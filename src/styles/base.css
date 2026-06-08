@@ -1,0 +1,77 @@
+/* ============================================================
+   base.css — Design tokens, reset, and typography
+   ============================================================ */
+
+:root {
+  /* Palette */
+  --bg:           #0d1117;
+  --surface:      #161b22;
+  --surface-2:    #0f1621;
+  --line:         #30363d;
+  --text:         #e6edf3;
+  --muted:        #8b949e;
+  --primary:      #58a6ff;
+  --primary-hover:#79b8ff;
+  --green:        #3fb950;
+  --orange:       #d29922;
+  --purple:       #d2a8ff;
+  --red:          #f85149;
+
+  /* Effects */
+  --shadow: 0 22px 60px rgba(0,0,0,.28);
+  --radius-sm:  8px;
+  --radius-md: 12px;
+  --radius-lg: 18px;
+  --radius-xl: 22px;
+
+  /* Spacing scale */
+  --space-1:  4px;
+  --space-2:  8px;
+  --space-3: 14px;
+  --space-4: 22px;
+  --space-5: 36px;
+  --space-6: 56px;
+}
+
+/* ── Reset ─────────────────────────────────────────────────── */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html, body { min-height: 100%; margin: 0; }
+
+body {
+  background:  var(--bg);
+  color:       var(--text);
+  font-family: Outfit, Cairo, system-ui, sans-serif;
+  line-height: 1.6;
+}
+
+[dir="rtl"] body { font-family: Cairo, Outfit, system-ui, sans-serif; }
+
+h1, h2, h3, p { margin-top: 0; }
+
+button, input, textarea, select { font: inherit; cursor: pointer; }
+input, textarea, select { cursor: text; }
+
+a { color: var(--primary); }
+
+img { max-width: 100%; }
+
+/* ── Typography ────────────────────────────────────────────── */
+
+code {
+  font-family: "JetBrains Mono", monospace;
+  color: var(--muted);
+  line-height: 1.9;
+}
+code b { color: #ff7b72; }
+code i { color: #a5d6ff; font-style: normal; }
+
+small { color: var(--muted); line-height: 1.6; }
+
+/* ── Utility ───────────────────────────────────────────────── */
+
+.hidden       { display: none !important; }
+.danger,
+.text-btn.danger { color: var(--red); }
+.secondary-btn.danger { border-color: rgba(248,81,73,.35); color: var(--red); }

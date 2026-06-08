@@ -1,0 +1,334 @@
+/* ============================================================
+   Auth.css — Login and Register page styles
+   ============================================================ */
+
+.auth-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: calc(100vh - 60px);
+  padding: var(--space-5);
+  background: linear-gradient(135deg, var(--bg) 0%, var(--surface) 100%);
+}
+
+.auth-card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
+  width: 100%;
+  max-width: 420px;
+  box-shadow: var(--shadow);
+}
+
+/* Register page specific styles */
+.register-card {
+  max-width: 900px !important;
+}
+
+.auth-title {
+  color: var(--text);
+  font-size: 28px;
+  font-weight: 600;
+  margin: 0 0 var(--space-5) 0;
+  text-align: center;
+}
+
+.auth-error {
+  background-color: rgba(248, 81, 73, 0.1);
+  border: 1px solid var(--red);
+  color: #ff8a80;
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-sm);
+  margin-bottom: var(--space-4);
+  font-size: 14px;
+}
+
+.auth-success {
+  background-color: rgba(63, 185, 80, 0.1);
+  border: 1px solid var(--green);
+  color: #7ee787;
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-sm);
+  margin-bottom: var(--space-4);
+  font-size: 14px;
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+/* Two Columns Layout for Register */
+.form-two-columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-5);
+  margin-bottom: var(--space-4);
+}
+
+.form-column {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.form-group label {
+  color: var(--text);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.form-input {
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  padding: var(--space-3) var(--space-4);
+  color: var(--text);
+  font-size: 14px;
+  font-family: inherit;
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: var(--primary);
+  background-color: var(--bg);
+}
+
+.form-input::placeholder {
+  color: var(--muted);
+}
+
+.form-input:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+/* Bio textarea */
+.bio-textarea {
+  resize: vertical;
+  min-height: 100px;
+  font-family: inherit;
+}
+
+/* Upload Container Styles */
+.upload-container {
+  width: 100%;
+}
+
+.file-input {
+  display: none;
+}
+
+.upload-area {
+  border: 2px dashed var(--line);
+  border-radius: var(--radius-md);
+  background: var(--surface-2);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-height: 180px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.upload-area:hover {
+  border-color: var(--primary);
+  background: rgba(88, 166, 255, 0.05);
+}
+
+.upload-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: var(--space-4);
+  color: var(--muted);
+  text-align: center;
+}
+
+.upload-icon {
+  width: 48px;
+  height: 48px;
+  color: var(--primary);
+  margin-bottom: var(--space-2);
+}
+
+.upload-placeholder span {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.upload-placeholder small {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+/* Image Preview Styles */
+.image-preview-wrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 180px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg);
+}
+
+.image-preview {
+  width: 100%;
+  height: 100%;
+  min-height: 180px;
+  object-fit: cover;
+  object-position: center;
+}
+
+.remove-image-btn {
+  position: absolute;
+  top: var(--space-2);
+  right: var(--space-2);
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.75);
+  border: 1px solid var(--red);
+  color: var(--red);
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  backdrop-filter: blur(4px);
+}
+
+.remove-image-btn:hover {
+  background: var(--red);
+  color: white;
+  transform: scale(1.05);
+}
+
+.auth-button {
+  background: var(--primary);
+  color: #0d1117;
+  border: none;
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-sm);
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+  margin-top: var(--space-3);
+}
+
+.auth-button:hover {
+  background: var(--primary-hover);
+}
+
+.auth-button:active {
+  transform: scale(0.98);
+}
+
+.auth-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.auth-footer {
+  margin-top: var(--space-5);
+  padding-top: var(--space-5);
+  border-top: 1px solid var(--line);
+  text-align: center;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.auth-footer p {
+  margin: 0 0 var(--space-3) 0;
+}
+
+.auth-footer a {
+  color: var(--primary);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.auth-footer a:hover {
+  color: var(--primary-hover);
+  text-decoration: underline;
+}
+
+.back-link {
+  display: block;
+  color: var(--muted);
+  margin-top: var(--space-3);
+}
+
+.back-link:hover {
+  color: var(--primary) !important;
+}
+
+/* ── Responsive ────────────────────────────────────────── */
+
+@media (max-width: 768px) {
+  .register-card {
+    max-width: 420px !important;
+  }
+  
+  .form-two-columns {
+    grid-template-columns: 1fr;
+    gap: var(--space-4);
+  }
+  
+  .upload-area {
+    min-height: 160px;
+  }
+  
+  .image-preview {
+    min-height: 160px;
+  }
+}
+
+@media (max-width: 480px) {
+  .auth-container {
+    padding: var(--space-3);
+  }
+
+  .auth-card {
+    padding: var(--space-4);
+  }
+
+  .auth-title {
+    font-size: 24px;
+  }
+  
+  .upload-area {
+    min-height: 140px;
+  }
+  
+  .upload-icon {
+    width: 36px;
+    height: 36px;
+  }
+  
+  .upload-placeholder span {
+    font-size: 12px;
+  }
+  
+  .upload-placeholder small {
+    font-size: 10px;
+  }
+}
