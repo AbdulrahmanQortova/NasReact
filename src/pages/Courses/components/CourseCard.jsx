@@ -15,6 +15,14 @@ export default function CourseCard({ course, topicName, onRate, onDelete, onView
     return levelMap[level] || 'Beginner';
   };
 
+  const getImageUrl = (thumbnailUrl) => {
+    if (!thumbnailUrl) return null;
+    if (thumbnailUrl.startsWith('/')) {
+      return `https://localhost:7021${thumbnailUrl}`;
+    }
+    return thumbnailUrl;
+  };
+
   const getLevelColor = (level) => {
     const levelName = getLevelName(level);
     switch (levelName) {
@@ -42,11 +50,26 @@ export default function CourseCard({ course, topicName, onRate, onDelete, onView
     return stars;
   };
 
+  // ✅ دالة لتنسيق عرض السعر
+  const formatPrice = (price) => {
+    const numPrice = Number(price);
+    if (isNaN(numPrice)) return 'Free';
+    if (numPrice <= 0) return 'Free';
+    return `$${numPrice.toFixed(2)}`;
+  };
+
   return (
     <div className="course-card">
       <div className="course-card-image">
         {course.thumbnailUrl ? (
-          <img src={course.thumbnailUrl} alt={course.title} />
+          <img 
+            src={getImageUrl(course.thumbnailUrl)} 
+            alt={course.title}
+            onError={(e) => {
+              e.target.style.display = 'none';
+              e.target.parentElement.innerHTML = '<div class="course-card-image-placeholder">📚</div>';
+            }}
+          />
         ) : (
           <div className="course-card-image-placeholder">📚</div>
         )}
@@ -73,12 +96,11 @@ export default function CourseCard({ course, topicName, onRate, onDelete, onView
           </div>
         </div>
 
+        {/* ✅ عرض السعر بشكل صحيح */}
         <div className="course-price">
-          {course.price > 0 ? (
-            <span className="price-value">${course.price}</span>
-          ) : (
-            <span className="price-free">Free</span>
-          )}
+          <span className={course.price > 0 ? "price-value" : "price-free"}>
+            {formatPrice(course.price)}
+          </span>
         </div>
       </div>
 

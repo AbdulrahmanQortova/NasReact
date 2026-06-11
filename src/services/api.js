@@ -2,7 +2,6 @@
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://localhost:7021/api';
 
 
-// src/services/api.js - تحديث handleResponse
 
 const handleResponse = async (response) => {
   if (!response.ok) {

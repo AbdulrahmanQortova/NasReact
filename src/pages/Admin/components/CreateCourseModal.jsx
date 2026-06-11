@@ -12,13 +12,13 @@ export default function CreateCourseModal({ onClose, onSuccess }) {
     level: 'Beginner',
     durationInMinutes: 60,
     topicId: '',
+    price: 0,
   });
   const [thumbnail, setThumbnail] = useState(null);
   const [thumbnailPreview, setThumbnailPreview] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
-  // Fetch topics on mount
   useEffect(() => {
     fetchTopics();
   }, []);
@@ -62,10 +62,42 @@ export default function CreateCourseModal({ onClose, onSuccess }) {
     }
   };
 
+  const uploadThumbnail = async (courseId) => {
+    if (!thumbnail) return null;
+    
+    try {
+      console.log('Uploading file:', thumbnail.name);
+      
+      const formData = new FormData();
+      formData.append('file', thumbnail);
+      
+      const token = localStorage.getItem('auth_token');
+      
+      const response = await fetch(`https://localhost:7021/api/Courses/${courseId}/thumbnail`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+        body: formData,
+      });
+      
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.message || 'Upload failed');
+      }
+      
+      const result = await response.json();
+      console.log('Upload success:', result);
+      return result;
+    } catch (err) {
+      console.error('Error uploading thumbnail:', err);
+      throw err;
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    // Validation
     if (!formData.title.trim()) {
       setError('Course title is required');
       return;
@@ -80,29 +112,30 @@ export default function CreateCourseModal({ onClose, onSuccess }) {
     setLoading(true);
 
     try {
-      // Send level as numeric value (0, 1, 2)
       const levelNumber = {
         'Beginner': 0,
         'Intermediate': 1,
         'Advanced': 2
       };
       
-      // Only send fields that exist in CourseCreateDto
+      // ✅ إضافة Price إلى البيانات المرسلة
       const courseData = {
         Title: formData.title.trim(),
         Description: formData.description.trim() || null,
         Level: levelNumber[formData.level],
         DurationInMinutes: parseInt(formData.durationInMinutes),
         TopicId: formData.topicId,
+        Price: parseFloat(formData.price) || 0,
       };
       
       console.log('Sending course data:', JSON.stringify(courseData, null, 2));
       
       const course = await courseService.create(courseData);
+      console.log('Course created:', course);
       
-      // Upload thumbnail if exists
       if (thumbnail && course.id) {
-        await courseService.uploadThumbnail(course.id, thumbnail);
+        console.log('Uploading thumbnail for course:', course.id);
+        await uploadThumbnail(course.id);
       }
       
       onSuccess();
@@ -172,26 +205,42 @@ export default function CreateCourseModal({ onClose, onSuccess }) {
             </div>
           </div>
 
-          <div className="form-group">
-            <label>Topic / Category *</label>
-            <select 
-              name="topicId" 
-              value={formData.topicId} 
-              onChange={handleChange}
-              disabled={loadingTopics}
-              required
-            >
-              <option value="">Select a topic</option>
-              {topics.map(topic => (
-                <option key={topic.id} value={topic.id}>
-                  {topic.iconUrl ? '📁 ' : '🏷️ '} {topic.name}
-                </option>
-              ))}
-            </select>
-            {loadingTopics && <small>Loading topics...</small>}
-            {topics.length === 0 && !loadingTopics && (
-              <small className="error-text">No topics available. Please create a topic first.</small>
-            )}
+          <div className="form-row">
+            <div className="form-group">
+              <label>Topic / Category *</label>
+              <select 
+                name="topicId" 
+                value={formData.topicId} 
+                onChange={handleChange}
+                disabled={loadingTopics}
+                required
+              >
+                <option value="">Select a topic</option>
+                {topics.map(topic => (
+                  <option key={topic.id} value={topic.id}>
+                    {topic.iconUrl ? '📁 ' : '🏷️ '} {topic.name}
+                  </option>
+                ))}
+              </select>
+              {loadingTopics && <small>Loading topics...</small>}
+              {topics.length === 0 && !loadingTopics && (
+                <small className="error-text">No topics available. Please create a topic first.</small>
+              )}
+            </div>
+
+            <div className="form-group">
+              <label>Price ($)</label>
+              <input
+                type="number"
+                name="price"
+                value={formData.price}
+                onChange={handleChange}
+                min="0"
+                step="0.01"
+                placeholder="0.00"
+              />
+              <small>Leave 0 for free course</small>
+            </div>
           </div>
 
           <div className="form-group">
@@ -223,6 +272,18 @@ export default function CreateCourseModal({ onClose, onSuccess }) {
                 style={{ display: 'none' }}
               />
             </div>
+            {thumbnailPreview && (
+              <button 
+                type="button"
+                className="remove-thumbnail-btn"
+                onClick={() => {
+                  setThumbnail(null);
+                  setThumbnailPreview(null);
+                }}
+              >
+                Remove image
+              </button>
+            )}
           </div>
 
           <div className="modal-actions">

@@ -1,6 +1,35 @@
 // src/services/courseService.js
 import { api } from './api';
 
+const API_BASE_URL = 'https://localhost:7021/api';
+
+const handleResponse = async (response) => {
+  if (!response.ok) {
+    let errorMessage = `Request failed with status ${response.status}`;
+    try {
+      const errorData = await response.json();
+      console.error('Error response:', errorData);
+      if (errorData.errors) {
+        const validationErrors = Object.values(errorData.errors).flat();
+        errorMessage = validationErrors.join(', ');
+      } else if (errorData.message) {
+        errorMessage = errorData.message;
+      } else if (errorData.title) {
+        errorMessage = errorData.title;
+      }
+    } catch (e) {
+      // Keep default message
+    }
+    throw new Error(errorMessage);
+  }
+  
+  if (response.status === 204) {
+    return null;
+  }
+  
+  return response.json();
+};
+
 class CourseService {
   // ========== Courses Services ==========
   
@@ -29,10 +58,11 @@ class CourseService {
     return await api.get(`/Courses/${id}`);
   }
 
-async create(courseData) {
-  console.log('Creating course with data:', courseData);
-  return await api.post('/Courses', courseData);
-}
+  async create(courseData) {
+    console.log('Creating course with data:', courseData);
+    return await api.post('/Courses', courseData);
+  }
+  
   async update(id, courseData) {
     return await api.put(`/Courses/${id}`, courseData);
   }
@@ -45,10 +75,22 @@ async create(courseData) {
     return await api.post(`/Courses/${id}/ratings`, ratingData);
   }
 
+  // ✅ دالة رفع الصورة المعدلة
   async uploadThumbnail(id, file) {
     const formData = new FormData();
     formData.append('file', file);
-    return await api.post(`/Courses/${id}/thumbnail`, formData, true);
+    
+    const token = localStorage.getItem('auth_token');
+    
+    const response = await fetch(`${API_BASE_URL}/Courses/${id}/thumbnail`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+      },
+      body: formData,
+    });
+    
+    return handleResponse(response);
   }
 
   async getRatings(id, page = 1, pageSize = 20) {

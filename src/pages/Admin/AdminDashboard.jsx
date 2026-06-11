@@ -46,6 +46,7 @@ export default function AdminDashboard() {
     try {
       const response = await courseService.getAll({ pageSize: 100 });
       const coursesData = response.items || response.data || [];
+      console.log('Fetched courses:', coursesData);
       setCourses(coursesData);
       setStats(prev => ({ ...prev, totalCourses: coursesData.length }));
     } catch (error) {
@@ -96,6 +97,23 @@ export default function AdminDashboard() {
       2: 'Advanced'
     };
     return levelMap[level] || 'Beginner';
+  };
+
+  // ✅ دالة للحصول على رابط الصورة الكامل
+  const getImageUrl = (thumbnailUrl) => {
+    if (!thumbnailUrl) return null;
+    if (thumbnailUrl.startsWith('/')) {
+      return `https://localhost:7021${thumbnailUrl}`;
+    }
+    return thumbnailUrl;
+  };
+
+  // ✅ دالة لتنسيق عرض السعر
+  const formatPrice = (price) => {
+    const numPrice = Number(price);
+    if (isNaN(numPrice)) return 'Free';
+    if (numPrice <= 0) return 'Free';
+    return `$${numPrice.toFixed(2)}`;
   };
 
   if (loading) {
@@ -222,7 +240,15 @@ export default function AdminDashboard() {
                       <tr key={course.id}>
                         <td>
                           {course.thumbnailUrl ? (
-                            <img src={course.thumbnailUrl} alt={course.title} className="course-thumbnail" />
+                            <img 
+                              src={getImageUrl(course.thumbnailUrl)} 
+                              alt={course.title} 
+                              className="course-thumbnail"
+                              onError={(e) => {
+                                e.target.style.display = 'none';
+                                e.target.parentElement.innerHTML = '<div class="thumbnail-placeholder">📚</div>';
+                              }}
+                            />
                           ) : (
                             <div className="thumbnail-placeholder">📚</div>
                           )}
@@ -238,7 +264,11 @@ export default function AdminDashboard() {
                           </span>
                         </td>
                         <td>{course.durationInMinutes} min</td>
-                        <td>${course.price || 0}</td>
+                        <td>
+                          <span className={course.price > 0 ? "price-value" : "price-free"}>
+                            {formatPrice(course.price)}
+                          </span>
+                        </td>
                         <td>
                           <div className="action-buttons">
                             <button 
@@ -294,7 +324,7 @@ export default function AdminDashboard() {
                 <div key={topic.id} className="topic-card">
                   <div className="topic-icon">
                     {topic.iconUrl ? (
-                      <img src={topic.iconUrl} alt={topic.name} />
+                      <img src={getImageUrl(topic.iconUrl)} alt={topic.name} />
                     ) : (
                       <span>🏷️</span>
                     )}
