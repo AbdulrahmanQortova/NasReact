@@ -148,7 +148,11 @@
       "actions": "الإجراءات",
       "minutes": "دقيقة",
       "edit": "تعديل",
-      "delete": "حذف"
+      "delete": "حذف",
+       "viewEditSections": "عرض وتعديل الأقسام",
+      "loading": "جاري تحميل الدورات...",
+      "confirmDelete": "هل أنت متأكد من حذف هذه الدورة؟",
+      "deleteFailed": "فشل حذف الدورة"
     },
     "sidebar": {
       "courses": "الدورات",
@@ -200,6 +204,27 @@
       "deleteError": "فشل في حذف الموضوع",
       "confirmDelete": "هل أنت متأكد من حذف الموضوع \"{{name}}\"؟ هذا قد يؤثر على الدورات المرتبطة به.",
       "iconHint": "الحجم الموصى به: 64×64 بكسل. PNG، JPG، GIF حتى 2 ميغابايت"
+    },
+    "courseDetails": {
+      "loadError": "فشل في تحميل تفاصيل الدورة",
+      "notFound": "الدورة غير موجودة",
+      "sections": "أقسام الدورة",
+      "addSection": "إضافة قسم",
+      "addNewSection": "إضافة قسم جديد",
+      "editSection": "تعديل القسم",
+      "sectionTitle": "عنوان القسم",
+      "titlePlaceholder": "مثال: مقدمة، الفصل الأول، الخاتمة",
+      "order": "الترتيب",
+      "orderPlaceholder": "ترتيب العرض",
+      "addBtn": "إضافة قسم",
+      "updateBtn": "تحديث القسم",
+      "noSections": "لا توجد أقسام حتى الآن. أضف قسمك الأول!",
+      "titleRequired": "عنوان القسم مطلوب",
+      "createError": "فشل في إنشاء القسم",
+      "updateError": "فشل في تحديث القسم",
+      "deleteError": "فشل في حذف القسم",
+      "confirmDelete": "هل أنت متأكد من حذف القسم \"{{title}}\"؟ هذا سيحذف جميع الدروس داخله."
     }
+    
   }
 }

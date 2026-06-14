@@ -124,6 +124,27 @@ class CourseService {
     formData.append('file', file);
     return await api.post(`/Topics/${id}/icon`, formData, true);
   }
+
+  // ========== Sections Services ==========
+  async getCourseSections(courseId) {
+  return await api.get(`/Courses/${courseId}/sections`);
+}
+
+async getSectionById(courseId, sectionId) {
+  return await api.get(`/Courses/${courseId}/sections/${sectionId}`);
+}
+
+async createCourseSection(courseId, sectionData) {
+  return await api.post(`/Courses/${courseId}/sections`, sectionData);
+}
+
+async updateCourseSection(sectionId, sectionData) {
+  return await api.put(`/CourseSections/${sectionId}`, sectionData);
+}
+
+async deleteCourseSection(courseId, sectionId) {
+  return await api.delete(`/Courses/${courseId}/sections/${sectionId}`);
+}
 }
 
 export const courseService = new CourseService();

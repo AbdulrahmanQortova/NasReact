@@ -39,13 +39,10 @@ export default function Sidebar({ activeTab, onTabChange }) {
     return t('admin.sidebar.admin');
   };
 
-  // تحديد اتجاه السهم حسب اللغة وحالة التصغير
   const getArrowIcon = () => {
     if (collapsed) {
-      // إذا كان مصغر، السهم يشير للخارج (توسيع)
       return isRTL ? leftArrow : rightArrow;
     } else {
-      // إذا كان مفتوح، السهم يشير للداخل (تصغير)
       return isRTL ? rightArrow : leftArrow;
     }
   };
@@ -53,7 +50,7 @@ export default function Sidebar({ activeTab, onTabChange }) {
   return (
     <aside className={`admin-sidebar ${collapsed ? 'collapsed' : ''}`} dir={isRTL ? 'rtl' : 'ltr'}>
       <div className="sidebar-header">
-        {/* اللوجو يظهر فقط عندما يكون السايد بار مفتوح */}
+        {/* */}
         {!collapsed && (
           <div className="sidebar-logo">
             <span className="logo-icon">🎓</span>

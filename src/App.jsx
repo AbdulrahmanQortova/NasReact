@@ -5,6 +5,7 @@ import Login from './pages/Auth/Login';
 import Register from './pages/Auth/Register';
 import Courses from './pages/Courses/Courses';
 import AdminDashboard from './pages/Admin/AdminDashboard';
+import CourseDetails from './pages/Admin/CourseDetails';
 
 // Protected Route Component
 const ProtectedRoute = ({ children }) => {
@@ -58,17 +59,13 @@ export default function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           
-          {/* Protected routes */}
+          {/* Protected routes - User */}
           <Route path="/dashboard" element={
             <ProtectedRoute>
               <div style={{ padding: '40px' }}>Dashboard Page</div>
             </ProtectedRoute>
           } />
-          <Route path="/admin/topics" element={
-  <AdminRoute>
-    <div style={{ padding: '40px' }}>Topics Management Page</div>
-  </AdminRoute>
-} />
+          
           <Route path="/live" element={
             <ProtectedRoute>
               <div style={{ padding: '40px' }}>Live Page</div>
@@ -99,16 +96,29 @@ export default function App() {
             </ProtectedRoute>
           } />
           
-          {/* 👈 Admin Dashboard Route - Added */}
+          {/* Admin Routes */}
           <Route path="/admin/dashboard" element={
             <AdminRoute>
               <AdminDashboard />
             </AdminRoute>
           } />
           
+          {/* 👈 Course Details Route - View and Manage Sections */}
+          <Route path="/admin/courses/:id" element={
+            <AdminRoute>
+              <CourseDetails />
+            </AdminRoute>
+          } />
+          
           <Route path="/admin/courses/:id/edit" element={
             <AdminRoute>
               <div style={{ padding: '40px' }}>Edit Course Page</div>
+            </AdminRoute>
+          } />
+          
+          <Route path="/admin/topics" element={
+            <AdminRoute>
+              <div style={{ padding: '40px' }}>Topics Management Page</div>
             </AdminRoute>
           } />
           

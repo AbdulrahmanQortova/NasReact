@@ -19,7 +19,6 @@ i18n
     },
   });
 
-// تغيير الفونت تلقائياً عند تغيير اللغة
 i18n.on('languageChanged', (lng) => {
   const root = document.documentElement;
   if (lng === 'ar') {
