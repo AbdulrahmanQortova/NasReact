@@ -69,7 +69,6 @@
   background: rgba(88, 166, 255, 0.1);
 }
 
-/* ✅ Active Link Style - نفس الـ hover */
 .nav-links a.active-link button {
   color: var(--primary);
   background: rgba(88, 166, 255, 0.1);
@@ -82,14 +81,6 @@
   background-clip: text !important;
   color: transparent !important;
   font-weight: 700 !important;
-}
-
-.admin-nav-link.active-link button {
-  background: linear-gradient(135deg, var(--primary), var(--purple)) !important;
-  -webkit-background-clip: text !important;
-  background-clip: text !important;
-  color: transparent !important;
-  opacity: 0.8;
 }
 
 /* Search Box */
@@ -130,7 +121,6 @@
   font-size: 13px;
 }
 
-/* Clear Search Button */
 .search-clear-btn {
   position: absolute;
   right: 10px;
@@ -154,6 +144,33 @@
 .search-clear-btn:hover {
   color: white;
   background: var(--red);
+}
+
+/* Theme Toggle Button */
+.theme-toggle-btn {
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  color: var(--text);
+}
+
+.theme-toggle-btn:hover {
+  background: var(--primary);
+  color: var(--bg);
+  border-color: var(--primary);
+  transform: scale(1.05);
+}
+
+.theme-icon {
+  width: 20px;
+  height: 20px;
 }
 
 /* Language Dropdown */
@@ -280,7 +297,6 @@
   color: var(--primary);
 }
 
-/* Notification Badge */
 .notification-badge {
   position: absolute;
   top: -2px;

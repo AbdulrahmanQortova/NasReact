@@ -3,7 +3,35 @@
 .home-page {
   min-height: 100vh;
 }
+[data-theme="dark"] {
+  --bg: #0d1117;
+  --surface: #161b22;
+  --surface-2: #0f1621;
+  --line: #30363d;
+  --text: #e6edf3;
+  --muted: #8b949e;
+  --primary: #58a6ff;
+  --primary-hover: #79b8ff;
+  --green: #3fb950;
+  --orange: #d29922;
+  --purple: #d2a8ff;
+  --red: #f85149;
+}
 
+[data-theme="light"] {
+  --bg: #ffffff;
+  --surface: #f6f8fa;
+  --surface-2: #eaeef2;
+  --line: #d0d7de;
+  --text: #1f2328;
+  --muted: #656d76;
+  --primary: #0969da;
+  --primary-hover: #0969da;
+  --green: #1a7f37;
+  --orange: #bc4c00;
+  --purple: #8250df;
+  --red: #cf222e;
+}
 /* Hero Section */
 .home-hero {
   position: relative;
