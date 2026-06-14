@@ -3,6 +3,9 @@ import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { courseService } from '../../../services/courseService';
 import TopicsManager from './TopicsManager';
+import EditTopicModal from './EditTopicModal';
+import editIcon from '../../../assets/images/edit.png';
+import deleteIcon from '../../../assets/images/delete.png';
 import './TopicsManagement.css';
 
 export default function TopicsManagement() {
@@ -10,6 +13,8 @@ export default function TopicsManagement() {
   const [topics, setTopics] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showTopicsManager, setShowTopicsManager] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [selectedTopic, setSelectedTopic] = useState(null);
   const isRTL = i18n.language === 'ar';
 
   useEffect(() => {
@@ -38,6 +43,11 @@ export default function TopicsManagement() {
       console.error('Error deleting topic:', error);
       alert(t('admin.topics.deleteFailed'));
     }
+  };
+
+  const handleEditTopic = (topic) => {
+    setSelectedTopic(topic);
+    setShowEditModal(true);
   };
 
   const getImageUrl = (iconUrl) => {
@@ -75,39 +85,73 @@ export default function TopicsManagement() {
         <div className="topics-grid">
           {topics.map(topic => (
             <div key={topic.id} className="topic-management-card">
-              <div className="topic-icon-large">
-                {topic.iconUrl ? (
-                  <img src={getImageUrl(topic.iconUrl)} alt={topic.name} />
-                ) : (
-                  <span>🏷️</span>
-                )}
-              </div>
-              <div className="topic-info-large">
-                <h3>{topic.name}</h3>
-                <p>{topic.description || t('admin.topics.noDescription')}</p>
-                <div className="topic-stats">
-                  <span>📚 {t('admin.topics.coursesCount', { count: topic.coursesCount || 0 })}</span>
+              {/* Card Image with overlay */}
+              <div className="topic-card-image-wrapper">
+                <div className="topic-icon-large">
+                  {topic.iconUrl ? (
+                    <img src={getImageUrl(topic.iconUrl)} alt={topic.name} />
+                  ) : (
+                    <span>🏷️</span>
+                  )}
+                </div>
+                
+                {/* Action Buttons - Circles like courses */}
+                <div className="topic-card-actions">
+                  <button 
+                    className="action-circle edit-circle"
+                    onClick={() => handleEditTopic(topic)}
+                    title={t('common.edit')}
+                  >
+                    <img src={editIcon} alt="edit" className="action-icon" />
+                  </button>
+                  <button 
+                    className="action-circle delete-circle"
+                    onClick={() => handleDeleteTopic(topic.id, topic.name)}
+                    title={t('common.delete')}
+                  >
+                    <img src={deleteIcon} alt="delete" className="action-icon" />
+                  </button>
                 </div>
               </div>
-              <div className="topic-actions-large">
-                <button 
-                  className="delete-btn" 
-                  onClick={() => handleDeleteTopic(topic.id, topic.name)}
-                >
-                  {t('admin.topics.delete')}
-                </button>
+
+              {/* Card Content */}
+              <div className="topic-card-content">
+                <h3 className="topic-card-title">{topic.name}</h3>
+                <p className="topic-card-description">
+                  {topic.description || t('admin.topics.noDescription')}
+                </p>
+                <div className="topic-card-stats">
+                  <span>📚 {t('admin.topics.coursesCount', { count: topic.coursesCount || 0 })}</span>
+                </div>
               </div>
             </div>
           ))}
         </div>
       )}
 
+      {/* Create Topic Modal */}
       {showTopicsManager && (
         <TopicsManager
           onClose={() => setShowTopicsManager(false)}
           onSuccess={() => {
             fetchTopics();
             setShowTopicsManager(false);
+          }}
+        />
+      )}
+
+      {/* Edit Topic Modal */}
+      {showEditModal && selectedTopic && (
+        <EditTopicModal
+          topic={selectedTopic}
+          onClose={() => {
+            setShowEditModal(false);
+            setSelectedTopic(null);
+          }}
+          onSuccess={() => {
+            setShowEditModal(false);
+            setSelectedTopic(null);
+            fetchTopics();
           }}
         />
       )}

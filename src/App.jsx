@@ -1,6 +1,7 @@
 // App.jsx
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import Navbar from './components/layout/Navbar';
+import Home from './pages/Home/Home';
 import Login from './pages/Auth/Login';
 import Register from './pages/Auth/Register';
 import Courses from './pages/Courses/Courses';
@@ -51,8 +52,8 @@ export default function App() {
       <Navbar />
       <main id="main" tabIndex={-1}>
         <Routes>
-          {/* Redirect root to courses */}
-          <Route path="/" element={<Navigate to="/courses" replace />} />
+          {/* ✅ Home page as root */}
+          <Route path="/" element={<Home />} />
           
           {/* Public routes */}
           <Route path="/courses" element={<Courses />} />
@@ -103,7 +104,7 @@ export default function App() {
             </AdminRoute>
           } />
           
-          {/* 👈 Course Details Route - View and Manage Sections */}
+          {/* Course Details Route - View and Manage Sections */}
           <Route path="/admin/courses/:id" element={
             <AdminRoute>
               <CourseDetails />

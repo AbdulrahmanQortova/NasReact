@@ -219,47 +219,6 @@ export default function Courses() {
 
   return (
     <div className="courses-page" dir={isRTL ? 'rtl' : 'ltr'}>
-      {/* Hero Section */}
-      <div className="courses-hero-animated">
-        <div className="hero-bg-shapes">
-          <div className="shape shape-1"></div>
-          <div className="shape shape-2"></div>
-          <div className="shape shape-3"></div>
-          <div className="shape shape-4"></div>
-        </div>
-        <div className="hero-content-animated">
-          <div className="hero-badge">
-            <span className="badge-icon">🎓</span>
-            <span>{t('hero.badge')}</span>
-          </div>
-          <h1 className="hero-title">
-            {t('hero.title')}
-            <span className="gradient-text"> {t('hero.titleGradient')}</span>
-          </h1>
-          <p className="hero-subtitle">
-            {t('hero.subtitle')}
-          </p>
-          <div className="hero-stats-animated">
-            <div className="hero-stat-item">
-              <div className="stat-number">{pagination.totalCount || courses.length}+</div>
-              <div className="stat-label">{t('hero.courses')}</div>
-            </div>
-            <div className="hero-stat-item">
-              <div className="stat-number">10K+</div>
-              <div className="stat-label">{t('hero.students')}</div>
-            </div>
-            <div className="hero-stat-item">
-              <div className="stat-number">50+</div>
-              <div className="stat-label">{t('hero.instructors')}</div>
-            </div>
-            <div className="hero-stat-item">
-              <div className="stat-number">100%</div>
-              <div className="stat-label">{t('hero.satisfaction')}</div>
-            </div>
-          </div>
-        </div>
-      </div>
-
       {/* Categories Bar - Horizontal */}
       <div className="categories-bar">
         <div className="categories-container">

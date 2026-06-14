@@ -13,7 +13,8 @@
     "profile": "الملف الشخصي",
     "settings": "الإعدادات",
     "notifications": "الإشعارات",
-    "inbox": "صندوق الوارد"
+    "inbox": "صندوق الوارد",
+    "home": "الرئيسية"
   },
   "courses": {
     "title": "جميع الدورات",
@@ -107,13 +108,16 @@
     "cancel": "إلغاء",
     "delete": "حذف",
     "edit": "تعديل",
+    "update": "تحديث",
     "confirm": "تأكيد",
     "loading": "جاري التحميل...",
     "error": "حدث خطأ",
     "previous": "السابق",
     "next": "التالي",
     "retry": "إعادة المحاولة",
-    "creating": "جاري الإنشاء..."
+    "creating": "جاري الإنشاء...",
+    "remove": "إزالة",
+    "saving": "جاري الحفظ..."
   },
   "admin": {
     "loading": "جاري تحميل لوحة التحكم...",
@@ -224,7 +228,55 @@
       "updateError": "فشل في تحديث القسم",
       "deleteError": "فشل في حذف القسم",
       "confirmDelete": "هل أنت متأكد من حذف القسم \"{{title}}\"؟ هذا سيحذف جميع الدروس داخله."
+    },
+    "editCourse": {
+      "title": "تعديل الدورة",
+      "courseTitle": "عنوان الدورة",
+      "titlePlaceholder": "مثال: React للمبتدئين",
+      "description": "الوصف",
+      "descriptionPlaceholder": "وصف الدورة...",
+      "level": "المستوى",
+      "duration": "المدة (بالدقائق)",
+      "topic": "الموضوع/التصنيف",
+      "selectTopic": "اختر موضوعاً",
+      "price": "السعر ($)",
+      "thumbnail": "الصورة المصغرة",
+      "clickToUpload": "اضغط لرفع الصورة",
+      "imageHint": "PNG، JPG، GIF حتى 5 ميغابايت",
+      "titleRequired": "عنوان الدورة مطلوب",
+      "topicRequired": "الرجاء اختيار موضوع/تصنيف",
+      "updateError": "فشل في تحديث الدورة"
+    },
+    "editTopic": {
+      "title": "تعديل الموضوع",
+      "topicName": "اسم الموضوع",
+      "namePlaceholder": "مثال: برمجة، تصميم، أعمال",
+      "description": "الوصف",
+      "descriptionPlaceholder": "وصف الموضوع...",
+      "icon": "الأيقونة",
+      "clickToUpload": "اضغط لرفع الأيقونة",
+      "iconHint": "الحجم الموصى به: 64×64 بكسل. PNG، JPG، GIF حتى 2 ميغابايت"
     }
     
+  },
+    "home": {
+    "featuredCourses": "دورات مميزة",
+    "featuredSubtitle": "اكتشف أشهر الدورات على منصتنا",
+    "viewAllCourses": "عرض جميع الدورات",
+    "whyChooseUs": "لماذا تختارنا",
+    "whyChooseUsSubtitle": "ما الذي يجعل منصتنا الخيار الأفضل لرحلتك التعليمية",
+    "expertInstructors": "مدربون خبراء",
+    "expertInstructorsDesc": "تعلم من محترفين في المجال مع سنوات من الخبرة",
+    "comprehensiveCourses": "دورات شاملة",
+    "comprehensiveCoursesDesc": "دورات منظمة تغطي جميع جوانب الموضوع",
+    "certificates": "شهادات معتمدة",
+    "certificatesDesc": "احصل على شهادات بعد إكمال دوراتك",
+    "community": "دعم المجتمع",
+    "communityDesc": "انضم إلى مجتمع نابض بالحياة من المتعلمين واحصل على المساعدة",
+    "readyToStart": "هل أنت مستعد لبدء رحلتك؟",
+    "readyToStartSubtitle": "انضم إلى آلاف الطلاب وابدأ التعلم اليوم",
+    "getStartedNow": "ابدأ الآن",
+    "exploreCourses": "استكشف الدورات",
+    "getStarted": "ابدأ"
   }
 }

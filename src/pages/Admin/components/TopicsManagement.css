@@ -3,36 +3,47 @@
 .topics-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-  gap: 20px;
+  gap: 24px;
 }
 
+/* Topic Management Card - مثل كورسات */
 .topic-management-card {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  padding: 20px;
   background: var(--surface-2);
-  border-radius: 16px;
-  transition: all 0.2s;
+  border-radius: 20px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  border: 1px solid var(--line);
+  display: flex;
+  flex-direction: column;
 }
 
 .topic-management-card:hover {
-  transform: translateY(-2px);
-  background: var(--surface);
-  border: 1px solid var(--primary);
+  transform: translateY(-4px);
+  border-color: var(--primary);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
 }
 
-.topic-icon-large {
-  width: 64px;
-  height: 64px;
-  border-radius: 16px;
-  background: rgba(88, 166, 255, 0.1);
+/* Card Image Wrapper */
+.topic-card-image-wrapper {
+  position: relative;
+  height: 140px;
+  background: linear-gradient(135deg, var(--surface), var(--surface-2));
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 32px;
+  border-bottom: 1px solid var(--line);
+}
+
+.topic-icon-large {
+  width: 80px;
+  height: 80px;
+  border-radius: 20px;
+  background: rgba(88, 166, 255, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 48px;
   overflow: hidden;
-  flex-shrink: 0;
 }
 
 .topic-icon-large img {
@@ -41,75 +52,170 @@
   object-fit: cover;
 }
 
-.topic-info-large {
+/* Card Actions - Circles مثل الكورسات */
+.topic-card-actions {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  display: flex;
+  gap: 8px;
+  z-index: 2;
+}
+
+[dir="rtl"] .topic-card-actions {
+  right: auto;
+  left: 12px;
+}
+
+.action-circle {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  backdrop-filter: blur(4px);
+}
+
+.action-circle:hover {
+  transform: scale(1.1);
+}
+
+.edit-circle {
+  background: var(--primary);
+  box-shadow: 0 2px 8px rgba(88, 166, 255, 0.4);
+}
+
+.edit-circle:hover {
+  background: var(--primary-hover);
+}
+
+.delete-circle {
+  background: var(--red);
+  box-shadow: 0 2px 8px rgba(248, 81, 73, 0.4);
+}
+
+.delete-circle:hover {
+  background: #e03a32;
+}
+
+.action-icon {
+  width: 18px;
+  height: 18px;
+  filter: brightness(0) invert(1);
+}
+
+/* Card Content */
+.topic-card-content {
+  padding: 20px;
   flex: 1;
 }
 
-.topic-info-large h3 {
+.topic-card-title {
   font-size: 18px;
-  margin-bottom: 6px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  color: var(--text);
 }
 
-.topic-info-large p {
+.topic-card-description {
   color: var(--muted);
   font-size: 13px;
-  margin-bottom: 8px;
+  margin-bottom: 12px;
+  line-height: 1.5;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
-.topic-stats {
+.topic-card-stats {
   font-size: 12px;
   color: var(--primary);
+  padding-top: 12px;
+  border-top: 1px solid var(--line);
+  margin-top: 8px;
 }
 
-.topic-actions-large {
-  display: flex;
-  gap: 8px;
-  flex-shrink: 0;
+/* Loading & Empty States */
+.management-loading {
+  text-align: center;
+  padding: 40px;
+  color: var(--muted);
 }
 
-.delete-btn {
-  padding: 6px 12px;
-  background: rgba(248, 81, 73, 0.15);
-  border: none;
-  border-radius: 6px;
-  color: var(--red);
-  cursor: pointer;
-  font-size: 12px;
-  font-weight: 600;
-  transition: all 0.2s;
+.empty-state {
+  text-align: center;
+  padding: 60px;
+  color: var(--muted);
 }
 
-.delete-btn:hover {
-  background: var(--red);
-  color: white;
+.empty-state button {
+  margin-top: 16px;
 }
 
 /* RTL Support */
-[dir="rtl"] .topic-management-card {
+[dir="rtl"] .topic-card-content {
   text-align: right;
 }
 
-[dir="rtl"] .topic-actions-large {
-  margin-right: auto;
-  margin-left: 0;
+[dir="rtl"] .topic-card-stats {
+  text-align: right;
 }
 
 /* Responsive */
 @media (max-width: 768px) {
   .topics-grid {
     grid-template-columns: 1fr;
+    gap: 20px;
   }
   
-  .topic-management-card {
-    flex-wrap: wrap;
+  .management-header {
+    flex-direction: column;
+    text-align: center;
   }
   
-  .topic-actions-large {
+  .create-btn {
     width: 100%;
-    justify-content: flex-end;
+  }
+}
+
+@media (max-width: 480px) {
+  .topic-card-actions {
+    top: 8px;
+    right: 8px;
+    gap: 6px;
   }
   
-  [dir="rtl"] .topic-actions-large {
-    justify-content: flex-start;
+  [dir="rtl"] .topic-card-actions {
+    right: auto;
+    left: 8px;
+  }
+  
+  .action-circle {
+    width: 32px;
+    height: 32px;
+  }
+  
+  .action-icon {
+    width: 16px;
+    height: 16px;
+  }
+  
+  .topic-icon-large {
+    width: 60px;
+    height: 60px;
+    font-size: 36px;
+  }
+  
+  .topic-card-content {
+    padding: 16px;
+  }
+  
+  .topic-card-title {
+    font-size: 16px;
   }
 }

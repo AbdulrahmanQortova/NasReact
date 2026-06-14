@@ -13,7 +13,8 @@
     "profile": "Profile",
     "settings": "Settings",
     "notifications": "Notifications",
-    "inbox": "Inbox"
+    "inbox": "Inbox",
+    "home": "Home"
   },
   "courses": {
     "title": "All Courses",
@@ -113,7 +114,10 @@
     "previous": "Previous",
     "next": "Next",
     "retry": "Retry",
-    "creating": "Creating..."
+    "creating": "Creating...",
+    "update": "Update",
+    "remove": "Remove",
+    "saving": "Saving..."
   },
   "admin": {
     "loading": "Loading dashboard...",
@@ -224,6 +228,54 @@
       "updateError": "Failed to update section",
       "deleteError": "Failed to delete section",
       "confirmDelete": "Delete section \"{{title}}\"? This will also delete all lessons inside it."
+    },
+    "editCourse": {
+      "title": "Edit Course",
+      "courseTitle": "Course Title",
+      "titlePlaceholder": "e.g., React for Beginners",
+      "description": "Description",
+      "descriptionPlaceholder": "Course description...",
+      "level": "Level",
+      "duration": "Duration (minutes)",
+      "topic": "Topic / Category",
+      "selectTopic": "Select a topic",
+      "price": "Price ($)",
+      "thumbnail": "Thumbnail Image",
+      "clickToUpload": "Click to upload thumbnail",
+      "imageHint": "PNG, JPG, GIF up to 5MB",
+      "titleRequired": "Course title is required",
+      "topicRequired": "Please select a topic/category",
+      "updateError": "Failed to update course"
+    },
+    "editTopic": {
+      "title": "Edit Topic",
+      "topicName": "Topic Name",
+      "namePlaceholder": "e.g., Programming, Design, Business",
+      "description": "Description",
+      "descriptionPlaceholder": "Topic description...",
+      "icon": "Icon",
+      "clickToUpload": "Click to upload icon",
+      "iconHint": "Recommended size: 64x64px. PNG, JPG, GIF up to 2MB"
     }
-  }
+  },
+  "home": {
+    "featuredCourses": "Featured Courses",
+    "featuredSubtitle": "Discover the most popular courses from our platform",
+    "viewAllCourses": "View All Courses",
+    "whyChooseUs": "Why Choose Us",
+    "whyChooseUsSubtitle": "What makes our platform the best choice for your learning journey",
+    "expertInstructors": "Expert Instructors",
+    "expertInstructorsDesc": "Learn from industry professionals with years of experience",
+    "comprehensiveCourses": "Comprehensive Courses",
+    "comprehensiveCoursesDesc": "Well-structured courses covering all aspects of the subject",
+    "certificates": "Certificates",
+    "certificatesDesc": "Earn certificates upon completion of your courses",
+    "community": "Community Support",
+    "communityDesc": "Join a vibrant community of learners and get help when you need it",
+    "readyToStart": "Ready to Start Your Journey?",
+    "readyToStartSubtitle": "Join thousands of students and start learning today",
+    "getStartedNow": "Get Started Now",
+    "exploreCourses": "Explore Courses",
+    "getStarted": "Get Started"
+  } 
 }

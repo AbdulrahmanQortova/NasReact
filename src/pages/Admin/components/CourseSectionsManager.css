@@ -252,41 +252,51 @@
   font-size: 14px;
 }
 
+/* Action Buttons - Circles with Icons */
 .section-actions {
   display: flex;
   gap: 8px;
   flex-shrink: 0;
 }
 
-.edit-btn,
-.delete-btn {
-  padding: 6px 14px;
+.action-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
   border: none;
-  border-radius: 8px;
   cursor: pointer;
-  font-size: 12px;
-  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   transition: all 0.2s;
 }
 
-.edit-btn {
-  background: rgba(88, 166, 255, 0.15);
-  color: var(--primary);
+.action-btn:hover {
+  transform: scale(1.1);
 }
 
-.edit-btn:hover {
+.edit-action {
   background: var(--primary);
-  color: var(--bg);
+  box-shadow: 0 2px 8px rgba(88, 166, 255, 0.4);
 }
 
-.delete-btn {
-  background: rgba(248, 81, 73, 0.1);
-  color: var(--red);
+.edit-action:hover {
+  background: var(--primary-hover);
 }
 
-.delete-btn:hover {
+.delete-action {
   background: var(--red);
-  color: white;
+  box-shadow: 0 2px 8px rgba(248, 81, 73, 0.4);
+}
+
+.delete-action:hover {
+  background: #e03a32;
+}
+
+.action-icon {
+  width: 16px;
+  height: 16px;
+  filter: brightness(0) invert(1);
 }
 
 /* Error Message */
@@ -321,7 +331,55 @@
   background: var(--surface-2);
   border-radius: 14px;
 }
+/* أضف أو استبدل في CourseSectionsManager.css */
 
+/* Action Buttons - نفس تصميم CoursesManagement */
+.section-actions {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.action-circle {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  backdrop-filter: blur(4px);
+}
+
+.action-circle:hover {
+  transform: scale(1.1);
+}
+
+.edit-circle {
+  background: var(--primary);
+  box-shadow: 0 2px 8px rgba(88, 166, 255, 0.4);
+}
+
+.edit-circle:hover {
+  background: var(--primary-hover);
+}
+
+.delete-circle {
+  background: var(--red);
+  box-shadow: 0 2px 8px rgba(248, 81, 73, 0.4);
+}
+
+.delete-circle:hover {
+  background: #e03a32;
+}
+
+.action-icon {
+  width: 16px;
+  height: 16px;
+  filter: brightness(0) invert(1);
+}
 /* Animations */
 @keyframes slideUp {
   from {
@@ -367,12 +425,7 @@
   
   .section-actions {
     width: 100%;
-  }
-  
-  .edit-btn,
-  .delete-btn {
-    flex: 1;
-    text-align: center;
+    justify-content: flex-end;
   }
   
   .form-actions {
@@ -384,4 +437,8 @@
     width: 100%;
     text-align: center;
   }
+}
+
+[dir="rtl"] .section-actions {
+  justify-content: flex-start;
 }

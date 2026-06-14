@@ -53,66 +53,80 @@ export default function CourseDetails() {
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleAddSection = async (e) => {
-    e.preventDefault();
-    if (!formData.title.trim()) {
-      setError(t('admin.courseDetails.titleRequired'));
-      return;
+// src/pages/Admin/CourseDetails.jsx
+
+const handleAddSection = async (e) => {
+  e.preventDefault();
+  if (!formData.title.trim()) {
+    setError(t('admin.courseDetails.titleRequired'));
+    return;
+  }
+
+  setSubmitting(true);
+  setError('');
+
+  try {
+    // ✅ إرسال البيانات بشكل صحيح
+    await courseService.createCourseSection(id, {
+      title: formData.title.trim(),
+      order: parseInt(formData.order) || sections.length + 1,
+      courseId: id,
+    });
+
+    setFormData({ title: '', order: 0 });
+    setShowAddSection(false);
+    await fetchSections();
+  } catch (err) {
+    console.error('Create error:', err);
+    setError(err.message || t('admin.courseDetails.createError'));
+  } finally {
+    setSubmitting(false);
+  }
+};
+
+const handleUpdateSection = async (e) => {
+  e.preventDefault();
+  if (!formData.title.trim()) return;
+
+  setSubmitting(true);
+  setError('');
+
+  try {
+    const updateData = { title: formData.title.trim() };
+    
+    if (formData.order && parseInt(formData.order) !== editingSection.order) {
+      updateData.order = parseInt(formData.order);
     }
+    
+    await courseService.updateCourseSection(id, editingSection.id, updateData);
 
-    setSubmitting(true);
-    setError('');
+    setEditingSection(null);
+    setFormData({ title: '', order: 0 });
+    await fetchSections();
+  } catch (err) {
+    console.error('Update error:', err);
+    setError(err.message || t('admin.courseDetails.updateError'));
+  } finally {
+    setSubmitting(false);
+  }
+};
 
-    try {
-      await courseService.createCourseSection(id, {
-        title: formData.title.trim(),
-        order: parseInt(formData.order) || sections.length + 1,
-        courseId: id,
-      });
 
-      setFormData({ title: '', order: 0 });
-      setShowAddSection(false);
+const handleDeleteSection = async (sectionId, sectionTitle) => {
+  if (!window.confirm(t('admin.courseDetails.confirmDelete', { title: sectionTitle }))) return;
+
+  try {
+    const response = await courseService.deleteCourseSection(id, sectionId);
+    
+    if (response === null || response?.status === 204) {
+      alert(t('admin.courseDetails.deleteSuccess'));
       await fetchSections();
-    } catch (err) {
-      setError(err.message || t('admin.courseDetails.createError'));
-    } finally {
-      setSubmitting(false);
     }
-  };
-
-  const handleUpdateSection = async (e) => {
-    e.preventDefault();
-    if (!formData.title.trim()) return;
-
-    setSubmitting(true);
-    setError('');
-
-    try {
-      await courseService.updateCourseSection(editingSection.id, {
-        title: formData.title.trim(),
-        order: parseInt(formData.order),
-      });
-
-      setEditingSection(null);
-      setFormData({ title: '', order: 0 });
-      await fetchSections();
-    } catch (err) {
-      setError(err.message || t('admin.courseDetails.updateError'));
-    } finally {
-      setSubmitting(false);
-    }
-  };
-
-  const handleDeleteSection = async (sectionId, sectionTitle) => {
-    if (!window.confirm(t('admin.courseDetails.confirmDelete', { title: sectionTitle }))) return;
-
-    try {
-      await courseService.deleteCourseSection(id, sectionId);
-      await fetchSections();
-    } catch (err) {
-      setError(err.message || t('admin.courseDetails.deleteError'));
-    }
-  };
+  } catch (err) {
+    console.error('Delete error:', err);
+    setError(err.message || t('admin.courseDetails.deleteError'));
+  }
+};
 
   const startEdit = (section) => {
     setEditingSection(section);

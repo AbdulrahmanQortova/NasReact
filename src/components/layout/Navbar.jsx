@@ -114,7 +114,7 @@ export default function Navbar() {
     authService.logout();
     setIsLoggedIn(false);
     setUser(null);
-    navigate('/courses');
+    navigate('/');
   };
 
   const hasRole = (role) => {
@@ -127,18 +127,31 @@ export default function Navbar() {
     return user.role === 'Admin' || user.userRole === 'Admin' || user.roles?.includes('Admin');
   };
 
+  // ✅ Check if link is active
+  const isActive = (path) => {
+    if (path === '/') {
+      return location.pathname === '/';
+    }
+    return location.pathname === path || location.pathname.startsWith(path + '/');
+  };
+
   const getNavLinks = () => {
-    const links = [{ path: '/courses', label: t('nav.courses') }];
+    const links = [
+      { path: '/', label: t('nav.home'), icon: '🏠' }
+    ];
+    
+    links.push({ path: '/courses', label: t('nav.courses'), icon: '📚' });
+    
     if (isLoggedIn) {
-      links.push({ path: '/live', label: t('nav.live') });
-      links.push({ path: '/community', label: t('nav.community') });
+      links.push({ path: '/live', label: t('nav.live'), icon: '📺' });
+      links.push({ path: '/community', label: t('nav.community'), icon: '💬' });
       if (hasRole('Student')) {
-        links.push({ path: '/exams', label: t('nav.exams') });
+        links.push({ path: '/exams', label: t('nav.exams'), icon: '📝' });
       }
       if (isAdmin()) {
-        links.push({ path: '/admin/dashboard', label: t('nav.adminDashboard'), isAdmin: true });
+        links.push({ path: '/admin/dashboard', label: t('nav.adminDashboard'), icon: '⚙️', isAdmin: true });
       }
-      links.push({ path: '/dashboard', label: t('nav.dashboard') });
+      links.push({ path: '/dashboard', label: t('nav.dashboard'), icon: '📊' });
     }
     return links;
   };
@@ -147,15 +160,22 @@ export default function Navbar() {
 
   return (
     <nav className="top-nav">
-      <button className="brand-btn" onClick={() => navigate('/courses')}>
+      <button className="brand-btn" onClick={() => navigate('/')}>
         <span className="brand-icon">🎓</span>
         <span>Nas Academy</span>
       </button>
 
       <div className="nav-links">
         {navLinks.map((link) => (
-          <Link key={link.path} to={link.path} className={link.isAdmin ? 'admin-nav-link' : ''}>
-            <button>{link.label}</button>
+          <Link 
+            key={link.path} 
+            to={link.path} 
+            className={`${link.isAdmin ? 'admin-nav-link' : ''} ${isActive(link.path) ? 'active-link' : ''}`}
+          >
+            <button role="menuitem">
+              {link.icon && <span className="link-icon">{link.icon}</span>}
+              {link.label}
+            </button>
           </Link>
         ))}
       </div>
@@ -242,7 +262,12 @@ export default function Navbar() {
       {showMobileMenu && (
         <div className="mobile-menu">
           {navLinks.map((link) => (
-            <Link key={link.path} to={link.path} onClick={() => setShowMobileMenu(false)}>
+            <Link 
+              key={link.path} 
+              to={link.path} 
+              className={`${link.isAdmin ? 'admin-nav-link' : ''} ${isActive(link.path) ? 'active-link' : ''}`}
+              onClick={() => setShowMobileMenu(false)}
+            >
               {link.label}
             </Link>
           ))}

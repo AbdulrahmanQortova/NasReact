@@ -2,6 +2,8 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { courseService } from '../../../services/courseService';
+import editIcon from '../../../assets/images/edit.png';
+import deleteIcon from '../../../assets/images/delete.png';
 import './CourseSectionsManager.css';
 
 export default function CourseSectionsManager({ course, onClose, onSuccess }) {
@@ -190,16 +192,18 @@ export default function CourseSectionsManager({ course, onClose, onSuccess }) {
                     </div>
                     <div className="section-actions">
                       <button 
-                        className="edit-btn"
+                        className="action-circle edit-circle"
                         onClick={() => startEdit(section)}
+                        title={t('common.edit')}
                       >
-                        {t('common.edit')}
+                        <img src={editIcon} alt="edit" className="action-icon" />
                       </button>
                       <button 
-                        className="delete-btn"
+                        className="action-circle delete-circle"
                         onClick={() => handleDelete(section.id, section.title)}
+                        title={t('common.delete')}
                       >
-                        {t('common.delete')}
+                        <img src={deleteIcon} alt="delete" className="action-icon" />
                       </button>
                     </div>
                   </div>

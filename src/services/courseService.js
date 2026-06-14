@@ -125,8 +125,11 @@ class CourseService {
     return await api.post(`/Topics/${id}/icon`, formData, true);
   }
 
-  // ========== Sections Services ==========
-  async getCourseSections(courseId) {
+  // src/services/courseService.js
+
+// ========== Sections Services ==========
+
+async getCourseSections(courseId) {
   return await api.get(`/Courses/${courseId}/sections`);
 }
 
@@ -138,12 +141,17 @@ async createCourseSection(courseId, sectionData) {
   return await api.post(`/Courses/${courseId}/sections`, sectionData);
 }
 
-async updateCourseSection(sectionId, sectionData) {
-  return await api.put(`/CourseSections/${sectionId}`, sectionData);
+async updateCourseSection(courseId, sectionId, sectionData) {
+  const cleanData = {};
+  if (sectionData.title) cleanData.title = sectionData.title;
+  if (sectionData.order && sectionData.order > 0) cleanData.order = sectionData.order;
+  
+  return await api.put(`/Courses/${courseId}/sections/${sectionId}`, cleanData);
 }
 
 async deleteCourseSection(courseId, sectionId) {
-  return await api.delete(`/Courses/${courseId}/sections/${sectionId}`);
+  const response = await api.delete(`/Courses/${courseId}/sections/${sectionId}`);
+  return response;
 }
 }
 

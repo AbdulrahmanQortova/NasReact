@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { courseService } from '../../../services/courseService';
 import CreateCourseModal from './CreateCourseModal';
+import EditCourseModal from './EditCourseModal';
 import editIcon from '../../../assets/images/edit.png';
 import deleteIcon from '../../../assets/images/delete.png';
 import './CoursesManagement.css';
@@ -14,6 +15,8 @@ export default function CoursesManagement() {
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showCreateModal, setShowCreateModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [selectedCourse, setSelectedCourse] = useState(null);
   const isRTL = i18n.language === 'ar';
 
   useEffect(() => {
@@ -44,12 +47,13 @@ export default function CoursesManagement() {
     }
   };
 
-  const handleManageSections = (course) => {
-    navigate(`/admin/courses/${course.id}`);
+  const handleEditCourse = (course) => {
+    setSelectedCourse(course);
+    setShowEditModal(true);
   };
 
-  const handleEditCourse = (courseId) => {
-    navigate(`/admin/courses/${courseId}/edit`);
+  const handleManageSections = (course) => {
+    navigate(`/admin/courses/${course.id}`);
   };
 
   const getImageUrl = (thumbnailUrl) => {
@@ -125,7 +129,7 @@ export default function CoursesManagement() {
                 <div className="card-actions">
                   <button 
                     className="action-circle edit-circle"
-                    onClick={() => handleEditCourse(course.id)}
+                    onClick={() => handleEditCourse(course)}
                     title={t('common.edit')}
                   >
                     <img src={editIcon} alt="edit" className="action-icon" />
@@ -179,12 +183,29 @@ export default function CoursesManagement() {
         </div>
       )}
 
+      {/* Create Course Modal */}
       {showCreateModal && (
         <CreateCourseModal
           onClose={() => setShowCreateModal(false)}
           onSuccess={() => {
             fetchCourses();
             setShowCreateModal(false);
+          }}
+        />
+      )}
+
+      {/* Edit Course Modal */}
+      {showEditModal && selectedCourse && (
+        <EditCourseModal
+          course={selectedCourse}
+          onClose={() => {
+            setShowEditModal(false);
+            setSelectedCourse(null);
+          }}
+          onSuccess={() => {
+            setShowEditModal(false);
+            setSelectedCourse(null);
+            fetchCourses();
           }}
         />
       )}
