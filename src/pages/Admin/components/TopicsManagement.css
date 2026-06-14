@@ -1,0 +1,115 @@
+/* src/pages/Admin/components/TopicsManagement.css */
+
+.topics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 20px;
+}
+
+.topic-management-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 20px;
+  background: var(--surface-2);
+  border-radius: 16px;
+  transition: all 0.2s;
+}
+
+.topic-management-card:hover {
+  transform: translateY(-2px);
+  background: var(--surface);
+  border: 1px solid var(--primary);
+}
+
+.topic-icon-large {
+  width: 64px;
+  height: 64px;
+  border-radius: 16px;
+  background: rgba(88, 166, 255, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.topic-icon-large img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.topic-info-large {
+  flex: 1;
+}
+
+.topic-info-large h3 {
+  font-size: 18px;
+  margin-bottom: 6px;
+}
+
+.topic-info-large p {
+  color: var(--muted);
+  font-size: 13px;
+  margin-bottom: 8px;
+}
+
+.topic-stats {
+  font-size: 12px;
+  color: var(--primary);
+}
+
+.topic-actions-large {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.delete-btn {
+  padding: 6px 12px;
+  background: rgba(248, 81, 73, 0.15);
+  border: none;
+  border-radius: 6px;
+  color: var(--red);
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 600;
+  transition: all 0.2s;
+}
+
+.delete-btn:hover {
+  background: var(--red);
+  color: white;
+}
+
+/* RTL Support */
+[dir="rtl"] .topic-management-card {
+  text-align: right;
+}
+
+[dir="rtl"] .topic-actions-large {
+  margin-right: auto;
+  margin-left: 0;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .topics-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .topic-management-card {
+    flex-wrap: wrap;
+  }
+  
+  .topic-actions-large {
+    width: 100%;
+    justify-content: flex-end;
+  }
+  
+  [dir="rtl"] .topic-actions-large {
+    justify-content: flex-start;
+  }
+}

@@ -1,18 +1,22 @@
 // src/pages/Courses/components/CourseCard.jsx
+import { useTranslation } from 'react-i18next';
 import { authService } from '../../../services/authService';
 
-export default function CourseCard({ course, topicName, onRate, onDelete, onView }) {
-  const isAdmin = authService.isAdmin();
+export default function CourseCard({ course, topicName, onRate, onView, onEnroll }) {
+  const { t, i18n } = useTranslation();
+  const isLoggedIn = authService.isAuthenticated();
   const isStudent = authService.isStudent();
+  const isAdmin = authService.isAdmin();
+  const isEnrolled = course.isEnrolled || false;
+  const isRTL = i18n.language === 'ar';
 
-  // دالة لتحويل رقم المستوى إلى نص
   const getLevelName = (level) => {
     const levelMap = {
-      0: 'Beginner',
-      1: 'Intermediate',
-      2: 'Advanced'
+      0: t('courses.level.beginner'),
+      1: t('courses.level.intermediate'),
+      2: t('courses.level.advanced')
     };
-    return levelMap[level] || 'Beginner';
+    return levelMap[level] || t('courses.level.beginner');
   };
 
   const getImageUrl = (thumbnailUrl) => {
@@ -26,9 +30,9 @@ export default function CourseCard({ course, topicName, onRate, onDelete, onView
   const getLevelColor = (level) => {
     const levelName = getLevelName(level);
     switch (levelName) {
-      case 'Beginner': return 'level-beginner';
-      case 'Intermediate': return 'level-intermediate';
-      case 'Advanced': return 'level-advanced';
+      case t('courses.level.beginner'): return 'level-beginner';
+      case t('courses.level.intermediate'): return 'level-intermediate';
+      case t('courses.level.advanced'): return 'level-advanced';
       default: return 'level-beginner';
     }
   };
@@ -50,16 +54,21 @@ export default function CourseCard({ course, topicName, onRate, onDelete, onView
     return stars;
   };
 
-  // ✅ دالة لتنسيق عرض السعر
   const formatPrice = (price) => {
     const numPrice = Number(price);
-    if (isNaN(numPrice)) return 'Free';
-    if (numPrice <= 0) return 'Free';
+    if (isNaN(numPrice)) return t('courses.free');
+    if (numPrice <= 0) return t('courses.free');
     return `$${numPrice.toFixed(2)}`;
   };
 
+  const handleEnroll = () => {
+    if (onEnroll) {
+      onEnroll(course.id);
+    }
+  };
+
   return (
-    <div className="course-card">
+    <div className="course-card" dir={isRTL ? 'rtl' : 'ltr'}>
       <div className="course-card-image">
         {course.thumbnailUrl ? (
           <img 
@@ -92,11 +101,10 @@ export default function CourseCard({ course, topicName, onRate, onDelete, onView
             <span className="rating-value">({course.totalRatings || 0})</span>
           </div>
           <div className="course-duration">
-            ⏱️ {course.durationInMinutes} min
+            ⏱️ {course.durationInMinutes} {t('courses.duration')}
           </div>
         </div>
 
-        {/* ✅ عرض السعر بشكل صحيح */}
         <div className="course-price">
           <span className={course.price > 0 ? "price-value" : "price-free"}>
             {formatPrice(course.price)}
@@ -105,19 +113,29 @@ export default function CourseCard({ course, topicName, onRate, onDelete, onView
       </div>
 
       <div className="course-card-actions">
-        <button className="primary-btn" onClick={() => onView(course)}>
-          View Course
+        {/* View Course Button - Solid Background */}
+        <button className="view-btn" onClick={() => onView(course)}>
+          {t('courses.viewCourse')}
         </button>
         
-        {isStudent && (
-          <button className="secondary-btn" onClick={() => onRate(course)}>
-            ⭐ Rate
+        {/* Enroll Now Button - Solid Background */}
+        {isLoggedIn && !isEnrolled && (
+          <button className="enroll-btn" onClick={handleEnroll}>
+            {t('courses.enrollNow')}
           </button>
         )}
         
-        {isAdmin && (
-          <button className="danger-btn" onClick={() => onDelete(course.id)}>
-            🗑️ Delete
+        {/* Enrolled Button - Border only */}
+        {isLoggedIn && isEnrolled && (
+          <button className="enrolled-btn" disabled>
+            ✓ {t('courses.enrolled')}
+          </button>
+        )}
+        
+        {/* Rate Button - Border only */}
+        {isStudent && isEnrolled && (
+          <button className="rate-btn" onClick={() => onRate(course)}>
+            {t('courses.rate')}
           </button>
         )}
       </div>

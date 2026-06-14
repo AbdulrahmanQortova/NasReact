@@ -1,0 +1,173 @@
+/* src/pages/Admin/components/CoursesManagement.css */
+
+.management-container {
+  background: var(--surface);
+  border-radius: 20px;
+  padding: 24px;
+}
+
+.management-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.header-info h2 {
+  font-size: 20px;
+  margin-bottom: 4px;
+}
+
+.course-count {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.create-btn {
+  padding: 10px 20px;
+  background: linear-gradient(135deg, var(--primary), var(--purple));
+  border: none;
+  border-radius: 10px;
+  color: var(--bg);
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.create-btn:hover {
+  transform: translateY(-2px);
+}
+
+.courses-table-container {
+  overflow-x: auto;
+}
+
+.management-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.management-table th,
+.management-table td {
+  padding: 14px 12px;
+  text-align: left;
+  border-bottom: 1px solid var(--line);
+}
+
+.management-table th {
+  color: var(--primary);
+  font-weight: 600;
+}
+
+.table-thumbnail {
+  width: 50px;
+  height: 50px;
+  border-radius: 10px;
+  object-fit: cover;
+}
+
+.table-thumbnail-placeholder {
+  width: 50px;
+  height: 50px;
+  border-radius: 10px;
+  background: var(--surface-2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+}
+
+.level-badge {
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.level-beginner {
+  background: rgba(63, 185, 80, 0.15);
+  color: var(--green);
+}
+
+.level-intermediate {
+  background: rgba(210, 153, 34, 0.15);
+  color: var(--orange);
+}
+
+.level-advanced {
+  background: rgba(248, 81, 73, 0.15);
+  color: var(--red);
+}
+
+.price-value {
+  color: var(--primary);
+  font-weight: 600;
+}
+
+.price-free {
+  color: var(--green);
+  font-weight: 600;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+.edit-btn,
+.delete-btn {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.edit-btn {
+  background: rgba(88, 166, 255, 0.15);
+  color: var(--primary);
+}
+
+.edit-btn:hover {
+  background: var(--primary);
+  color: var(--bg);
+}
+
+.delete-btn {
+  background: rgba(248, 81, 73, 0.15);
+  color: var(--red);
+}
+
+.delete-btn:hover {
+  background: var(--red);
+  color: white;
+}
+
+.management-loading {
+  text-align: center;
+  padding: 40px;
+  color: var(--muted);
+}
+
+.empty-state {
+  text-align: center;
+  padding: 60px;
+  color: var(--muted);
+}
+
+.empty-state button {
+  margin-top: 16px;
+}
+
+/* RTL Support */
+[dir="rtl"] .management-table th,
+[dir="rtl"] .management-table td {
+  text-align: right;
+}
+
+[dir="rtl"] .action-buttons {
+  justify-content: flex-end;
+}

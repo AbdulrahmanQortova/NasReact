@@ -1,266 +1,255 @@
 // src/components/layout/Navbar.jsx
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 import { authService } from '../../services/authService';
 import './Navbar.css';
 
 export default function Navbar() {
+  const { t, i18n } = useTranslation();
   const [searchQuery, setSearchQuery] = useState('');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState(null);
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
+  const [showLanguageMenu, setShowLanguageMenu] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Check authentication status on mount and when route changes
+  // Languages list
+  const languages = [
+    { code: 'en', name: 'English', dir: 'ltr', icon: '🇬🇧' },
+    { code: 'ar', name: 'العربية', dir: 'rtl', icon: '🇸🇦' }
+  ];
+
+  const currentLanguage = i18n.language;
+
+  // Change language function
+  const changeLanguage = (langCode) => {
+    i18n.changeLanguage(langCode);
+    const lang = languages.find(l => l.code === langCode);
+    document.documentElement.dir = lang?.dir || 'ltr';
+    document.documentElement.lang = langCode;
+    setShowLanguageMenu(false);
+  };
+
+  // Debounce function for search
+  const debounce = (func, delay) => {
+    let timeoutId;
+    return (...args) => {
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(() => func(...args), delay);
+    };
+  };
+
   useEffect(() => {
     const checkAuth = () => {
       try {
-        // التحقق من وجود authService والوظائف
-        if (!authService || typeof authService.isAuthenticated !== 'function') {
-          console.error('authService.isAuthenticated is not a function');
-          setIsLoggedIn(false);
-          setUser(null);
-          return;
-        }
-        
         const loggedIn = authService.isAuthenticated();
         const currentUser = authService.getCurrentUser();
-        
-        console.log('=== Navbar Debug ===');
-        console.log('Is logged in:', loggedIn);
-        console.log('Current user:', currentUser);
-        console.log('Is admin?', authService.isAdmin?.());
-        console.log('===================');
-        
         setIsLoggedIn(loggedIn);
         setUser(currentUser);
-        
-        // If token expired, redirect to login
-        if (!loggedIn && location.pathname !== '/login' && location.pathname !== '/register') {
-          if (location.pathname !== '/' && !location.pathname.startsWith('/courses')) {
-            navigate('/login');
-          }
-        }
       } catch (error) {
         console.error('Error checking auth:', error);
         setIsLoggedIn(false);
         setUser(null);
       }
     };
-
     checkAuth();
-    
-    // Listen for storage changes (logout in other tabs)
     window.addEventListener('storage', checkAuth);
-    
     return () => window.removeEventListener('storage', checkAuth);
-  }, [location.pathname, navigate]);
+  }, []);
 
-  const handleLogout = () => {
-    try {
-      authService.logout();
-    } catch (error) {
-      console.error('Error during logout:', error);
+  // Read search query from URL when on courses page
+  useEffect(() => {
+    if (location.pathname === '/courses') {
+      const params = new URLSearchParams(location.search);
+      const searchParam = params.get('search');
+      if (searchParam) {
+        setSearchQuery(searchParam);
+      } else {
+        setSearchQuery('');
+      }
     }
-    setIsLoggedIn(false);
-    setUser(null);
-    setShowUserMenu(false);
+  }, [location]);
+
+  // Perform search navigation
+  const performSearch = useCallback((query) => {
+    if (query.trim()) {
+      navigate(`/courses?search=${encodeURIComponent(query.trim())}`);
+    } else {
+      navigate('/courses');
+    }
+  }, [navigate]);
+
+  // Debounced search function
+  const debouncedSearch = useCallback(
+    debounce((query) => {
+      performSearch(query);
+    }, 500),
+    [performSearch]
+  );
+
+  // Handle input change - search on typing
+  const handleInputChange = (e) => {
+    const value = e.target.value;
+    setSearchQuery(value);
+    debouncedSearch(value);
+  };
+
+  // Handle clear search
+  const clearSearch = () => {
+    setSearchQuery('');
     navigate('/courses');
   };
 
-  const handleLoginClick = () => {
-    navigate('/login');
-  };
-
-  const handleSearch = (e) => {
+  // Handle Enter key press
+  const handleKeyDown = (e) => {
     if (e.key === 'Enter' && searchQuery.trim()) {
-      navigate(`/courses?search=${encodeURIComponent(searchQuery)}`);
-      setSearchQuery('');
+      performSearch(searchQuery);
     }
   };
 
-  // Check user roles
+  const handleLogout = () => {
+    authService.logout();
+    setIsLoggedIn(false);
+    setUser(null);
+    navigate('/courses');
+  };
+
   const hasRole = (role) => {
     if (!user) return false;
-    if (!authService.hasRole) return user.role === role;
-    return authService.hasRole(role);
+    return user.role === role || user.userRole === role || user.roles?.includes(role);
   };
 
   const isAdmin = () => {
     if (!user) return false;
-    if (authService.isAdmin) return authService.isAdmin();
-    return user.role === 'Admin' || user.userRole === 'Admin';
+    return user.role === 'Admin' || user.userRole === 'Admin' || user.roles?.includes('Admin');
   };
 
-  // Determine which nav items to show based on roles
   const getNavLinks = () => {
-    const links = [
-      { path: '/courses', label: 'Courses', roles: ['all'] },
-    ];
-
+    const links = [{ path: '/courses', label: t('nav.courses') }];
     if (isLoggedIn) {
-      links.push(
-        { path: '/live', label: 'Live', roles: ['all-logged-in'] },
-        { path: '/community', label: 'Community', roles: ['all-logged-in'] }
-      );
-
+      links.push({ path: '/live', label: t('nav.live') });
+      links.push({ path: '/community', label: t('nav.community') });
       if (hasRole('Student')) {
-        links.push({ path: '/exams', label: 'Exams', roles: ['Student'] });
+        links.push({ path: '/exams', label: t('nav.exams') });
       }
-
       if (isAdmin()) {
-        links.push({ 
-          path: '/admin/dashboard', 
-          label: '⚙️ Admin Dashboard', 
-          roles: ['Admin'],
-          isAdmin: true 
-        });
+        links.push({ path: '/admin/dashboard', label: t('nav.adminDashboard'), isAdmin: true });
       }
-
-      links.push({ path: '/dashboard', label: 'Dashboard', roles: ['all-logged-in'] });
+      links.push({ path: '/dashboard', label: t('nav.dashboard') });
     }
-
     return links;
   };
 
   const navLinks = getNavLinks();
 
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (showUserMenu && !event.target.closest('.user-menu')) {
-        setShowUserMenu(false);
-      }
-    };
-    
-    document.addEventListener('click', handleClickOutside);
-    return () => document.removeEventListener('click', handleClickOutside);
-  }, [showUserMenu]);
-
   return (
-    <nav className="top-nav" role="navigation" aria-label="Main navigation">
-      <button className="brand-btn" onClick={() => navigate('/courses')} aria-label="Nas Academy Courses">
-        <span className="brand-icon" aria-hidden="true">NA</span>
+    <nav className="top-nav">
+      <button className="brand-btn" onClick={() => navigate('/courses')}>
+        <span className="brand-icon">🎓</span>
         <span>Nas Academy</span>
       </button>
 
-      <div className="nav-links" role="menubar">
+      <div className="nav-links">
         {navLinks.map((link) => (
           <Link key={link.path} to={link.path} className={link.isAdmin ? 'admin-nav-link' : ''}>
-            <button role="menuitem">{link.label}</button>
+            <button>{link.label}</button>
           </Link>
         ))}
       </div>
 
-      <div className="nav-search-wrap" role="search">
-        <input
-          type="search"
-          placeholder="🔍 Search courses..."
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          onKeyDown={handleSearch}
-          aria-label="Search courses"
-        />
+      {/* Search Box */}
+      <div className="nav-search-wrap">
+        <div className="search-wrapper">
+          <input
+            type="text"
+            placeholder={t('nav.search')}
+            value={searchQuery}
+            onChange={handleInputChange}
+            onKeyDown={handleKeyDown}
+            className="search-input"
+          />
+          {searchQuery && (
+            <button className="search-clear-btn" onClick={clearSearch} aria-label="Clear search">
+              ✕
+            </button>
+          )}
+        </div>
       </div>
 
       <div className="nav-actions">
-        <button className="ghost-btn" aria-label="Toggle language">
-          العربية
-        </button>
+        {/* Language Switcher */}
+        <div className="language-dropdown">
+          <button 
+            className="ghost-btn lang-btn" 
+            onClick={() => setShowLanguageMenu(!showLanguageMenu)}
+          >
+            {languages.find(l => l.code === currentLanguage)?.icon || '🌐'} {currentLanguage === 'ar' ? 'عربي' : 'English'}
+          </button>
+          {showLanguageMenu && (
+            <div className="language-menu">
+              {languages.map(lang => (
+                <button
+                  key={lang.code}
+                  onClick={() => changeLanguage(lang.code)}
+                  className={currentLanguage === lang.code ? 'active' : ''}
+                >
+                  <span>{lang.icon}</span>
+                  {lang.name}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
         
         {isLoggedIn ? (
           <>
-            <button className="icon-btn" aria-label="Notifications">
-              🔔
-              {user?.hasUnreadNotifications && (
-                <strong className="notification-badge">3</strong>
-              )}
-            </button>
-            
-            <button className="icon-btn" aria-label="Inbox">
-              ✉️
-            </button>
-
+            <button className="icon-btn">🔔</button>
+            <button className="icon-btn">✉️</button>
             <div className="user-menu">
-              <button 
-                className="user-menu-btn" 
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setShowUserMenu(!showUserMenu);
-                }}
-                aria-label="User menu"
-              >
+              <button className="user-menu-btn" onClick={() => setShowUserMenu(!showUserMenu)}>
                 <div className="user-avatar">
-                  {user?.profilePictureUrl ? (
-                    <img src={user.profilePictureUrl} alt={`${user.firstName} ${user.lastName}`} />
-                  ) : (
-                    <span>{user?.firstName?.charAt(0)}{user?.lastName?.charAt(0)}</span>
-                  )}
+                  <span>{user?.firstName?.charAt(0)}{user?.lastName?.charAt(0)}</span>
                 </div>
               </button>
-              
               {showUserMenu && (
                 <div className="user-dropdown">
                   <div className="user-info">
                     <strong>{user?.firstName} {user?.lastName}</strong>
                     <small>{user?.email}</small>
-                    <span className={`user-role ${isAdmin() ? 'admin-role' : 'student-role'}`}>
-                      {isAdmin() ? '👑 Administrator' : '🎓 Student'}
-                    </span>
                   </div>
                   <hr />
-                  <button onClick={() => {
-                    navigate('/profile');
-                    setShowUserMenu(false);
-                  }}>Profile</button>
-                  <button onClick={() => {
-                    navigate('/settings');
-                    setShowUserMenu(false);
-                  }}>Settings</button>
+                  <button onClick={() => navigate('/profile')}>{t('nav.profile')}</button>
+                  <button onClick={() => navigate('/settings')}>{t('nav.settings')}</button>
                   <hr />
-                  <button onClick={handleLogout} className="logout-btn">Logout</button>
+                  <button onClick={handleLogout} className="logout-btn">{t('nav.logout')}</button>
                 </div>
               )}
             </div>
           </>
         ) : (
           <>
-            <button className="ghost-btn" onClick={handleLoginClick}>
-              Login
-            </button>
-            <button className="primary-btn" onClick={() => navigate('/register')}>
-              Sign Up
-            </button>
+            <button className="ghost-btn" onClick={() => navigate('/login')}>{t('nav.login')}</button>
+            <button className="primary-btn" onClick={() => navigate('/register')}>{t('nav.signup')}</button>
           </>
         )}
 
-        <button 
-          className="icon-btn hamburger-btn" 
-          aria-label="Open menu" 
-          aria-expanded={showMobileMenu}
-          onClick={() => setShowMobileMenu(!showMobileMenu)}
-        >
-          ☰
-        </button>
+        <button className="hamburger-btn" onClick={() => setShowMobileMenu(!showMobileMenu)}>☰</button>
       </div>
 
       {showMobileMenu && (
         <div className="mobile-menu">
           {navLinks.map((link) => (
-            <Link 
-              key={link.path} 
-              to={link.path}
-              className={link.isAdmin ? 'admin-nav-link' : ''}
-              onClick={() => setShowMobileMenu(false)}
-            >
+            <Link key={link.path} to={link.path} onClick={() => setShowMobileMenu(false)}>
               {link.label}
             </Link>
           ))}
           {!isLoggedIn && (
             <>
-              <Link to="/login" onClick={() => setShowMobileMenu(false)}>Login</Link>
-              <Link to="/register" onClick={() => setShowMobileMenu(false)}>Sign Up</Link>
+              <Link to="/login" onClick={() => setShowMobileMenu(false)}>{t('nav.login')}</Link>
+              <Link to="/register" onClick={() => setShowMobileMenu(false)}>{t('nav.signup')}</Link>
             </>
           )}
         </div>

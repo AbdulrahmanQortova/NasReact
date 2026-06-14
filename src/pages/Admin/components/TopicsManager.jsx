@@ -1,12 +1,11 @@
 // src/pages/Admin/components/TopicsManager.jsx
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { courseService } from '../../../services/courseService';
 import './TopicsManager.css';
 
 export default function TopicsManager({ onClose, onSuccess }) {
-  const [topics, setTopics] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
+  const { t, i18n } = useTranslation();
   const [formData, setFormData] = useState({
     name: '',
     description: '',
@@ -14,22 +13,8 @@ export default function TopicsManager({ onClose, onSuccess }) {
   const [iconFile, setIconFile] = useState(null);
   const [iconPreview, setIconPreview] = useState(null);
   const [submitting, setSubmitting] = useState(false);
-
-  useEffect(() => {
-    fetchTopics();
-  }, []);
-
-  const fetchTopics = async () => {
-    setLoading(true);
-    try {
-      const response = await courseService.getAllTopics();
-      setTopics(response.data || response || []);
-    } catch (err) {
-      setError('Failed to load topics');
-    } finally {
-      setLoading(false);
-    }
-  };
+  const [error, setError] = useState('');
+  const isRTL = i18n.language === 'ar';
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -40,19 +25,20 @@ export default function TopicsManager({ onClose, onSuccess }) {
     const file = e.target.files[0];
     if (file) {
       if (file.size > 2 * 1024 * 1024) {
-        setError('Icon size must be less than 2MB');
+        setError(t('admin.topicsManager.iconSizeError'));
         return;
       }
       setIconFile(file);
       const previewUrl = URL.createObjectURL(file);
       setIconPreview(previewUrl);
+      setError('');
     }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!formData.name.trim()) {
-      setError('Topic name is required');
+      setError(t('admin.topicsManager.nameRequired'));
       return;
     }
 
@@ -69,65 +55,66 @@ export default function TopicsManager({ onClose, onSuccess }) {
         await courseService.uploadTopicIcon(newTopic.id, iconFile);
       }
 
-      setFormData({ name: '', description: '' });
-      setIconFile(null);
-      setIconPreview(null);
-      await fetchTopics();
       if (onSuccess) onSuccess();
+      onClose();
     } catch (err) {
-      setError(err.message || 'Failed to create topic');
+      setError(err.message || t('admin.topicsManager.createError'));
     } finally {
       setSubmitting(false);
     }
   };
 
-  const handleDeleteTopic = async (topicId, topicName) => {
-    if (!window.confirm(`Delete topic "${topicName}"? This may affect related courses.`)) return;
-    
-    try {
-      await courseService.deleteTopic(topicId);
-      await fetchTopics();
-    } catch (err) {
-      setError(err.message || 'Failed to delete topic');
-    }
-  };
-
   return (
     <div className="modal-overlay" onClick={onClose}>
-      <div className="topics-manager-modal" onClick={(e) => e.stopPropagation()}>
+      <div className="topics-manager-modal" onClick={(e) => e.stopPropagation()} dir={isRTL ? 'rtl' : 'ltr'}>
         <div className="modal-header">
-          <h2>🏷️ Manage Topics</h2>
+          <h2>{t('admin.topicsManager.title')}</h2>
           <button className="close-btn" onClick={onClose}>✕</button>
         </div>
 
         <div className="modal-body">
           {error && <div className="error-message">{error}</div>}
 
-          {/* Create Topic Form */}
-          <div className="create-topic-form">
-            <h3>Create New Topic</h3>
-            <form onSubmit={handleSubmit}>
-              <div className="form-row">
+          <form onSubmit={handleSubmit}>
+            {/* Two Columns Layout */}
+            <div className="form-two-columns">
+              {/* Left Column */}
+              <div className="form-column">
                 <div className="form-group">
-                  <label>Topic Name *</label>
+                  <label>{t('admin.topicsManager.topicName')} *</label>
                   <input
                     type="text"
                     name="name"
                     value={formData.name}
                     onChange={handleInputChange}
-                    placeholder="e.g., Programming, Design, Business"
+                    placeholder={t('admin.topicsManager.namePlaceholder')}
                     required
                   />
                 </div>
+
+                <div className="form-group full-width">
+                  <label>{t('admin.topicsManager.description')}</label>
+                  <textarea
+                    name="description"
+                    value={formData.description}
+                    onChange={handleInputChange}
+                    placeholder={t('admin.topicsManager.descriptionPlaceholder')}
+                    rows="4"
+                  />
+                </div>
+              </div>
+
+              {/* Right Column */}
+              <div className="form-column">
                 <div className="form-group">
-                  <label>Icon (Optional)</label>
+                  <label>{t('admin.topicsManager.icon')}</label>
                   <div className="icon-upload" onClick={() => document.getElementById('icon-input').click()}>
                     {iconPreview ? (
                       <img src={iconPreview} alt="Icon preview" />
                     ) : (
                       <div className="icon-placeholder">
                         <span>📷</span>
-                        <small>Upload icon</small>
+                        <small>{t('admin.topicsManager.uploadIcon')}</small>
                       </div>
                     )}
                     <input
@@ -138,59 +125,20 @@ export default function TopicsManager({ onClose, onSuccess }) {
                       style={{ display: 'none' }}
                     />
                   </div>
+                  <p className="icon-hint">{t('admin.topicsManager.iconHint')}</p>
                 </div>
               </div>
+            </div>
 
-              <div className="form-group">
-                <label>Description</label>
-                <textarea
-                  name="description"
-                  value={formData.description}
-                  onChange={handleInputChange}
-                  placeholder="Topic description..."
-                  rows="2"
-                />
-              </div>
-
-              <button type="submit" className="primary-btn" disabled={submitting}>
-                {submitting ? 'Creating...' : '+ Create Topic'}
+            <div className="form-actions">
+              <button type="button" className="secondary-btn" onClick={onClose}>
+                {t('common.cancel')}
               </button>
-            </form>
-          </div>
-
-          {/* Topics List */}
-          <div className="topics-list">
-            <h3>Existing Topics ({topics.length})</h3>
-            {loading ? (
-              <div className="loading-spinner">Loading...</div>
-            ) : topics.length === 0 ? (
-              <div className="empty-state">No topics yet. Create your first topic above.</div>
-            ) : (
-              <div className="topics-items">
-                {topics.map(topic => (
-                  <div key={topic.id} className="topic-item">
-                    <div className="topic-item-icon">
-                      {topic.iconUrl ? (
-                        <img src={topic.iconUrl} alt={topic.name} />
-                      ) : (
-                        <span>🏷️</span>
-                      )}
-                    </div>
-                    <div className="topic-item-info">
-                      <strong>{topic.name}</strong>
-                      {topic.description && <p>{topic.description}</p>}
-                    </div>
-                    <button 
-                      className="delete-btn"
-                      onClick={() => handleDeleteTopic(topic.id, topic.name)}
-                    >
-                      Delete
-                    </button>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
+              <button type="submit" className="primary-btn" disabled={submitting}>
+                {submitting ? t('common.creating') : t('admin.topicsManager.createBtn')}
+              </button>
+            </div>
+          </form>
         </div>
       </div>
     </div>
