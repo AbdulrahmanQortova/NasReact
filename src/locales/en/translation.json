@@ -127,6 +127,7 @@
     "titles": {
       "courses": "Courses Management",
       "topics": "Topics & Categories",
+      "learningPaths": "Learning Paths Management",
       "users": "Users Management",
       "reports": "Analytics & Reports",
       "settings": "Platform Settings"
@@ -134,6 +135,7 @@
     "descriptions": {
       "courses": "Create, edit, and manage all courses on the platform",
       "topics": "Organize courses by topics and categories",
+      "learningPaths": "Create and manage learning paths to guide students through structured courses",
       "users": "Manage students, instructors, and administrators",
       "reports": "View platform analytics and generate reports",
       "settings": "Configure platform settings and preferences"
@@ -153,10 +155,31 @@
       "minutes": "min",
       "edit": "Edit",
       "delete": "Delete",
-       "viewEditSections": "View and Edit Sections",
+      "viewEditSections": "View and Edit Sections",
       "loading": "Loading courses...",
       "confirmDelete": "Are you sure you want to delete this course?",
-      "deleteFailed": "Failed to delete course"
+      "deleteFailed": "Failed to delete course",
+      "createSuccess": "Course created successfully",
+      "updateSuccess": "Course updated successfully",
+      "deleteSuccess": "Course deleted successfully",
+      "createTitle": "Create New Course",
+      "courseTitle": "Course Title",
+      "titlePlaceholder": "e.g., React for Beginners",
+      "description": "Description",
+      "descriptionPlaceholder": "Course description...",
+      "selectTopic": "Select a topic",
+      "priceHint": "Leave 0 for free course",
+      "clickToUpload": "Click to upload thumbnail",
+      "imageHint": "PNG, JPG, GIF up to 5MB",
+      "imageSizeError": "Image size must be less than 5MB",
+      "imageTypeError": "Only JPG, PNG, GIF, and WEBP images are allowed",
+      "uploadFailed": "Failed to upload thumbnail",
+      "titleRequired": "Course title is required",
+      "topicRequired": "Please select a topic/category",
+      "createError": "Failed to create course",
+      "topicsLoadError": "Failed to load topics",
+      "noTopics": "No topics available. Please create a topic first.",
+      "createBtn": "Create Course"
     },
     "sidebar": {
       "courses": "Courses",
@@ -173,9 +196,11 @@
       "admin": "Admin",
       "administrator": "Administrator",
       "expand": "Expand sidebar",
-      "collapse": "Collapse sidebar"
+      "collapse": "Collapse sidebar",
+      "learningPaths": "Learning Paths",
+      "learningPathsDesc": "Manage learning paths"
     },
-     "topics": {
+    "topics": {
       "title": "All Topics",
       "total": "{{count}} topics total",
       "createNew": "Create New Topic",
@@ -186,9 +211,12 @@
       "delete": "Delete",
       "confirmDelete": "Delete topic \"{{name}}\"? This may affect related courses.",
       "deleteFailed": "Failed to delete topic",
-      "loading": "Loading topics..."
+      "loading": "Loading topics...",
+      "createSuccess": "Topic created successfully",
+      "updateSuccess": "Topic updated successfully",
+      "deleteSuccess": "Topic deleted successfully"
     },
-     "topicsManager": {
+    "topicsManager": {
       "title": "📁 Manage Topics",
       "createNew": "Create New Topic",
       "topicName": "Topic Name",
@@ -209,7 +237,7 @@
       "confirmDelete": "Delete topic \"{{name}}\"? This may affect related courses.",
       "iconHint": "Recommended size: 64x64px. PNG, JPG, GIF up to 2MB"
     },
-     "courseDetails": {
+    "courseDetails": {
       "loadError": "Failed to load course details",
       "notFound": "Course not found",
       "sections": "Course Sections",
@@ -256,6 +284,58 @@
       "icon": "Icon",
       "clickToUpload": "Click to upload icon",
       "iconHint": "Recommended size: 64x64px. PNG, JPG, GIF up to 2MB"
+    },
+    "learningPaths": {
+      "title": "Learning Paths",
+      "total": "{{count}} paths total",
+      "createNew": "Create New Path",
+      "createTitle": "Create Learning Path",
+      "noPaths": "No learning paths yet. Create your first path!",
+      "createFirst": "Create Path",
+      "steps": "steps",
+      "manageSteps": "Manage Steps",
+      "pathTitle": "Path Title",
+      "titlePlaceholder": "e.g., Web Development Roadmap",
+      "description": "Description",
+      "descriptionPlaceholder": "Path description...",
+      "topic": "Topic",
+      "selectTopic": "Select a topic (optional)",
+      "createBtn": "Create Path",
+      "createError": "Failed to create learning path",
+      "titleRequired": "Path title is required",
+      "confirmDelete": "Delete learning path \"{{title}}\"?",
+      "deleteFailed": "Failed to delete learning path",
+      "loading": "Loading learning paths...",
+      "createSuccess": "Learning path created successfully",
+      "updateSuccess": "Learning path updated successfully",
+      "deleteSuccess": "Learning path deleted successfully"
+    },
+    "steps": {
+      "title": "Manage Steps",
+      "addStep": "Add Step",
+      "addNewStep": "Add New Step",
+      "editStep": "Edit Step",
+      "course": "Course",
+      "selectCourse": "Select a course",
+      "order": "Order",
+      "orderHint": "Order in the learning path",
+      "addBtn": "Add Step",
+      "existingSteps": "Existing Steps",
+      "noSteps": "No steps yet. Add your first step!",
+      "courseRequired": "Please select a course",
+      "orderRequired": "Please enter a valid order",
+      "addSuccess": "Step added successfully",
+      "updateSuccess": "Step updated successfully",
+      "deleteSuccess": "Step deleted successfully",
+      "addError": "Failed to add step",
+      "updateError": "Failed to update step",
+      "deleteError": "Failed to delete step",
+      "loadError": "Failed to load steps",
+      "confirmDelete": "Delete step \"{{title}}\"?",
+      "unknownCourse": "Unknown Course",
+            "dragHint": "Drag and drop to reorder",
+      "reorderSuccess": "Steps reordered successfully",
+      "reorderError": "Failed to reorder steps"
     }
   },
   "home": {
@@ -277,5 +357,5 @@
     "getStartedNow": "Get Started Now",
     "exploreCourses": "Explore Courses",
     "getStarted": "Get Started"
-  } 
+  }
 }

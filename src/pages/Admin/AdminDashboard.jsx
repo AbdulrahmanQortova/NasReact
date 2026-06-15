@@ -6,6 +6,7 @@ import { authService } from '../../services/authService';
 import Sidebar from './components/Sidebar';
 import CoursesManagement from './components/CoursesManagement';
 import TopicsManagement from './components/TopicsManagement';
+import LearningPathsManagement from './components/LearningPathsManagement';
 import UsersManagement from './components/UsersManagement';
 import ReportsManagement from './components/ReportsManagement';
 import SettingsManagement from './components/SettingsManagement';
@@ -33,6 +34,8 @@ export default function AdminDashboard() {
         return <CoursesManagement />;
       case 'topics':
         return <TopicsManagement />;
+      case 'learningPaths':
+        return <LearningPathsManagement />;
       case 'users':
         return <UsersManagement />;
       case 'reports':

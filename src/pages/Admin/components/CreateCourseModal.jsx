@@ -1,9 +1,13 @@
 // src/pages/Admin/components/CreateCourseModal.jsx
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { courseService } from '../../../services/courseService';
+import { useToast } from '../../../context/ToastContext';
 import './CreateCourseModal.css';
 
 export default function CreateCourseModal({ onClose, onSuccess }) {
+  const { t, i18n } = useTranslation();
+  const toast = useToast();
   const [topics, setTopics] = useState([]);
   const [loadingTopics, setLoadingTopics] = useState(true);
   const [formData, setFormData] = useState({
@@ -18,6 +22,7 @@ export default function CreateCourseModal({ onClose, onSuccess }) {
   const [thumbnailPreview, setThumbnailPreview] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const isRTL = i18n.language === 'ar';
 
   useEffect(() => {
     fetchTopics();
@@ -30,7 +35,7 @@ export default function CreateCourseModal({ onClose, onSuccess }) {
       setTopics(topicsData);
     } catch (err) {
       console.error('Error fetching topics:', err);
-      setError('Failed to load topics');
+      setError(t('admin.courses.topicsLoadError'));
     } finally {
       setLoadingTopics(false);
     }
@@ -45,13 +50,13 @@ export default function CreateCourseModal({ onClose, onSuccess }) {
     const file = e.target.files[0];
     if (file) {
       if (file.size > 5 * 1024 * 1024) {
-        setError('Image size must be less than 5MB');
+        toast.error(t('admin.courses.imageSizeError'));
         return;
       }
       
       const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
       if (!allowedTypes.includes(file.type)) {
-        setError('Only JPG, PNG, GIF, and WEBP images are allowed');
+        toast.error(t('admin.courses.imageTypeError'));
         return;
       }
       
@@ -66,8 +71,6 @@ export default function CreateCourseModal({ onClose, onSuccess }) {
     if (!thumbnail) return null;
     
     try {
-      console.log('Uploading file:', thumbnail.name);
-      
       const formData = new FormData();
       formData.append('file', thumbnail);
       
@@ -83,11 +86,10 @@ export default function CreateCourseModal({ onClose, onSuccess }) {
       
       if (!response.ok) {
         const error = await response.json();
-        throw new Error(error.message || 'Upload failed');
+        throw new Error(error.message || t('admin.courses.uploadFailed'));
       }
       
       const result = await response.json();
-      console.log('Upload success:', result);
       return result;
     } catch (err) {
       console.error('Error uploading thumbnail:', err);
@@ -99,12 +101,12 @@ export default function CreateCourseModal({ onClose, onSuccess }) {
     e.preventDefault();
     
     if (!formData.title.trim()) {
-      setError('Course title is required');
+      setError(t('admin.courses.titleRequired'));
       return;
     }
     
     if (!formData.topicId) {
-      setError('Please select a topic/category');
+      setError(t('admin.courses.topicRequired'));
       return;
     }
     
@@ -118,7 +120,6 @@ export default function CreateCourseModal({ onClose, onSuccess }) {
         'Advanced': 2
       };
       
-      // ✅ إضافة Price إلى البيانات المرسلة
       const courseData = {
         Title: formData.title.trim(),
         Description: formData.description.trim() || null,
@@ -128,21 +129,18 @@ export default function CreateCourseModal({ onClose, onSuccess }) {
         Price: parseFloat(formData.price) || 0,
       };
       
-      console.log('Sending course data:', JSON.stringify(courseData, null, 2));
-      
       const course = await courseService.create(courseData);
-      console.log('Course created:', course);
       
       if (thumbnail && course.id) {
-        console.log('Uploading thumbnail for course:', course.id);
         await uploadThumbnail(course.id);
       }
       
+      toast.success(t('admin.courses.createSuccess'));
       onSuccess();
       onClose();
     } catch (err) {
       console.error('Create course error:', err);
-      setError(err.message || 'Failed to create course');
+      setError(err.message || t('admin.courses.createError'));
     } finally {
       setLoading(false);
     }
@@ -150,155 +148,157 @@ export default function CreateCourseModal({ onClose, onSuccess }) {
 
   return (
     <div className="modal-overlay" onClick={onClose}>
-      <div className="create-course-modal" onClick={(e) => e.stopPropagation()}>
+      <div className="create-course-modal" onClick={(e) => e.stopPropagation()} dir={isRTL ? 'rtl' : 'ltr'}>
         <div className="modal-header">
-          <h2>✨ Create New Course</h2>
+          <h2>✨ {t('admin.courses.createTitle')}</h2>
           <button className="close-btn" onClick={onClose}>✕</button>
         </div>
 
-        <form onSubmit={handleSubmit}>
+        <div className="modal-body">
           {error && <div className="error-message">{error}</div>}
 
-          <div className="form-group">
-            <label>Course Title *</label>
-            <input
-              type="text"
-              name="title"
-              value={formData.title}
-              onChange={handleChange}
-              placeholder="e.g., React for Beginners"
-              required
-            />
-          </div>
-
-          <div className="form-group">
-            <label>Description (Optional)</label>
-            <textarea
-              name="description"
-              value={formData.description}
-              onChange={handleChange}
-              placeholder="Course description..."
-              rows="4"
-            />
-          </div>
-
-          <div className="form-row">
+          <form onSubmit={handleSubmit}>
             <div className="form-group">
-              <label>Level *</label>
-              <select name="level" value={formData.level} onChange={handleChange} required>
-                <option value="Beginner">🌱 Beginner</option>
-                <option value="Intermediate">📘 Intermediate</option>
-                <option value="Advanced">🚀 Advanced</option>
-              </select>
-            </div>
-
-            <div className="form-group">
-              <label>Duration (minutes) *</label>
+              <label>{t('admin.courses.courseTitle')} *</label>
               <input
-                type="number"
-                name="durationInMinutes"
-                value={formData.durationInMinutes}
+                type="text"
+                name="title"
+                value={formData.title}
                 onChange={handleChange}
-                min="1"
+                placeholder={t('admin.courses.titlePlaceholder')}
                 required
               />
             </div>
-          </div>
-
-          <div className="form-row">
-            <div className="form-group">
-              <label>Topic / Category *</label>
-              <select 
-                name="topicId" 
-                value={formData.topicId} 
-                onChange={handleChange}
-                disabled={loadingTopics}
-                required
-              >
-                <option value="">Select a topic</option>
-                {topics.map(topic => (
-                  <option key={topic.id} value={topic.id}>
-                    {topic.iconUrl ? '📁 ' : '🏷️ '} {topic.name}
-                  </option>
-                ))}
-              </select>
-              {loadingTopics && <small>Loading topics...</small>}
-              {topics.length === 0 && !loadingTopics && (
-                <small className="error-text">No topics available. Please create a topic first.</small>
-              )}
-            </div>
 
             <div className="form-group">
-              <label>Price ($)</label>
-              <input
-                type="number"
-                name="price"
-                value={formData.price}
+              <label>{t('admin.courses.description')}</label>
+              <textarea
+                name="description"
+                value={formData.description}
                 onChange={handleChange}
-                min="0"
-                step="0.01"
-                placeholder="0.00"
+                placeholder={t('admin.courses.descriptionPlaceholder')}
+                rows="4"
               />
-              <small>Leave 0 for free course</small>
             </div>
-          </div>
 
-          <div className="form-group">
-            <label>Thumbnail Image (Optional)</label>
-            <div 
-              className="thumbnail-upload" 
-              onClick={() => document.getElementById('thumbnail-input').click()}
-              onDragOver={(e) => e.preventDefault()}
-              onDrop={(e) => {
-                e.preventDefault();
-                const file = e.dataTransfer.files[0];
-                if (file) handleThumbnailChange({ target: { files: [file] } });
-              }}
-            >
-              {thumbnailPreview ? (
-                <img src={thumbnailPreview} alt="Thumbnail preview" />
-              ) : (
-                <div className="upload-placeholder">
-                  <span>📸</span>
-                  <p>Click or drag to upload thumbnail</p>
-                  <small>PNG, JPG, GIF up to 5MB</small>
-                </div>
-              )}
-              <input
-                id="thumbnail-input"
-                type="file"
-                accept="image/*"
-                onChange={handleThumbnailChange}
-                style={{ display: 'none' }}
-              />
+            <div className="form-row">
+              <div className="form-group">
+                <label>{t('admin.courses.level')} *</label>
+                <select name="level" value={formData.level} onChange={handleChange} required>
+                  <option value="Beginner">🌱 {t('courses.level.beginner')}</option>
+                  <option value="Intermediate">📘 {t('courses.level.intermediate')}</option>
+                  <option value="Advanced">🚀 {t('courses.level.advanced')}</option>
+                </select>
+              </div>
+
+              <div className="form-group">
+                <label>{t('admin.courses.duration')} *</label>
+                <input
+                  type="number"
+                  name="durationInMinutes"
+                  value={formData.durationInMinutes}
+                  onChange={handleChange}
+                  min="1"
+                  required
+                />
+              </div>
             </div>
-            {thumbnailPreview && (
-              <button 
-                type="button"
-                className="remove-thumbnail-btn"
-                onClick={() => {
-                  setThumbnail(null);
-                  setThumbnailPreview(null);
+
+            <div className="form-row">
+              <div className="form-group">
+                <label>{t('admin.courses.topic')} *</label>
+                <select 
+                  name="topicId" 
+                  value={formData.topicId} 
+                  onChange={handleChange}
+                  disabled={loadingTopics}
+                  required
+                >
+                  <option value="">{t('admin.courses.selectTopic')}</option>
+                  {topics.map(topic => (
+                    <option key={topic.id} value={topic.id}>
+                      {topic.iconUrl ? '📁 ' : '🏷️ '} {topic.name}
+                    </option>
+                  ))}
+                </select>
+                {loadingTopics && <small>{t('common.loading')}</small>}
+                {topics.length === 0 && !loadingTopics && (
+                  <small className="error-text">{t('admin.courses.noTopics')}</small>
+                )}
+              </div>
+
+              <div className="form-group">
+                <label>{t('admin.courses.price')}</label>
+                <input
+                  type="number"
+                  name="price"
+                  value={formData.price}
+                  onChange={handleChange}
+                  min="0"
+                  step="0.01"
+                  placeholder="0.00"
+                />
+                <small>{t('admin.courses.priceHint')}</small>
+              </div>
+            </div>
+
+            <div className="form-group">
+              <label>{t('admin.courses.thumbnail')}</label>
+              <div 
+                className="thumbnail-upload" 
+                onClick={() => document.getElementById('thumbnail-input').click()}
+                onDragOver={(e) => e.preventDefault()}
+                onDrop={(e) => {
+                  e.preventDefault();
+                  const file = e.dataTransfer.files[0];
+                  if (file) handleThumbnailChange({ target: { files: [file] } });
                 }}
               >
-                Remove image
-              </button>
-            )}
-          </div>
+                {thumbnailPreview ? (
+                  <img src={thumbnailPreview} alt="Thumbnail preview" />
+                ) : (
+                  <div className="upload-placeholder">
+                    <span>📸</span>
+                    <p>{t('admin.courses.clickToUpload')}</p>
+                    <small>{t('admin.courses.imageHint')}</small>
+                  </div>
+                )}
+                <input
+                  id="thumbnail-input"
+                  type="file"
+                  accept="image/*"
+                  onChange={handleThumbnailChange}
+                  style={{ display: 'none' }}
+                />
+              </div>
+              {thumbnailPreview && (
+                <button 
+                  type="button"
+                  className="remove-thumbnail-btn"
+                  onClick={() => {
+                    setThumbnail(null);
+                    setThumbnailPreview(null);
+                  }}
+                >
+                  {t('common.remove')}
+                </button>
+              )}
+            </div>
 
-          <div className="modal-actions">
-            <button type="button" className="secondary-btn" onClick={onClose}>
-              Cancel
-            </button>
-            <button 
-              type="submit" 
-              className="primary-btn" 
-              disabled={loading || topics.length === 0}
-            >
-              {loading ? '⏳ Creating...' : '✨ Create Course'}
-            </button>
-          </div>
-        </form>
+            <div className="modal-actions">
+              <button type="button" className="secondary-btn" onClick={onClose}>
+                {t('common.cancel')}
+              </button>
+              <button 
+                type="submit" 
+                className="primary-btn" 
+                disabled={loading || topics.length === 0}
+              >
+                {loading ? t('common.creating') : t('admin.courses.createBtn')}
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
     </div>
   );

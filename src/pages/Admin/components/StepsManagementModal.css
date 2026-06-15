@@ -1,0 +1,512 @@
+/* src/pages/Admin/components/StepsManagementModal.css */
+
+/* Modal Container */
+.steps-modal {
+  background: var(--surface);
+  border: 1px solid rgba(88, 166, 255, 0.2);
+  border-radius: 24px;
+  width: 90%;
+  max-width: 650px;
+  max-height: 85vh;
+  overflow: hidden;
+  animation: slideUp 0.3s ease;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--line);
+}
+
+.modal-header h2 {
+  font-size: 20px;
+  font-weight: 700;
+  background: linear-gradient(135deg, var(--primary), var(--purple));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.close-btn {
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--muted);
+  transition: all 0.2s;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+.close-btn:hover {
+  background: rgba(248, 81, 73, 0.15);
+  border-color: var(--red);
+  color: var(--red);
+}
+
+.modal-body {
+  padding: 24px;
+  max-height: calc(85vh - 80px);
+  overflow-y: auto;
+}
+
+.modal-body.loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 300px;
+}
+
+/* Add Step Button */
+.add-step-btn {
+  width: 100%;
+  padding: 12px;
+  background: linear-gradient(135deg, var(--primary), var(--purple));
+  border: none;
+  border-radius: 12px;
+  color: var(--bg);
+  font-weight: 600;
+  cursor: pointer;
+  margin-bottom: 20px;
+  transition: all 0.2s;
+}
+
+.add-step-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(88, 166, 255, 0.3);
+}
+
+/* Step Form */
+.step-form {
+  background: var(--surface-2);
+  border-radius: 16px;
+  padding: 20px;
+  margin-bottom: 24px;
+}
+
+.step-form h3 {
+  margin-bottom: 16px;
+  color: var(--primary);
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.form-group label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.form-group select,
+.form-group input {
+  padding: 10px 12px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  color: var(--text);
+  font-size: 14px;
+  transition: all 0.2s;
+}
+
+.form-group select:focus,
+.form-group input:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px rgba(88, 166, 255, 0.1);
+}
+
+.form-group small {
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+/* Steps List */
+.steps-list {
+  margin-top: 8px;
+}
+
+.steps-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--line);
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.steps-header h3 {
+  font-size: 16px;
+  color: var(--text);
+  font-weight: 600;
+  margin: 0;
+}
+
+.drag-hint {
+  font-size: 11px;
+  color: var(--muted);
+}
+
+/* Steps Items Container */
+.steps-items {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-height: 400px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+/* Custom Scrollbar - Improved */
+.steps-items::-webkit-scrollbar {
+  width: 6px;
+}
+
+.steps-items::-webkit-scrollbar-track {
+  background: var(--surface-2);
+  border-radius: 10px;
+}
+
+.steps-items::-webkit-scrollbar-thumb {
+  background: var(--primary);
+  border-radius: 10px;
+  transition: background 0.2s;
+}
+
+.steps-items::-webkit-scrollbar-thumb:hover {
+  background: var(--primary-hover);
+}
+
+/* Step Item - With Drag and Drop */
+.step-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  background: var(--surface-2);
+  border-radius: 14px;
+  transition: all 0.2s;
+  cursor: grab;
+  user-select: none;
+}
+
+.step-item:active {
+  cursor: grabbing;
+}
+
+.step-item:hover {
+  background: var(--surface);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Drag and Drop States */
+.step-item.dragging {
+  opacity: 0.4;
+  cursor: grabbing;
+}
+
+.step-item.drag-over {
+  border: 2px dashed var(--primary);
+  background: rgba(88, 166, 255, 0.1);
+  transform: scale(1.01);
+}
+
+/* Drag Handle */
+.drag-handle {
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  color: var(--muted);
+  cursor: grab;
+  flex-shrink: 0;
+  transition: color 0.2s;
+}
+
+.drag-handle:hover {
+  color: var(--primary);
+}
+
+.drag-handle:active {
+  cursor: grabbing;
+}
+
+/* Step Order Badge */
+.step-order {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: rgba(88, 166, 255, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--primary);
+  flex-shrink: 0;
+}
+
+/* Step Info */
+.step-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.step-info strong {
+  display: block;
+  font-size: 14px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Step Actions */
+.step-actions {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+/* Action Buttons */
+.action-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.action-btn:hover {
+  transform: scale(1.1);
+}
+
+.edit-action {
+  background: var(--primary);
+  box-shadow: 0 2px 8px rgba(88, 166, 255, 0.4);
+}
+
+.edit-action:hover {
+  background: var(--primary-hover);
+}
+
+.delete-action {
+  background: var(--red);
+  box-shadow: 0 2px 8px rgba(248, 81, 73, 0.4);
+}
+
+.delete-action:hover {
+  background: #e03a32;
+}
+
+.action-icon {
+  width: 16px;
+  height: 16px;
+  filter: brightness(0) invert(1);
+}
+
+/* Error Message */
+.error-message {
+  background: rgba(248, 81, 73, 0.1);
+  border: 1px solid var(--red);
+  border-radius: 12px;
+  padding: 12px 16px;
+  margin-bottom: 20px;
+  color: #ff8a80;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.error-message::before {
+  content: "⚠️";
+}
+
+/* Empty State */
+.empty-state {
+  text-align: center;
+  padding: 40px;
+  color: var(--muted);
+  background: var(--surface-2);
+  border-radius: 14px;
+}
+
+/* Spinner */
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid var(--line);
+  border-top-color: var(--primary);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 16px;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Animations */
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* RTL Support */
+[dir="rtl"] .step-item:hover {
+  transform: translateX(-4px);
+}
+
+[dir="rtl"] .step-actions {
+  justify-content: flex-start;
+}
+
+[dir="rtl"] .drag-handle {
+  order: 3;
+}
+
+[dir="rtl"] .step-order {
+  order: 2;
+}
+
+[dir="rtl"] .step-info {
+  order: 1;
+  text-align: right;
+}
+
+[dir="rtl"] .steps-items {
+  padding-right: 0;
+  padding-left: 4px;
+}
+
+[dir="rtl"] .step-actions {
+  justify-content: flex-start;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .steps-modal {
+    width: 95%;
+  }
+  
+  .modal-header {
+    padding: 16px 20px;
+  }
+  
+  .modal-header h2 {
+    font-size: 16px;
+  }
+  
+  .modal-body {
+    padding: 20px;
+  }
+  
+  .step-item {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  
+  .drag-handle {
+    order: 1;
+  }
+  
+  .step-order {
+    order: 2;
+  }
+  
+  .step-info {
+    order: 3;
+    flex: 1 1 100%;
+    margin-top: 4px;
+  }
+  
+  .step-info strong {
+    white-space: normal;
+    word-break: break-word;
+  }
+  
+  .step-actions {
+    order: 4;
+    width: 100%;
+    justify-content: flex-end;
+  }
+  
+  .steps-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .drag-hint {
+    font-size: 10px;
+  }
+  
+  .form-actions {
+    flex-direction: column;
+  }
+  
+  .secondary-btn,
+  .primary-btn {
+    width: 100%;
+    text-align: center;
+  }
+  
+  /* RTL Responsive */
+  [dir="rtl"] .step-actions {
+    justify-content: flex-start;
+  }
+  
+  [dir="rtl"] .drag-handle {
+    order: 1;
+  }
+  
+  [dir="rtl"] .step-order {
+    order: 2;
+  }
+  
+  [dir="rtl"] .step-info {
+    order: 3;
+  }
+  
+  [dir="rtl"] .step-actions {
+    order: 4;
+  }
+}

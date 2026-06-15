@@ -7,9 +7,11 @@ import CreateCourseModal from './CreateCourseModal';
 import EditCourseModal from './EditCourseModal';
 import editIcon from '../../../assets/images/edit.png';
 import deleteIcon from '../../../assets/images/delete.png';
+import { useToast } from '../../../context/ToastContext';
 import './CoursesManagement.css';
 
 export default function CoursesManagement() {
+  const toast = useToast();
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
   const [courses, setCourses] = useState([]);
@@ -41,9 +43,10 @@ export default function CoursesManagement() {
     try {
       await courseService.delete(courseId);
       await fetchCourses();
+      toast.success(t('admin.courses.deleteSuccess'));
     } catch (error) {
       console.error('Error deleting course:', error);
-      alert(t('admin.courses.deleteFailed'));
+      toast.error(t('admin.courses.deleteFailed'));
     }
   };
 

@@ -6,10 +6,12 @@ import TopicsManager from './TopicsManager';
 import EditTopicModal from './EditTopicModal';
 import editIcon from '../../../assets/images/edit.png';
 import deleteIcon from '../../../assets/images/delete.png';
+import { useToast } from '../../../context/ToastContext';
 import './TopicsManagement.css';
 
 export default function TopicsManagement() {
   const { t, i18n } = useTranslation();
+  const toast = useToast();
   const [topics, setTopics] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showTopicsManager, setShowTopicsManager] = useState(false);
@@ -29,6 +31,7 @@ export default function TopicsManagement() {
       setTopics(topicsData);
     } catch (error) {
       console.error('Error fetching topics:', error);
+      toast.error(t('admin.topics.loadError'));
     } finally {
       setLoading(false);
     }
@@ -39,9 +42,10 @@ export default function TopicsManagement() {
     try {
       await courseService.deleteTopic(topicId);
       await fetchTopics();
+      toast.success(t('admin.topics.deleteSuccess'));
     } catch (error) {
       console.error('Error deleting topic:', error);
-      alert(t('admin.topics.deleteFailed'));
+      toast.error(t('admin.topics.deleteFailed'));
     }
   };
 
@@ -85,7 +89,6 @@ export default function TopicsManagement() {
         <div className="topics-grid">
           {topics.map(topic => (
             <div key={topic.id} className="topic-management-card">
-              {/* Card Image with overlay */}
               <div className="topic-card-image-wrapper">
                 <div className="topic-icon-large">
                   {topic.iconUrl ? (
@@ -95,7 +98,6 @@ export default function TopicsManagement() {
                   )}
                 </div>
                 
-                {/* Action Buttons - Circles like courses */}
                 <div className="topic-card-actions">
                   <button 
                     className="action-circle edit-circle"
@@ -114,7 +116,6 @@ export default function TopicsManagement() {
                 </div>
               </div>
 
-              {/* Card Content */}
               <div className="topic-card-content">
                 <h3 className="topic-card-title">{topic.name}</h3>
                 <p className="topic-card-description">
@@ -129,18 +130,17 @@ export default function TopicsManagement() {
         </div>
       )}
 
-      {/* Create Topic Modal */}
       {showTopicsManager && (
         <TopicsManager
           onClose={() => setShowTopicsManager(false)}
           onSuccess={() => {
             fetchTopics();
             setShowTopicsManager(false);
+            toast.success(t('admin.topics.createSuccess'));
           }}
         />
       )}
 
-      {/* Edit Topic Modal */}
       {showEditModal && selectedTopic && (
         <EditTopicModal
           topic={selectedTopic}
@@ -152,6 +152,7 @@ export default function TopicsManagement() {
             setShowEditModal(false);
             setSelectedTopic(null);
             fetchTopics();
+            toast.success(t('admin.topics.updateSuccess'));
           }}
         />
       )}

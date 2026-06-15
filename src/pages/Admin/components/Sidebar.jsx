@@ -20,6 +20,7 @@ export default function Sidebar({ activeTab, onTabChange }) {
   const menuItems = [
     { id: 'courses', label: t('admin.sidebar.courses'), icon: '📚', description: t('admin.sidebar.coursesDesc') },
     { id: 'topics', label: t('admin.sidebar.topics'), icon: '🏷️', description: t('admin.sidebar.topicsDesc') },
+    { id: 'learningPaths', label: t('admin.sidebar.learningPaths'), icon: '🛤️', description: t('admin.sidebar.learningPathsDesc') },
     { id: 'users', label: t('admin.sidebar.users'), icon: '👥', description: t('admin.sidebar.usersDesc') },
     { id: 'reports', label: t('admin.sidebar.reports'), icon: '📊', description: t('admin.sidebar.reportsDesc') },
     { id: 'settings', label: t('admin.sidebar.settings'), icon: '⚙️', description: t('admin.sidebar.settingsDesc') },
@@ -50,7 +51,6 @@ export default function Sidebar({ activeTab, onTabChange }) {
   return (
     <aside className={`admin-sidebar ${collapsed ? 'collapsed' : ''}`} dir={isRTL ? 'rtl' : 'ltr'}>
       <div className="sidebar-header">
-        {/* */}
         {!collapsed && (
           <div className="sidebar-logo">
             <span className="logo-icon">🎓</span>
