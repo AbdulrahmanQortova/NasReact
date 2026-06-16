@@ -276,100 +276,200 @@
   transform: none;
 }
 
-/* Sections List */
-.sections-list {
+/* ============================================
+   Modern Sections List with Drag and Drop
+   ============================================ */
+
+.sections-list-modern {
+  margin-top: 8px;
+}
+
+.sections-header-modern {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--line);
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.sections-header-modern h3 {
+  font-size: 16px;
+  color: var(--text);
+  font-weight: 600;
+  margin: 0;
+}
+
+.drag-hint {
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.sections-items-modern {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 10px;
+  max-height: 400px;
+  overflow-y: auto;
+  padding-right: 4px;
 }
 
-.section-card {
+/* Custom Scrollbar */
+.sections-items-modern::-webkit-scrollbar {
+  width: 6px;
+}
+
+.sections-items-modern::-webkit-scrollbar-track {
   background: var(--surface-2);
-  border-radius: 16px;
-  overflow: hidden;
-  transition: all 0.2s;
+  border-radius: 10px;
 }
 
-.section-card:hover {
-  transform: translateX(4px);
-  border-left: 3px solid var(--primary);
+.sections-items-modern::-webkit-scrollbar-thumb {
+  background: var(--primary);
+  border-radius: 10px;
 }
 
-[dir="rtl"] .section-card:hover {
-  transform: translateX(-4px);
-  border-left: none;
-  border-right: 3px solid var(--primary);
+.sections-items-modern::-webkit-scrollbar-thumb:hover {
+  background: var(--primary-hover);
 }
 
-.section-header {
+/* Section Item - Modern with Drag and Drop */
+.section-item-modern {
   display: flex;
   align-items: center;
-  gap: 16px;
-  padding: 16px 20px;
+  gap: 12px;
+  padding: 12px 16px;
+  background: var(--surface-2);
+  border-radius: 14px;
+  transition: all 0.2s;
+  cursor: grab;
+  user-select: none;
 }
 
-.section-order-badge {
-  width: 40px;
-  height: 40px;
-  border-radius: 12px;
+.section-item-modern:active {
+  cursor: grabbing;
+}
+
+.section-item-modern:hover {
+  background: var(--surface);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.section-item-modern.dragging {
+  opacity: 0.4;
+  cursor: grabbing;
+}
+
+.section-item-modern.drag-over {
+  border: 2px dashed var(--primary);
+  background: rgba(88, 166, 255, 0.1);
+  transform: scale(1.01);
+}
+
+/* Drag Handle */
+.drag-handle {
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  color: var(--muted);
+  cursor: grab;
+  flex-shrink: 0;
+  transition: color 0.2s;
+}
+
+.drag-handle:hover {
+  color: var(--primary);
+}
+
+.drag-handle:active {
+  cursor: grabbing;
+}
+
+.section-order-modern {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
   background: rgba(88, 166, 255, 0.15);
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: 700;
-  font-size: 16px;
+  font-size: 14px;
   color: var(--primary);
   flex-shrink: 0;
 }
 
-.section-title {
+.section-info-modern {
   flex: 1;
+  min-width: 0;
 }
 
-.section-title h3 {
-  font-size: 16px;
-  font-weight: 600;
-  margin: 0;
+.section-info-modern strong {
+  display: block;
+  font-size: 14px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.section-actions {
+/* Action Buttons - Circles with Images */
+.section-actions-modern {
   display: flex;
-  gap: 8px;
+  gap: 6px;
   flex-shrink: 0;
 }
 
-.edit-section-btn,
-.delete-section-btn {
-  width: 34px;
-  height: 34px;
-  border-radius: 8px;
+.action-circle {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
   border: none;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 16px;
   transition: all 0.2s;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
-.edit-section-btn {
-  background: rgba(88, 166, 255, 0.15);
-  color: var(--primary);
+.action-circle:hover {
+  transform: scale(1.1);
 }
 
-.edit-section-btn:hover {
+.edit-circle {
   background: var(--primary);
-  color: var(--bg);
 }
 
-.delete-section-btn {
-  background: rgba(248, 81, 73, 0.15);
-  color: var(--red);
+.edit-circle:hover {
+  background: var(--primary-hover);
 }
 
-.delete-section-btn:hover {
+.delete-circle {
   background: var(--red);
-  color: white;
+}
+
+.delete-circle:hover {
+  background: #e03a32;
+}
+
+.lessons-circle {
+  background: var(--purple);
+}
+
+.lessons-circle:hover {
+  background: #b388ff;
+}
+
+.action-icon {
+  width: 16px;
+  height: 16px;
+  filter: brightness(0) invert(1);
+  display: block;
 }
 
 /* No Sections */
@@ -421,7 +521,52 @@
   to { transform: rotate(360deg); }
 }
 
-/* Responsive */
+/* ============================================
+   RTL Support
+   ============================================ */
+
+[dir="rtl"] .section-item-modern:hover {
+  transform: translateX(-4px);
+}
+
+[dir="rtl"] .section-actions-modern {
+  justify-content: flex-start;
+}
+
+[dir="rtl"] .sections-items-modern {
+  padding-right: 0;
+  padding-left: 4px;
+}
+
+[dir="rtl"] .drag-handle {
+  order: 3;
+}
+
+[dir="rtl"] .section-order-modern {
+  order: 2;
+}
+
+[dir="rtl"] .section-info-modern {
+  order: 1;
+  text-align: right;
+}
+
+[dir="rtl"] .course-info-header {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .course-meta-details {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .form-actions {
+  justify-content: flex-start;
+}
+
+/* ============================================
+   Responsive
+   ============================================ */
+
 @media (max-width: 768px) {
   .course-info-header {
     flex-direction: column;
@@ -462,5 +607,76 @@
   
   .add-section-btn {
     width: 100%;
+  }
+}
+
+@media (max-width: 640px) {
+  .section-item-modern {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  
+  .drag-handle {
+    order: 1;
+  }
+  
+  .section-order-modern {
+    order: 2;
+  }
+  
+  .section-info-modern {
+    order: 3;
+    flex: 1 1 100%;
+    margin-top: 2px;
+  }
+  
+  .section-info-modern strong {
+    white-space: normal;
+  }
+  
+  .section-actions-modern {
+    order: 4;
+    width: 100%;
+    justify-content: flex-end;
+    gap: 8px;
+  }
+  
+  .sections-header-modern {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .drag-hint {
+    font-size: 10px;
+  }
+  
+  .modal-actions {
+    flex-direction: column;
+  }
+  
+  .secondary-btn,
+  .primary-btn {
+    width: 100%;
+    text-align: center;
+  }
+  
+  [dir="rtl"] .section-actions-modern {
+    justify-content: flex-start;
+  }
+  
+  [dir="rtl"] .drag-handle {
+    order: 1;
+  }
+  
+  [dir="rtl"] .section-order-modern {
+    order: 2;
+  }
+  
+  [dir="rtl"] .section-info-modern {
+    order: 3;
+  }
+  
+  [dir="rtl"] .section-actions-modern {
+    order: 4;
   }
 }

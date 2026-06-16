@@ -153,6 +153,33 @@ async deleteCourseSection(courseId, sectionId) {
   const response = await api.delete(`/Courses/${courseId}/sections/${sectionId}`);
   return response;
 }
+
+
+// ========== Lessons Services ==========
+
+async getLessons(sectionId) {
+  return await api.get(`/sections/${sectionId}/lessons`);
 }
+
+async getLessonById(sectionId, lessonId) {
+  return await api.get(`/sections/${sectionId}/lessons/${lessonId}`);
+}
+
+async createLesson(sectionId, lessonData) {
+  return await api.post(`/sections/${sectionId}/lessons`, lessonData);
+}
+
+async updateLesson(sectionId, lessonId, lessonData) {
+  return await api.put(`/sections/${sectionId}/lessons/${lessonId}`, lessonData);
+}
+
+async deleteLesson(sectionId, lessonId) {
+  return await api.delete(`/sections/${sectionId}/lessons/${lessonId}`);
+}
+async reorderLessons(sectionId, orders) {
+  return await api.post(`/sections/${sectionId}/lessons/reorder`, orders);
+}
+}
+
 
 export const courseService = new CourseService();

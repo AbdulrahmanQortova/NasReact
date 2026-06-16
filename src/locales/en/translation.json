@@ -179,7 +179,8 @@
       "createError": "Failed to create course",
       "topicsLoadError": "Failed to load topics",
       "noTopics": "No topics available. Please create a topic first.",
-      "createBtn": "Create Course"
+      "createBtn": "Create Course",
+      "topic" :"Select Topic"
     },
     "sidebar": {
       "courses": "Courses",
@@ -255,7 +256,15 @@
       "createError": "Failed to create section",
       "updateError": "Failed to update section",
       "deleteError": "Failed to delete section",
-      "confirmDelete": "Delete section \"{{title}}\"? This will also delete all lessons inside it."
+      "confirmDelete": "Delete section \"{{title}}\"? This will also delete all lessons inside it.",
+      "existingSections": "Existing Sections",
+      "dragHint": "Drag and drop to reorder",
+      "addSuccess": "Section added successfully",
+      "updateSuccess": "Section updated successfully",
+      "deleteSuccess": "Section deleted successfully",
+      "reorderSuccess": "Sections reordered successfully",
+      "reorderError": "Failed to reorder sections",
+      "sectionsLoadError": "Failed to load sections"
     },
     "editCourse": {
       "title": "Edit Course",
@@ -333,10 +342,47 @@
       "loadError": "Failed to load steps",
       "confirmDelete": "Delete step \"{{title}}\"?",
       "unknownCourse": "Unknown Course",
-            "dragHint": "Drag and drop to reorder",
+      "dragHint": "Drag and drop to reorder",
       "reorderSuccess": "Steps reordered successfully",
       "reorderError": "Failed to reorder steps"
+    },
+    "lessons": {
+      "title": "Manage Lessons",
+      "addLesson": "Add Lesson",
+      "addNewLesson": "Add New Lesson",
+      "editLesson": "Edit Lesson",
+      "title": "Lesson Title",
+      "titlePlaceholder": "e.g., Introduction to React",
+      "videoUrl": "Video URL",
+      "videoPlaceholder": "https://example.com/video.mp4",
+      "content": "Content (Markdown)",
+      "contentPlaceholder": "Lesson content in Markdown...",
+      "duration": "Duration (minutes)",
+      "order": "Order",
+      "freePreview": "Free Preview",
+      "free": "Free",
+      "addBtn": "Add Lesson",
+      "existingLessons": "Existing Lessons",
+      "noLessons": "No lessons yet. Add your first lesson!",
+      "loadError": "Failed to load lessons",
+      "titleRequired": "Lesson title is required",
+      "createError": "Failed to create lesson",
+      "updateError": "Failed to update lesson",
+      "deleteError": "Failed to delete lesson",
+      "confirmDelete": "Delete lesson \"{{title}}\"?",
+       "createSuccess": "Lesson created successfully",
+      "updateSuccess": "Lesson updated successfully",
+      "deleteSuccess": "Lesson deleted successfully",
+      "reorderSuccess": "Lessons reordered successfully",
+      "reorderError": "Failed to reorder lessons",
+      "dragHint": "Drag and drop to reorder"
+    },
+     "sections": {
+      "dragHint": "Drag and drop to reorder",
+      "reorderSuccess": "Sections reordered successfully",
+      "reorderError": "Failed to reorder sections"
     }
+
   },
   "home": {
     "featuredCourses": "Featured Courses",

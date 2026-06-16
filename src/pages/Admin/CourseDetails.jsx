@@ -3,12 +3,17 @@ import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { courseService } from '../../services/courseService';
+import LessonsManager from './components/LessonsManager';
+import { useToast } from '../../context/ToastContext';
+import editIcon from '../../assets/images/edit.png';
+import deleteIcon from '../../assets/images/delete.png';
 import './CourseDetails.css';
 
 export default function CourseDetails() {
   const { id } = useParams();
   const navigate = useNavigate();
   const { t, i18n } = useTranslation();
+  const toast = useToast();
   const [course, setCourse] = useState(null);
   const [sections, setSections] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -16,6 +21,10 @@ export default function CourseDetails() {
   const [editingSection, setEditingSection] = useState(null);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
+  const [showLessonsModal, setShowLessonsModal] = useState(false);
+  const [selectedSection, setSelectedSection] = useState(null);
+  const [draggedItem, setDraggedItem] = useState(null);
+  const [dragOverItem, setDragOverItem] = useState(null);
   const [formData, setFormData] = useState({
     title: '',
     order: 0,
@@ -33,16 +42,19 @@ export default function CourseDetails() {
       setCourse(response.data || response);
     } catch (error) {
       console.error('Error fetching course:', error);
-      setError(t('admin.courseDetails.loadError'));
+      toast.error(t('admin.courseDetails.loadError'));
     }
   };
 
   const fetchSections = async () => {
     try {
       const response = await courseService.getCourseSections(id);
-      setSections(response.data || response || []);
+      const sectionsData = response.data || response || [];
+      const sortedSections = [...sectionsData].sort((a, b) => a.order - b.order);
+      setSections(sortedSections);
     } catch (error) {
       console.error('Error fetching sections:', error);
+      toast.error(t('admin.courseDetails.sectionsLoadError'));
     } finally {
       setLoading(false);
     }
@@ -53,80 +65,78 @@ export default function CourseDetails() {
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-// src/pages/Admin/CourseDetails.jsx
-
-const handleAddSection = async (e) => {
-  e.preventDefault();
-  if (!formData.title.trim()) {
-    setError(t('admin.courseDetails.titleRequired'));
-    return;
-  }
-
-  setSubmitting(true);
-  setError('');
-
-  try {
-    // ✅ إرسال البيانات بشكل صحيح
-    await courseService.createCourseSection(id, {
-      title: formData.title.trim(),
-      order: parseInt(formData.order) || sections.length + 1,
-      courseId: id,
-    });
-
-    setFormData({ title: '', order: 0 });
-    setShowAddSection(false);
-    await fetchSections();
-  } catch (err) {
-    console.error('Create error:', err);
-    setError(err.message || t('admin.courseDetails.createError'));
-  } finally {
-    setSubmitting(false);
-  }
-};
-
-const handleUpdateSection = async (e) => {
-  e.preventDefault();
-  if (!formData.title.trim()) return;
-
-  setSubmitting(true);
-  setError('');
-
-  try {
-    const updateData = { title: formData.title.trim() };
-    
-    if (formData.order && parseInt(formData.order) !== editingSection.order) {
-      updateData.order = parseInt(formData.order);
+  const handleAddSection = async (e) => {
+    e.preventDefault();
+    if (!formData.title.trim()) {
+      setError(t('admin.courseDetails.titleRequired'));
+      return;
     }
-    
-    await courseService.updateCourseSection(id, editingSection.id, updateData);
 
-    setEditingSection(null);
-    setFormData({ title: '', order: 0 });
-    await fetchSections();
-  } catch (err) {
-    console.error('Update error:', err);
-    setError(err.message || t('admin.courseDetails.updateError'));
-  } finally {
-    setSubmitting(false);
-  }
-};
+    setSubmitting(true);
+    setError('');
 
+    try {
+      await courseService.createCourseSection(id, {
+        title: formData.title.trim(),
+        order: parseInt(formData.order) || sections.length + 1,
+        courseId: id,
+      });
 
-const handleDeleteSection = async (sectionId, sectionTitle) => {
-  if (!window.confirm(t('admin.courseDetails.confirmDelete', { title: sectionTitle }))) return;
-
-  try {
-    const response = await courseService.deleteCourseSection(id, sectionId);
-    
-    if (response === null || response?.status === 204) {
-      alert(t('admin.courseDetails.deleteSuccess'));
+      setFormData({ title: '', order: 0 });
+      setShowAddSection(false);
       await fetchSections();
+      toast.success(t('admin.courseDetails.addSuccess'));
+    } catch (err) {
+      console.error('Create error:', err);
+      setError(err.message || t('admin.courseDetails.createError'));
+      toast.error(err.message || t('admin.courseDetails.createError'));
+    } finally {
+      setSubmitting(false);
     }
-  } catch (err) {
-    console.error('Delete error:', err);
-    setError(err.message || t('admin.courseDetails.deleteError'));
-  }
-};
+  };
+
+  const handleUpdateSection = async (e) => {
+    e.preventDefault();
+    if (!formData.title.trim()) return;
+
+    setSubmitting(true);
+    setError('');
+
+    try {
+      const updateData = { title: formData.title.trim() };
+      
+      if (formData.order && parseInt(formData.order) !== editingSection.order) {
+        updateData.order = parseInt(formData.order);
+      }
+      
+      await courseService.updateCourseSection(id, editingSection.id, updateData);
+
+      setEditingSection(null);
+      setFormData({ title: '', order: 0 });
+      await fetchSections();
+      toast.success(t('admin.courseDetails.updateSuccess'));
+    } catch (err) {
+      console.error('Update error:', err);
+      setError(err.message || t('admin.courseDetails.updateError'));
+      toast.error(err.message || t('admin.courseDetails.updateError'));
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const handleDeleteSection = async (sectionId, sectionTitle) => {
+    if (!window.confirm(t('admin.courseDetails.confirmDelete', { title: sectionTitle }))) return;
+
+    try {
+      await courseService.deleteCourseSection(id, sectionId);
+      await fetchSections();
+      toast.success(t('admin.courseDetails.deleteSuccess'));
+    } catch (err) {
+      console.error('Delete error:', err);
+      setError(err.message || t('admin.courseDetails.deleteError'));
+      toast.error(err.message || t('admin.courseDetails.deleteError'));
+    }
+  };
 
   const startEdit = (section) => {
     setEditingSection(section);
@@ -135,11 +145,79 @@ const handleDeleteSection = async (sectionId, sectionTitle) => {
       order: section.order,
     });
     setShowAddSection(false);
+    setError('');
   };
 
   const cancelEdit = () => {
     setEditingSection(null);
     setFormData({ title: '', order: 0 });
+    setError('');
+  };
+
+  const handleManageLessons = (section) => {
+    setSelectedSection(section);
+    setShowLessonsModal(true);
+  };
+
+  // ========== Drag and Drop Functions ==========
+  const handleDragStart = (e, index) => {
+    setDraggedItem(index);
+    e.dataTransfer.effectAllowed = 'move';
+    e.dataTransfer.setData('text/html', e.target.parentNode);
+    e.target.classList.add('dragging');
+  };
+
+  const handleDragOver = (e, index) => {
+    e.preventDefault();
+    setDragOverItem(index);
+    e.dataTransfer.dropEffect = 'move';
+  };
+
+  const handleDragEnd = (e) => {
+    e.target.classList.remove('dragging');
+    setDraggedItem(null);
+    setDragOverItem(null);
+  };
+
+  const handleDrop = async (e, dropIndex) => {
+    e.preventDefault();
+    
+    if (draggedItem === null || draggedItem === dropIndex) {
+      setDraggedItem(null);
+      setDragOverItem(null);
+      return;
+    }
+
+    const newSections = [...sections];
+    const draggedSection = newSections[draggedItem];
+    newSections.splice(draggedItem, 1);
+    newSections.splice(dropIndex, 0, draggedSection);
+
+    const reorderedSections = newSections.map((section, idx) => ({
+      ...section,
+      order: idx + 1
+    }));
+
+    setSections(reorderedSections);
+    setDraggedItem(null);
+    setDragOverItem(null);
+
+    setSubmitting(true);
+    try {
+      for (const section of reorderedSections) {
+        await courseService.updateCourseSection(id, section.id, {
+          title: section.title,
+          order: section.order,
+        });
+      }
+      toast.success(t('admin.courseDetails.reorderSuccess'));
+    } catch (err) {
+      console.error('Error reordering sections:', err);
+      toast.error(t('admin.courseDetails.reorderError'));
+      await fetchSections();
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   const getImageUrl = (thumbnailUrl) => {
@@ -306,36 +384,72 @@ const handleDeleteSection = async (sectionId, sectionTitle) => {
             <p>{t('admin.courseDetails.noSections')}</p>
           </div>
         ) : (
-          <div className="sections-list">
-            {sections.map((section, index) => (
-              <div key={section.id} className="section-card">
-                <div className="section-header">
-                  <div className="section-order-badge">{section.order || index + 1}</div>
-                  <div className="section-title">
-                    <h3>{section.title}</h3>
+          <div className="sections-list-modern">
+            <div className="sections-header-modern">
+              <h3>{t('admin.courseDetails.existingSections')} ({sections.length})</h3>
+              <small className="drag-hint">💡 {t('admin.courseDetails.dragHint')}</small>
+            </div>
+            <div className="sections-items-modern">
+              {sections.map((section, index) => (
+                <div
+                  key={section.id}
+                  className={`section-item-modern ${dragOverItem === index ? 'drag-over' : ''}`}
+                  draggable={!editingSection}
+                  onDragStart={(e) => handleDragStart(e, index)}
+                  onDragOver={(e) => handleDragOver(e, index)}
+                  onDragEnd={handleDragEnd}
+                  onDrop={(e) => handleDrop(e, index)}
+                >
+                  <div className="drag-handle">⋮⋮</div>
+                  <div className="section-order-modern">{section.order || index + 1}</div>
+                  <div className="section-info-modern">
+                    <strong>{section.title}</strong>
                   </div>
-                  <div className="section-actions">
+                  <div className="section-actions-modern">
                     <button 
-                      className="edit-section-btn"
+                      className="action-circle edit-circle"
                       onClick={() => startEdit(section)}
                       title={t('common.edit')}
                     >
-                      ✏️
+                      <img src={editIcon} alt="edit" className="action-icon" />
                     </button>
                     <button 
-                      className="delete-section-btn"
+                      className="action-circle delete-circle"
                       onClick={() => handleDeleteSection(section.id, section.title)}
                       title={t('common.delete')}
                     >
-                      🗑️
+                      <img src={deleteIcon} alt="delete" className="action-icon" />
+                    </button>
+                    <button 
+                      className="action-circle lessons-circle"
+                      onClick={() => handleManageLessons(section)}
+                      title={t('admin.sections.manageLessons')}
+                    >
+                      📚
                     </button>
                   </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         )}
       </div>
+
+      {/* Lessons Manager Modal */}
+      {showLessonsModal && selectedSection && (
+        <LessonsManager
+          section={selectedSection}
+          onClose={() => {
+            setShowLessonsModal(false);
+            setSelectedSection(null);
+          }}
+          onSuccess={() => {
+            setShowLessonsModal(false);
+            setSelectedSection(null);
+            fetchSections();
+          }}
+        />
+      )}
     </div>
   );
 }

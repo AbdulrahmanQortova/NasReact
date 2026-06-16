@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { courseService } from '../../../services/courseService';
+import LessonsManager from './LessonsManager';
 import editIcon from '../../../assets/images/edit.png';
 import deleteIcon from '../../../assets/images/delete.png';
 import './CourseSectionsManager.css';
@@ -13,6 +14,10 @@ export default function CourseSectionsManager({ course, onClose, onSuccess }) {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
   const [editingSection, setEditingSection] = useState(null);
+  const [showLessonsModal, setShowLessonsModal] = useState(false);
+  const [selectedSection, setSelectedSection] = useState(null);
+  const [draggedItem, setDraggedItem] = useState(null);
+  const [dragOverItem, setDragOverItem] = useState(null);
   const [formData, setFormData] = useState({
     title: '',
     order: 0,
@@ -27,7 +32,9 @@ export default function CourseSectionsManager({ course, onClose, onSuccess }) {
     setLoading(true);
     try {
       const response = await courseService.getCourseSections(course.id);
-      setSections(response.data || response || []);
+      const sectionsData = response.data || response || [];
+      const sortedSections = [...sectionsData].sort((a, b) => a.order - b.order);
+      setSections(sortedSections);
     } catch (err) {
       console.error('Error fetching sections:', err);
       setError(t('admin.sections.loadError'));
@@ -75,7 +82,7 @@ export default function CourseSectionsManager({ course, onClose, onSuccess }) {
     setError('');
 
     try {
-      await courseService.updateCourseSection(editingSection.id, {
+      await courseService.updateCourseSection(course.id, editingSection.id, {
         title: formData.title.trim(),
         order: parseInt(formData.order),
       });
@@ -113,6 +120,71 @@ export default function CourseSectionsManager({ course, onClose, onSuccess }) {
     setEditingSection(null);
     setFormData({ title: '', order: 0 });
     setError('');
+  };
+
+  const handleManageLessons = (section) => {
+    setSelectedSection(section);
+    setShowLessonsModal(true);
+  };
+
+  // ========== Drag and Drop Functions ==========
+  const handleDragStart = (e, index) => {
+    setDraggedItem(index);
+    e.dataTransfer.effectAllowed = 'move';
+    e.dataTransfer.setData('text/html', e.target.parentNode);
+    e.target.classList.add('dragging');
+  };
+
+  const handleDragOver = (e, index) => {
+    e.preventDefault();
+    setDragOverItem(index);
+    e.dataTransfer.dropEffect = 'move';
+  };
+
+  const handleDragEnd = (e) => {
+    e.target.classList.remove('dragging');
+    setDraggedItem(null);
+    setDragOverItem(null);
+  };
+
+  const handleDrop = async (e, dropIndex) => {
+    e.preventDefault();
+    
+    if (draggedItem === null || draggedItem === dropIndex) {
+      setDraggedItem(null);
+      setDragOverItem(null);
+      return;
+    }
+
+    const newSections = [...sections];
+    const draggedSection = newSections[draggedItem];
+    newSections.splice(draggedItem, 1);
+    newSections.splice(dropIndex, 0, draggedSection);
+
+    const reorderedSections = newSections.map((section, idx) => ({
+      ...section,
+      order: idx + 1
+    }));
+
+    setSections(reorderedSections);
+    setDraggedItem(null);
+    setDragOverItem(null);
+
+    setSubmitting(true);
+    try {
+      for (const section of reorderedSections) {
+        await courseService.updateCourseSection(course.id, section.id, {
+          title: section.title,
+          order: section.order,
+        });
+      }
+    } catch (err) {
+      console.error('Error reordering sections:', err);
+      toast.error(t('admin.sections.reorderError'));
+      await fetchSections();
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -172,10 +244,11 @@ export default function CourseSectionsManager({ course, onClose, onSuccess }) {
             </form>
           </div>
 
-          {/* Sections List */}
+          {/* Sections List with Drag and Drop */}
           <div className="sections-list">
             <div className="sections-header">
               <h3>{t('admin.sections.existingSections')} ({sections.length})</h3>
+              <small className="drag-hint">💡 {t('admin.sections.dragHint')}</small>
             </div>
 
             {loading ? (
@@ -185,7 +258,16 @@ export default function CourseSectionsManager({ course, onClose, onSuccess }) {
             ) : (
               <div className="sections-items">
                 {sections.map((section, index) => (
-                  <div key={section.id} className="section-item">
+                  <div
+                    key={section.id}
+                    className={`section-item ${dragOverItem === index ? 'drag-over' : ''}`}
+                    draggable={!editingSection && !editingSection}
+                    onDragStart={(e) => handleDragStart(e, index)}
+                    onDragOver={(e) => handleDragOver(e, index)}
+                    onDragEnd={handleDragEnd}
+                    onDrop={(e) => handleDrop(e, index)}
+                  >
+                    <div className="drag-handle">⋮⋮</div>
                     <div className="section-order">{section.order || index + 1}</div>
                     <div className="section-info">
                       <strong>{section.title}</strong>
@@ -205,6 +287,13 @@ export default function CourseSectionsManager({ course, onClose, onSuccess }) {
                       >
                         <img src={deleteIcon} alt="delete" className="action-icon" />
                       </button>
+                      <button 
+                        className="action-circle lessons-circle"
+                        onClick={() => handleManageLessons(section)}
+                        title={t('admin.sections.manageLessons')}
+                      >
+                        📚
+                      </button>
                     </div>
                   </div>
                 ))}
@@ -213,6 +302,21 @@ export default function CourseSectionsManager({ course, onClose, onSuccess }) {
           </div>
         </div>
       </div>
+
+      {/* Lessons Manager Modal */}
+      {showLessonsModal && selectedSection && (
+        <LessonsManager
+          section={selectedSection}
+          onClose={() => {
+            setShowLessonsModal(false);
+            setSelectedSection(null);
+          }}
+          onSuccess={() => {
+            setShowLessonsModal(false);
+            setSelectedSection(null);
+          }}
+        />
+      )}
     </div>
   );
 }

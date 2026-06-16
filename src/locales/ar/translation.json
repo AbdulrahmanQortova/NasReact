@@ -255,7 +255,17 @@
       "createError": "فشل في إنشاء القسم",
       "updateError": "فشل في تحديث القسم",
       "deleteError": "فشل في حذف القسم",
-      "confirmDelete": "هل أنت متأكد من حذف القسم \"{{title}}\"؟ هذا سيحذف جميع الدروس داخله."
+      "confirmDelete": "هل أنت متأكد من حذف القسم \"{{title}}\"؟ هذا سيحذف جميع الدروس داخله.",
+      "existingSections": "الأقسام الحالية",
+      "dragHint": "اسحب وأفلت لإعادة الترتيب",
+      "courseDetails": {
+      "addSuccess": "تم إضافة القسم بنجاح",
+      "updateSuccess": "تم تحديث القسم بنجاح",
+      "deleteSuccess": "تم حذف القسم بنجاح",
+      "reorderSuccess": "تم إعادة ترتيب الأقسام بنجاح",
+      "reorderError": "فشل إعادة ترتيب الأقسام",
+      "sectionsLoadError": "فشل في تحميل الأقسام"
+    }
     },
     "editCourse": {
       "title": "تعديل الدورة",
@@ -337,6 +347,42 @@
        "dragHint": "اسحب وأفلت لإعادة الترتيب",
       "reorderSuccess": "تم إعادة ترتيب الخطوات بنجاح",
       "reorderError": "فشل إعادة ترتيب الخطوات"
+    },
+    "lessons": {
+      "title": "إدارة الدروس",
+      "addLesson": "إضافة درس",
+      "addNewLesson": "إضافة درس جديد",
+      "editLesson": "تعديل الدرس",
+      "title": "عنوان الدرس",
+      "titlePlaceholder": "مثال: مقدمة إلى React",
+      "videoUrl": "رابط الفيديو",
+      "videoPlaceholder": "https://example.com/video.mp4",
+      "content": "المحتوى (Markdown)",
+      "contentPlaceholder": "محتوى الدرس بصيغة Markdown...",
+      "duration": "المدة (بالدقائق)",
+      "order": "الترتيب",
+      "freePreview": "معاينة مجانية",
+      "free": "مجاني",
+      "addBtn": "إضافة درس",
+      "existingLessons": "الدروس الحالية",
+      "noLessons": "لا توجد دروس حتى الآن. أضف درسك الأول!",
+      "loadError": "فشل في تحميل الدروس",
+      "titleRequired": "عنوان الدرس مطلوب",
+      "createError": "فشل في إنشاء الدرس",
+      "updateError": "فشل في تحديث الدرس",
+      "deleteError": "فشل في حذف الدرس",
+      "confirmDelete": "هل أنت متأكد من حذف الدرس \"{{title}}\"؟",
+       "createSuccess": "تم إنشاء الدرس بنجاح",
+      "updateSuccess": "تم تحديث الدرس بنجاح",
+      "deleteSuccess": "تم حذف الدرس بنجاح",
+      "reorderSuccess": "تم إعادة ترتيب الدروس بنجاح",
+      "reorderError": "فشل إعادة ترتيب الدروس",
+      "dragHint": "اسحب وأفلت لإعادة الترتيب"
+    },
+     "sections": {
+      "dragHint": "اسحب وأفلت لإعادة الترتيب",
+      "reorderSuccess": "تم إعادة ترتيب الأقسام بنجاح",
+      "reorderError": "فشل إعادة ترتيب الأقسام"
     }
   },
   "home": {

@@ -178,7 +178,7 @@ export default function LearningPathsManagement() {
           onSuccess={() => {
             setShowStepsModal(false);
             setSelectedPathForSteps(null);
-            fetchLearningPaths(); // تحديث القائمة لعرض عدد الخطوات الجديد
+            fetchLearningPaths(); 
           }}
         />
       )}
