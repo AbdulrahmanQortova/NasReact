@@ -268,17 +268,19 @@ const handleDrop = async (e, dropIndex) => {
                   />
                 </div>
 
-                <div className="form-group">
-                  <label>{t('admin.lessons.videoUrl')}</label>
-                  <input
-                    type="text"
-                    name="videoUrl"
-                    value={formData.videoUrl}
-                    onChange={handleInputChange}
-                    placeholder={t('admin.lessons.videoPlaceholder')}
-                  />
-                </div>
-
+<div className="form-group">
+  <label>{t('admin.lessons.videoUrl')}</label>
+  <input
+    type="text"
+    name="videoUrl"
+    value={formData.videoUrl}
+    onChange={handleInputChange}
+    placeholder={t('admin.lessons.videoPlaceholder')}
+  />
+  <small className="video-hint">
+    💡 {t('admin.lessons.videoHint')}
+  </small>
+</div>
                 <div className="form-group">
                   <label>{t('admin.lessons.content')}</label>
                   <textarea

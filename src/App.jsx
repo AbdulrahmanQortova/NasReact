@@ -5,6 +5,8 @@ import Home from './pages/Home/Home';
 import Login from './pages/Auth/Login';
 import Register from './pages/Auth/Register';
 import Courses from './pages/Courses/Courses';
+import CourseDetailsPage from './pages/Courses/CourseDetailsPage';
+import PaymentPage from './pages/Payment/PaymentPage';
 import AdminDashboard from './pages/Admin/AdminDashboard';
 import CourseDetails from './pages/Admin/CourseDetails';
 
@@ -29,11 +31,9 @@ const AdminRoute = ({ children }) => {
     return <Navigate to="/login" replace />;
   }
   
-  // استخدام authService للتحقق من صلاحيات الأدمن
   const userStr = localStorage.getItem('user_data');
   const user = userStr ? JSON.parse(userStr) : null;
   
-  // التحقق من الأدمن (يدعم الرقم 1 والنص 'Admin')
   const isAdmin = user?.role === 'Admin' || 
                   user?.role === 1 || 
                   user?.roleValue === 1 ||
@@ -52,11 +52,13 @@ export default function App() {
       <Navbar />
       <main id="main" tabIndex={-1}>
         <Routes>
-          {/* ✅ Home page as root */}
+          {/* Home page */}
           <Route path="/" element={<Home />} />
           
           {/* Public routes */}
           <Route path="/courses" element={<Courses />} />
+          <Route path="/courses/:id" element={<CourseDetailsPage />} />
+          <Route path="/payment/:id" element={<PaymentPage />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           
@@ -104,7 +106,6 @@ export default function App() {
             </AdminRoute>
           } />
           
-          {/* Course Details Route - View and Manage Sections */}
           <Route path="/admin/courses/:id" element={
             <AdminRoute>
               <CourseDetails />

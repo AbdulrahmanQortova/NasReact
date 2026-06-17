@@ -113,29 +113,22 @@ export default function CourseCard({ course, topicName, onRate, onView, onEnroll
       </div>
 
       <div className="course-card-actions">
-        {/* View Course Button - Solid Background */}
+        {/* View Course Button */}
         <button className="view-btn" onClick={() => onView(course)}>
           {t('courses.viewCourse')}
         </button>
         
-        {/* Enroll Now Button - Solid Background */}
+        {/* Enroll Now Button - فقط للمستخدمين المسجلين وغير المسجلين في الكورس */}
         {isLoggedIn && !isEnrolled && (
           <button className="enroll-btn" onClick={handleEnroll}>
             {t('courses.enrollNow')}
           </button>
         )}
         
-        {/* Enrolled Button - Border only */}
+        {/* Enrolled Badge - للمستخدمين المسجلين */}
         {isLoggedIn && isEnrolled && (
           <button className="enrolled-btn" disabled>
             ✓ {t('courses.enrolled')}
-          </button>
-        )}
-        
-        {/* Rate Button - Border only */}
-        {isStudent && isEnrolled && (
-          <button className="rate-btn" onClick={() => onRate(course)}>
-            {t('courses.rate')}
           </button>
         )}
       </div>

@@ -4,12 +4,14 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { courseService } from '../../services/courseService';
 import { authService } from '../../services/authService';
+import { useToast } from '../../context/ToastContext';
 import CourseCard from './components/CourseCard';
 import RatingModal from './components/RatingModal';
 import './Courses.css';
 
 export default function Courses() {
   const { t, i18n } = useTranslation();
+  const toast = useToast();
   const [courses, setCourses] = useState([]);
   const [topics, setTopics] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -78,11 +80,16 @@ export default function Courses() {
       
       const coursesData = response.items || response.data || [];
       
+      // ✅ جلب حالة التسجيل لكل كورس إذا كان المستخدم مسجل دخول
       if (isLoggedIn) {
-        const enrollments = await fetchUserEnrollments();
-        coursesData.forEach(course => {
-          course.isEnrolled = enrollments.some(e => e.courseId === course.id);
-        });
+        try {
+          const enrollments = await courseService.getMyEnrollments();
+          coursesData.forEach(course => {
+            course.isEnrolled = enrollments.some(e => e.courseId === course.id);
+          });
+        } catch (err) {
+          console.error('Error fetching enrollments:', err);
+        }
       }
       
       setCourses(coursesData);
@@ -98,20 +105,6 @@ export default function Courses() {
     }
   };
 
-  const fetchUserEnrollments = async () => {
-    try {
-      const token = localStorage.getItem('auth_token');
-      const response = await fetch('https://localhost:7021/api/Enrollments/my', {
-        headers: { 'Authorization': `Bearer ${token}` },
-      });
-      if (response.ok) return await response.json();
-      return [];
-    } catch (err) {
-      console.error('Error fetching enrollments:', err);
-      return [];
-    }
-  };
-
   const handleEnroll = async (courseId) => {
     if (!isLoggedIn) {
       navigate('/login');
@@ -119,28 +112,35 @@ export default function Courses() {
     }
     
     try {
-      const token = localStorage.getItem('auth_token');
-      const response = await fetch('https://localhost:7021/api/Enrollments', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ courseId }),
-      });
+      await courseService.enrollInCourse(courseId);
       
-      if (response.ok) {
-        alert(t('courses.enrollSuccess') || 'Successfully enrolled!');
-        setCourses(prev => prev.map(c => 
-          c.id === courseId ? { ...c, isEnrolled: true } : c
-        ));
-      } else {
-        const error = await response.json();
-        alert(error.message || t('courses.enrollFailed'));
-      }
+      // ✅ تحديث حالة الكورس محلياً
+      setCourses(prev => prev.map(c => 
+        c.id === courseId ? { ...c, isEnrolled: true } : c
+      ));
+      
+      toast.success(t('courses.enrollSuccess'));
     } catch (error) {
       console.error('Enrollment error:', error);
-      alert(t('courses.enrollFailed'));
+      toast.error(error.message || t('courses.enrollFailed'));
+    }
+  };
+
+  const handleUnenroll = async (courseId) => {
+    if (!window.confirm(t('courses.confirmUnenroll'))) return;
+    
+    try {
+      await courseService.unenrollFromCourse(courseId);
+      
+      // ✅ تحديث حالة الكورس محلياً
+      setCourses(prev => prev.map(c => 
+        c.id === courseId ? { ...c, isEnrolled: false } : c
+      ));
+      
+      toast.success(t('courses.unenrollSuccess'));
+    } catch (error) {
+      console.error('Unenroll error:', error);
+      toast.error(error.message || t('courses.unenrollFailed'));
     }
   };
 
@@ -181,8 +181,10 @@ export default function Courses() {
       await fetchCourses();
       setShowRatingModal(false);
       setSelectedCourse(null);
+      toast.success(t('courses.rateSuccess'));
     } catch (err) {
       setError(err.message || t('courses.rateFailed'));
+      toast.error(err.message || t('courses.rateFailed'));
     }
   };
 
@@ -327,6 +329,7 @@ export default function Courses() {
                 onRate={handleRateClick}
                 onView={handleViewCourse}
                 onEnroll={handleEnroll}
+                onUnenroll={handleUnenroll}
               />
             ))}
           </div>

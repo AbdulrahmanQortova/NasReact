@@ -1,11 +1,19 @@
 // src/pages/Courses/components/RatingModal.jsx
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
+import './RatingModal.css'; // ✅ أضف هذا السطر
 
-export default function RatingModal({ course, onClose, onSubmit }) {
-  const [rating, setRating] = useState(5);
-  const [comment, setComment] = useState('');
+export default function RatingModal({ course, onClose, onSubmit, initialRating = 5, initialReview = '' }) {
+  const { t } = useTranslation();
+  const [rating, setRating] = useState(initialRating);
+  const [comment, setComment] = useState(initialReview);
   const [hoverRating, setHoverRating] = useState(0);
   const [submitting, setSubmitting] = useState(false);
+
+  useEffect(() => {
+    setRating(initialRating);
+    setComment(initialReview);
+  }, [initialRating, initialReview]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -40,41 +48,41 @@ export default function RatingModal({ course, onClose, onSubmit }) {
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal-content" onClick={(e) => e.stopPropagation()}>
         <div className="modal-header">
-          <h2>Rate "{course?.title}"</h2>
+          <h2>{initialReview ? t('rating.update') : t('rating.rate')} "{course?.title}"</h2>
           <button className="modal-close" onClick={onClose}>✕</button>
         </div>
 
         <form onSubmit={handleSubmit}>
           <div className="rating-input-group">
-            <label>Your Rating</label>
+            <label>{t('rating.yourRating')}</label>
             <div className="star-inputs">
               {renderStarInput()}
             </div>
             <span className="rating-label">
-              {rating === 5 && "Excellent!"}
-              {rating === 4 && "Very Good"}
-              {rating === 3 && "Good"}
-              {rating === 2 && "Fair"}
-              {rating === 1 && "Poor"}
+              {rating === 5 && t('rating.excellent')}
+              {rating === 4 && t('rating.veryGood')}
+              {rating === 3 && t('rating.good')}
+              {rating === 2 && t('rating.fair')}
+              {rating === 1 && t('rating.poor')}
             </span>
           </div>
 
           <div className="comment-input-group">
-            <label>Review (Optional)</label>
+            <label>{t('rating.review')}</label>
             <textarea
               value={comment}
               onChange={(e) => setComment(e.target.value)}
-              placeholder="Share your experience with this course..."
+              placeholder={t('rating.reviewPlaceholder')}
               rows="4"
             />
           </div>
 
           <div className="modal-actions">
             <button type="button" className="secondary-btn" onClick={onClose}>
-              Cancel
+              {t('common.cancel')}
             </button>
             <button type="submit" className="primary-btn" disabled={submitting}>
-              {submitting ? 'Submitting...' : 'Submit Rating'}
+              {submitting ? t('common.saving') : (initialReview ? t('rating.update') : t('rating.submit'))}
             </button>
           </div>
         </form>

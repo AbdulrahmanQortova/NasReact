@@ -71,11 +71,18 @@ class CourseService {
     return await api.delete(`/Courses/${id}`);
   }
 
-  async rateCourse(id, ratingData) {
-    return await api.post(`/Courses/${id}/ratings`, ratingData);
-  }
+// src/services/courseService.js
 
-  // ✅ دالة رفع الصورة المعدلة
+async rateCourse(id, ratingData) {
+  const payload = {
+    value: Number(ratingData.value ?? ratingData.rating ?? 0),
+    review: ratingData.review ?? ratingData.comment ?? ''
+  };
+  
+  console.log('Sending rating payload:', payload); 
+  
+  return await api.post(`/Courses/${id}/ratings`, payload);
+}
   async uploadThumbnail(id, file) {
     const formData = new FormData();
     formData.append('file', file);
@@ -178,6 +185,23 @@ async deleteLesson(sectionId, lessonId) {
 }
 async reorderLessons(sectionId, orders) {
   return await api.post(`/sections/${sectionId}/lessons/reorder`, orders);
+}
+// ========== Enrollment Services ==========
+
+async enrollInCourse(courseId) {
+  return await api.post(`/Enrollments/enroll/${courseId}`);
+}
+
+async unenrollFromCourse(courseId) {
+  return await api.delete(`/Enrollments/unenroll/${courseId}`);
+}
+
+async getMyEnrollments() {
+  return await api.get('/Enrollments/my-enrollments');
+}
+
+async getMyEnrollment(courseId) {
+  return await api.get(`/Enrollments/my-enrollments/${courseId}`);
 }
 }
 

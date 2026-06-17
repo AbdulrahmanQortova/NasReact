@@ -42,6 +42,13 @@
     "clearFilters": "مسح جميع التصفيات",
     "loading": "جاري تحميل الدورات...",
     "error": "فشل في تحميل الدورات",
+     "enrollSuccess": "تم التسجيل في الدورة بنجاح!",
+    "enrollFailed": "فشل التسجيل في الدورة",
+    "unenroll": "إلغاء التسجيل",
+    "unenrollSuccess": "تم إلغاء التسجيل من الدورة بنجاح",
+    "unenrollFailed": "فشل إلغاء التسجيل من الدورة",
+    "confirmUnenroll": "هل أنت متأكد من إلغاء التسجيل من هذه الدورة؟",
+    "rateSuccess": "تم إرسال التقييم بنجاح",
     "level": {
       "beginner": "مبتدئ",
       "intermediate": "متوسط",
@@ -264,7 +271,14 @@
       "deleteSuccess": "تم حذف القسم بنجاح",
       "reorderSuccess": "تم إعادة ترتيب الأقسام بنجاح",
       "reorderError": "فشل إعادة ترتيب الأقسام",
-      "sectionsLoadError": "فشل في تحميل الأقسام"
+      "sectionsLoadError": "فشل في تحميل الأقسام",
+       "selectLesson": "اختر درساً",
+    "selectLessonHint": "اختر درساً من الشريط الجانبي لبدء التعلم",
+    "noLessons": "لا توجد دروس في هذا القسم",
+    "description": "الوصف",
+    "videoNotSupported": "المتصفح لا يدعم تشغيل الفيديو",
+    "noVideo": "لا يوجد فيديو لهذا الدرس",
+    "premium": "مميز"
     }
     },
     "editCourse": {
@@ -377,7 +391,8 @@
       "deleteSuccess": "تم حذف الدرس بنجاح",
       "reorderSuccess": "تم إعادة ترتيب الدروس بنجاح",
       "reorderError": "فشل إعادة ترتيب الدروس",
-      "dragHint": "اسحب وأفلت لإعادة الترتيب"
+      "dragHint": "اسحب وأفلت لإعادة الترتيب",
+      "videoHint": "الصق رابط يوتيوب (مثال: https://youtu.be/xxx أو https://www.youtube.com/watch?v=xxx) أو رابط فيديو مباشر"
     },
      "sections": {
       "dragHint": "اسحب وأفلت لإعادة الترتيب",
@@ -404,5 +419,58 @@
     "getStartedNow": "ابدأ الآن",
     "exploreCourses": "استكشف الدورات",
     "getStarted": "ابدأ"
+  }, "courseDetails": {
+    "loadError": "فشل في تحميل تفاصيل الدورة",
+    "notFound": "الدورة غير موجودة",
+    "sections": "أقسام الدورة",
+    "lessons": "درس",
+    "noSections": "لا توجد أقسام متاحة لهذه الدورة",
+    "freePreview": "معاينة مجانية",
+    "enrollFree": "سجل مجاناً",
+    "buyNow": "اشتر الآن",
+    "enrollSuccess": "تم التسجيل في الدورة بنجاح!",
+    "enrollFailed": "فشل التسجيل في الدورة",
+    "yourRating": "تقييمك",
+    "updateRating": "تحديث التقييم",
+   
+    "selectLesson": "اختر درساً",
+    "selectLessonHint": "اختر درساً من الشريط الجانبي لبدء التعلم",
+    "noLessons": "لا توجد دروس في هذا القسم",
+    "description": "الوصف",
+    "videoNotSupported": "المتصفح لا يدعم تشغيل الفيديو",
+    "noVideo": "لا يوجد فيديو لهذا الدرس",
+    "premium": "مميز"
+    
+  },
+  "payment": {
+    "title": "إتمام الدفع",
+    "course": "الدورة",
+    "amount": "المبلغ",
+    "payNow": "ادفع الآن",
+    "success": "تم الدفع بنجاح! أنت الآن مسجل في الدورة.",
+    "error": "فشل الدفع. الرجاء المحاولة مرة أخرى.",
+    "note": "سيتم خصم المبلغ بشكل آمن",
+    "noCourse": "لم يتم اختيار دورة"
+  },
+   "rating": {
+    "rate": "تقييم",
+    "update": "تحديث التقييم",
+    "yourRating": "تقييمك",
+    "excellent": "ممتاز!",
+    "veryGood": "جيد جداً",
+    "good": "جيد",
+    "fair": "مقبول",
+    "poor": "ضعيف",
+    "review": "المراجعة (اختياري)",
+    "reviewPlaceholder": "شارك تجربتك مع هذه الدورة...",
+    "submit": "إرسال التقييم"
+  },
+  "dialog": {
+    "unenrollTitle": "إلغاء التسجيل من الدورة",
+    "unenrollMessage": "هل أنت متأكد من إلغاء التسجيل من هذه الدورة؟ ستفقد الوصول إلى جميع مواد الدورة.",
+    "deleteTitle": "حذف العنصر",
+    "deleteMessage": "هل أنت متأكد من حذف هذا العنصر؟ لا يمكن التراجع عن هذا الإجراء.",
+    "confirmTitle": "تأكيد الإجراء",
+    "confirmMessage": "هل أنت متأكد من المتابعة بهذا الإجراء؟"
   }
 }

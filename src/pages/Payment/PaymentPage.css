@@ -1,0 +1,130 @@
+/* src/pages/Payment/PaymentPage.css */
+
+.payment-page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: calc(100vh - 60px);
+  padding: 40px 20px;
+  background: var(--bg);
+}
+
+.payment-card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 24px;
+  padding: 40px;
+  max-width: 480px;
+  width: 100%;
+}
+
+.payment-card h1 {
+  font-size: 28px;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 30px;
+  background: linear-gradient(135deg, var(--primary), var(--purple));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.payment-course-info {
+  background: var(--surface-2);
+  border-radius: 16px;
+  padding: 20px;
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.payment-course-info h3 {
+  font-size: 18px;
+  margin-bottom: 8px;
+}
+
+.payment-price {
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--primary);
+}
+
+.payment-details {
+  margin-bottom: 30px;
+}
+
+.payment-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.payment-row:last-child {
+  border-bottom: none;
+}
+
+.payment-row span:first-child {
+  color: var(--muted);
+}
+
+.payment-amount {
+  font-weight: 600;
+  color: var(--primary);
+}
+
+.payment-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.cancel-btn {
+  flex: 1;
+  padding: 14px;
+  background: transparent;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  color: var(--text);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.cancel-btn:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+.pay-btn {
+  flex: 2;
+  padding: 14px;
+  background: linear-gradient(135deg, var(--primary), var(--purple));
+  border: none;
+  border-radius: 12px;
+  color: var(--bg);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.pay-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(88, 166, 255, 0.3);
+}
+
+.pay-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.payment-note {
+  margin-top: 20px;
+  font-size: 12px;
+  color: var(--muted);
+  text-align: center;
+}
+
+.payment-error {
+  text-align: center;
+  padding: 60px;
+}
