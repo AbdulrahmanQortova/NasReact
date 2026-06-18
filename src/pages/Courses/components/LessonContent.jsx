@@ -5,11 +5,10 @@ import './LessonContent.css';
 export default function LessonContent({ lesson }) {
   const { t } = useTranslation();
 
-  // ✅ دالة لاستخراج YouTube Video ID من الرابط
   const getYouTubeVideoId = (url) => {
     if (!url) return null;
     
-    // دعم جميع صيغ YouTube
+
     const patterns = [
       // https://www.youtube.com/watch?v=VIDEO_ID
       /(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\n?#]+)/,
@@ -26,7 +25,6 @@ export default function LessonContent({ lesson }) {
       if (match) return match[1];
     }
     
-    // إذا كان الرابط يحتوي على embed بالفعل
     if (url.includes('youtube.com/embed/')) {
       return url.split('/embed/')[1]?.split('?')[0];
     }
@@ -34,7 +32,6 @@ export default function LessonContent({ lesson }) {
     return null;
   };
 
-  // ✅ دالة لإنشاء iframe
   const getYouTubeEmbedUrl = (url) => {
     const videoId = getYouTubeVideoId(url);
     if (!videoId) return null;
@@ -68,7 +65,6 @@ export default function LessonContent({ lesson }) {
       </div>
 
       <div className="lesson-content-body">
-        {/* ✅ فيديو يوتيوب عبر iframe */}
         {isYouTubeVideo ? (
           <div className="video-container">
             <iframe
@@ -97,7 +93,6 @@ export default function LessonContent({ lesson }) {
           </div>
         )}
 
-        {/* ✅ عرض الوصف إذا كان موجوداً */}
         {lesson.contentMarkdown && (
           <div className="lesson-description">
             <h3>{t('courseDetails.description')}</h3>

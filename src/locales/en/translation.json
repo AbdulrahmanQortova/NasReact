@@ -137,15 +137,18 @@
       "learningPaths": "Learning Paths Management",
       "users": "Users Management",
       "reports": "Analytics & Reports",
+      "exams": "Exams Management",
       "settings": "Platform Settings"
     },
+
     "descriptions": {
       "courses": "Create, edit, and manage all courses on the platform",
       "topics": "Organize courses by topics and categories",
       "learningPaths": "Create and manage learning paths to guide students through structured courses",
       "users": "Manage students, instructors, and administrators",
       "reports": "View platform analytics and generate reports",
-      "settings": "Configure platform settings and preferences"
+      "settings": "Configure platform settings and preferences",
+      "exams": "Create and manage exams, questions, and answers"
     },
     "courses": {
       "title": "All Courses",
@@ -206,7 +209,9 @@
       "expand": "Expand sidebar",
       "collapse": "Collapse sidebar",
       "learningPaths": "Learning Paths",
-      "learningPathsDesc": "Manage learning paths"
+      "learningPathsDesc": "Manage learning paths",
+      "exams": "Exams",
+      "examsDesc": "Manage exams and questions"
     },
     "topics": {
       "title": "All Topics",
@@ -390,6 +395,71 @@
       "reorderSuccess": "Sections reordered successfully",
       "reorderError": "Failed to reorder sections",
       "manageLessons": "Manage Lessons"
+    },
+     "exams": {
+      "title": "All Exams",
+      "total": "{{count}} exams total",
+      "createNew": "Create New Exam",
+      "createTitle": "Create New Exam",
+      "noExams": "No exams yet. Create your first exam!",
+      "createFirst": "Create Exam",
+      "title": "Title",
+      "course": "Course",
+      "duration": "Duration",
+      "passingScore": "Passing Score",
+      "questions": "Questions",
+      "actions": "Actions",
+      "standalone": "Standalone",
+      "minutes": "minutes",
+      "published": "Published",
+      "createBtn": "Create Exam",
+      "createError": "Failed to create exam",
+      "loadError": "Failed to load exams",
+      "loading": "Loading exams...",
+      "titleRequired": "Exam title is required",
+      "titlePlaceholder": "e.g., Final Exam, Midterm Exam",
+      "description": "Description",
+      "descriptionPlaceholder": "Exam description...",
+      "manageQuestions": "Manage Questions",
+      "addQuestion": "Add Question",
+      "addAnswer": "Add Answer",
+      "noQuestions": "No questions yet. Add your first question!",
+      "noAnswers": "No answers yet. Add your first answer!",
+      "singleAnswer": "Single Answer",
+      "multipleAnswer": "Multiple Answer",
+      "textAnswer": "Text Answer",
+      "questionText": "Question Text",
+      "questionTextPlaceholder": "Enter your question here...",
+      "questionType": "Question Type",
+      "points": "Points",
+      "createQuestion": "Create Question",
+      "createQuestionBtn": "Create Question",
+      "questionTextRequired": "Question text is required",
+      "questionCreateSuccess": "Question created successfully",
+      "questionCreateError": "Failed to create question",
+      "questionDeleteSuccess": "Question deleted successfully",
+      "answerText": "Answer Text",
+      "answerTextPlaceholder": "Enter answer text...",
+      "answerTextHint": "For text answers, this is the expected answer",
+      "markAsCorrect": "Mark as correct answer",
+      "createAnswer": "Create Answer",
+      "createAnswerBtn": "Create Answer",
+      "answerTextRequired": "Answer text is required",
+      "answerCreateSuccess": "Answer created successfully",
+      "answerCreateError": "Failed to create answer",
+      "answerDeleteSuccess": "Answer deleted successfully",
+      "setCorrect": "Set as Correct",
+      "correctAnswerSet": "Correct answer set successfully",
+      "correctAnswerError": "Failed to set correct answer",
+      "confirmDelete": "Are you sure you want to delete this exam?",
+      "confirmDeleteQuestion": "Are you sure you want to delete this question? All associated answers will also be deleted.",
+      "confirmDeleteAnswer": "Are you sure you want to delete this answer?",
+      "deleteError": "Failed to delete",
+      "deleteSuccess": "Deleted successfully",
+      "loadQuestionsError": "Failed to load questions",
+      "freeExams": "Free Exams",
+      "courseExams": "Course Exams",
+      "noCourseExams": "No exams "
     }
 
   },
@@ -413,7 +483,7 @@
     "exploreCourses": "Explore Courses",
     "getStarted": "Get Started"
   },
-    "courseDetails": {
+  "courseDetails": {
     "loadError": "Failed to load course details",
     "notFound": "Course not found",
     "sections": "Course Sections",
@@ -465,4 +535,5 @@
     "confirmTitle": "Confirm Action",
     "confirmMessage": "Are you sure you want to proceed with this action?"
   }
+
 }

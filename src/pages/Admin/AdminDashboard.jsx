@@ -7,6 +7,7 @@ import Sidebar from './components/Sidebar';
 import CoursesManagement from './components/CoursesManagement';
 import TopicsManagement from './components/TopicsManagement';
 import LearningPathsManagement from './components/LearningPathsManagement';
+import ExamsManagement from './components/Exam/ExamsManagement';
 import UsersManagement from './components/UsersManagement';
 import ReportsManagement from './components/ReportsManagement';
 import SettingsManagement from './components/SettingsManagement';
@@ -36,6 +37,8 @@ export default function AdminDashboard() {
         return <TopicsManagement />;
       case 'learningPaths':
         return <LearningPathsManagement />;
+      case 'exams':
+        return <ExamsManagement />;
       case 'users':
         return <UsersManagement />;
       case 'reports':

@@ -1,0 +1,106 @@
+/* src/pages/Admin/components/Question/CreateQuestionModal.css */
+
+.create-question-modal {
+  background: var(--surface);
+  border: 1px solid rgba(88, 166, 255, 0.2);
+  border-radius: 24px;
+  width: 90%;
+  max-width: 550px;
+  max-height: 85vh;
+  overflow: hidden;
+  animation: slideUp 0.3s ease;
+}
+
+.create-question-modal .modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--line);
+}
+
+.create-question-modal .modal-header h2 {
+  font-size: 22px;
+  font-weight: 700;
+  background: linear-gradient(135deg, var(--primary), var(--purple));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  margin: 0;
+}
+
+.create-question-modal .modal-body {
+  padding: 24px;
+  max-height: calc(85vh - 80px);
+  overflow-y: auto;
+}
+
+.create-question-modal .form-row {
+  display: flex;
+  gap: 16px;
+}
+
+.create-question-modal .form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 16px;
+  flex: 1;
+}
+
+.create-question-modal .form-group label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.create-question-modal .form-group input,
+.create-question-modal .form-group textarea,
+.create-question-modal .form-group select {
+  padding: 10px 12px;
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  color: var(--text);
+  font-size: 14px;
+  transition: all 0.2s;
+  width: 100%;
+}
+
+.create-question-modal .form-group input:focus,
+.create-question-modal .form-group textarea:focus,
+.create-question-modal .form-group select:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px rgba(88, 166, 255, 0.1);
+}
+
+.create-question-modal .modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid var(--line);
+}
+
+@media (max-width: 640px) {
+  .create-question-modal {
+    width: 95%;
+  }
+  
+  .create-question-modal .form-row {
+    flex-direction: column;
+    gap: 0;
+  }
+  
+  .create-question-modal .modal-actions {
+    flex-direction: column;
+  }
+  
+  .secondary-btn,
+  .primary-btn {
+    width: 100%;
+    text-align: center;
+  }
+}
