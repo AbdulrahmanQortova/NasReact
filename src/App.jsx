@@ -9,6 +9,7 @@ import CourseDetailsPage from './pages/Courses/CourseDetailsPage';
 import PaymentPage from './pages/Payment/PaymentPage';
 import AdminDashboard from './pages/Admin/AdminDashboard';
 import CourseDetails from './pages/Admin/CourseDetails';
+import Community from './pages/Community/Community';
 
 // Protected Route Component
 const ProtectedRoute = ({ children }) => {
@@ -69,15 +70,10 @@ export default function App() {
             </ProtectedRoute>
           } />
           
-          <Route path="/live" element={
-            <ProtectedRoute>
-              <div style={{ padding: '40px' }}>Live Page</div>
-            </ProtectedRoute>
-          } />
-          
+          {/* ✅ Community Page - Protected */}
           <Route path="/community" element={
             <ProtectedRoute>
-              <div style={{ padding: '40px' }}>Community Page</div>
+              <Community />
             </ProtectedRoute>
           } />
           

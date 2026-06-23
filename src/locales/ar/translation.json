@@ -59,7 +59,8 @@
     "enrolled": "مسجل",
     "rate": "تقييم",
     "free": "مجاني",
-    "duration": "دقيقة"
+    "duration": "دقيقة",
+    "noMoreCourses": "لا توجد دورات إضافية للتحميل"
   },
   "hero": {
     "title": "وسع",
@@ -115,7 +116,6 @@
     "cancel": "إلغاء",
     "delete": "حذف",
     "edit": "تعديل",
-    "update": "تحديث",
     "confirm": "تأكيد",
     "loading": "جاري التحميل...",
     "error": "حدث خطأ",
@@ -123,8 +123,13 @@
     "next": "التالي",
     "retry": "إعادة المحاولة",
     "creating": "جاري الإنشاء...",
+    "update": "تحديث",
     "remove": "إزالة",
-    "saving": "جاري الحفظ..."
+    "saving": "جاري الحفظ...",
+    "deleting": "جاري الحذف...",
+    "report": "إبلاغ",
+    "posting": "جاري النشر...",
+     "undo" : "تراجع"
   },
   "admin": {
     "loading": "جاري تحميل لوحة التحكم...",
@@ -463,7 +468,11 @@
       "confirmDeleteAnswer": "هل أنت متأكد من حذف هذه الإجابة؟",
       "deleteError": "فشل الحذف",
       "deleteSuccess": "تم الحذف بنجاح",
-      "loadQuestionsError": "فشل في تحميل الأسئلة"
+      "loadQuestionsError": "فشل في تحميل الأسئلة",
+      "editTitle" : "تعديل الامتحان",
+      "updateSuccess": "تم تحديث الامتحان بنجاح",
+      "updateError": "فشل في تحديث الامتحان",
+      "updateBtn": "تحديث"
     }
   },
   "home": {
@@ -537,6 +546,53 @@
     "deleteTitle": "حذف العنصر",
     "deleteMessage": "هل أنت متأكد من حذف هذا العنصر؟ لا يمكن التراجع عن هذا الإجراء.",
     "confirmTitle": "تأكيد الإجراء",
-    "confirmMessage": "هل أنت متأكد من المتابعة بهذا الإجراء؟"
+    "confirmMessage": "هل أنت متأكد من المتابعة بهذا الإجراء؟",
+    "deleteCommentTitle": "حذف التعليق",
+    "deleteCommentMessage": "هل أنت متأكد من حذف هذا التعليق؟"
+  },
+   "community": {
+    "title": "المجتمع",
+    "subtitle": "شارك أفكارك وتواصل مع الآخرين",
+    "createPost": "إنشاء منشور",
+    "postTitle": "عنوان المنشور",
+    "postContent": "ماذا تريد أن تشارك؟",
+    "hashtags": "الوسوم (مفصولة بفاصلة)",
+    "hashtagsHint": "مثال: react, javascript, programming",
+    "uploadMedia": "رفع وسائط",
+    "uploadHint": "الصور والفيديوهات مدعومة",
+    "post": "نشر",
+    "posting": "جاري النشر...",
+    "postCreated": "تم إنشاء المنشور بنجاح!",
+    "postDeleted": "تم حذف المنشور بنجاح",
+    "noPosts": "لا توجد منشورات",
+    "beFirst": "كن أول من يشارك شيئاً!",
+    "createFirstPost": "إنشاء أول منشور",
+    "noMorePosts": "لا توجد منشورات أخرى",
+    "error": "فشل في تحميل المنشورات",
+    "fillAllFields": "يرجى ملء جميع الحقول المطلوبة",
+    "createError": "فشل في إنشاء المنشور",
+    "deleteError": "فشل في حذف المنشور",
+    "likeError": "فشل في الإعجاب بالمنشور",
+    "commentAdded": "تم إضافة التعليق بنجاح",
+    "commentError": "فشل في إضافة التعليق",
+    "writeComment": "اكتب تعليقاً...",
+    "send": "إرسال",
+    "noComments": "لا توجد تعليقات",
+    "loadMoreComments": "تحميل المزيد من التعليقات",
+    "allCommentsLoaded": "تم تحميل جميع التعليقات",
+    "confirmDelete": "هل أنت متأكد من حذف هذا المنشور؟",
+    "reportPost": "الإبلاغ عن هذا المنشور",
+    "deleting": "جاري الحذف...",
+    "editPost" : "تعديل المنشور",
+    "media": "الوسائط",
+    "uploadNewMedia": "رفع وسائط جديدة",
+    "mediaWillBeRemoved" : "هل أنت متأكد من رغبتك في إزالة هذا العنصر؟",
+    "undo" : "تراجع",
+    "mediaRemoved" : "تمت إزالة الوسائط بنجاح",
+    "postUpdated" : "تم تحديث المنشور بنجاح",
+    "updateError" : "فشل في تحديث المنشور",
+    "editComment" : "تعديل التعليق",
+    "commentUpdated" : "تم تحديث التعليق بنجاح"
   }
+  
 }

@@ -1,8 +1,13 @@
 // src/components/layout/Navbar.jsx
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { authService } from '../../services/authService';
+
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faBell } from '@fortawesome/free-solid-svg-icons';
+import { useNotifications } from '../../hooks/useNotifications';
+import NotificationDropdown from '../notifications/NotificationDropdown';
 import './Navbar.css';
 
 export default function Navbar() {
@@ -22,7 +27,18 @@ export default function Navbar() {
   });
   const navigate = useNavigate();
   const location = useLocation();
-
+const [showNotifications, setShowNotifications] = useState(false);
+const notifBtnRef = useRef(null);
+const {
+  notifications,
+  unreadCount,
+  loading,
+  markAsRead,
+  markAllAsRead,
+  deleteNotification,
+  deleteAll,
+  clearUnreadCount, 
+} = useNotifications();
   // Languages list
   const languages = [
     { code: 'en', name: 'English', dir: 'ltr', icon: '🇬🇧' },
@@ -150,21 +166,21 @@ export default function Navbar() {
 
   const getNavLinks = () => {
     const links = [
-      { path: '/', label: t('nav.home'), icon: '🏠' }
+      { path: '/', label: t('nav.home') }
     ];
     
-    links.push({ path: '/courses', label: t('nav.courses'), icon: '📚' });
+    links.push({ path: '/courses', label: t('nav.courses') });
     
     if (isLoggedIn) {
-      links.push({ path: '/live', label: t('nav.live'), icon: '📺' });
-      links.push({ path: '/community', label: t('nav.community'), icon: '💬' });
+      // ✅ تم إزالة Live
+      links.push({ path: '/community', label: t('nav.community') });
       if (hasRole('Student')) {
-        links.push({ path: '/exams', label: t('nav.exams'), icon: '📝' });
+        links.push({ path: '/exams', label: t('nav.exams') });
       }
       if (isAdmin()) {
-        links.push({ path: '/admin/dashboard', label: t('nav.adminDashboard'), icon: '⚙️', isAdmin: true });
+        links.push({ path: '/admin/dashboard', label: t('nav.adminDashboard'), isAdmin: true });
       }
-      links.push({ path: '/dashboard', label: t('nav.dashboard'), icon: '📊' });
+      links.push({ path: '/dashboard', label: t('nav.dashboard') });
     }
     return links;
   };
@@ -186,7 +202,6 @@ export default function Navbar() {
             className={`${link.isAdmin ? 'admin-nav-link' : ''} ${isActive(link.path) ? 'active-link' : ''}`}
           >
             <button role="menuitem">
-              {link.icon && <span className="link-icon">{link.icon}</span>}
               {link.label}
             </button>
           </Link>
@@ -258,7 +273,34 @@ export default function Navbar() {
         
         {isLoggedIn ? (
           <>
-            <button className="icon-btn">🔔</button>
+
+<div style={{ position: 'relative' }} ref={notifBtnRef}>
+  <button
+    className="icon-btn"
+    onClick={() => {
+      const opening = !showNotifications;
+      setShowNotifications(opening);
+      if (opening) clearUnreadCount(); 
+    }}
+    aria-label="Notifications"
+  >
+    <FontAwesomeIcon icon={faBell} />
+    {unreadCount > 0 && (
+      <span className="notif-dot">{unreadCount > 9 ? '9+' : unreadCount}</span>
+    )}
+  </button>
+  <NotificationDropdown
+    isOpen={showNotifications}
+    onClose={() => setShowNotifications(false)}
+    notifications={notifications}
+    unreadCount={unreadCount}
+    loading={loading}
+    onMarkAsRead={markAsRead}
+    onMarkAllAsRead={markAllAsRead}
+    onDelete={deleteNotification}
+    onDeleteAll={deleteAll}
+  />
+</div>
             <div className="user-menu">
               <button className="user-menu-btn" onClick={() => setShowUserMenu(!showUserMenu)}>
                 <div className="user-avatar">

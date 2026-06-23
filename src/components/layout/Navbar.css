@@ -39,10 +39,10 @@
   font-size: 24px;
 }
 
-/* Nav Links */
+/* Nav Links - ✅ تقريب المسافات */
 .nav-links {
   display: flex;
-  gap: 8px;
+  gap: 2px; /* ✅ تقليل المسافة بين التابس */
   align-items: center;
 }
 
@@ -50,23 +50,20 @@
   background: transparent;
   border: none;
   color: var(--text);
-  padding: 8px 16px;
+  padding: 6px 12px; /* ✅ تقليل الـ padding */
   cursor: pointer;
-  font-weight: 600;
+  font-weight: 500; /* ✅ تقليل الوزن */
+  font-size: 14px; /* ✅ حجم خط أصغر */
   transition: all 0.2s;
-  border-radius: 8px;
+  border-radius: 6px;
   display: flex;
   align-items: center;
-  gap: 6px;
-}
-
-.link-icon {
-  font-size: 16px;
+  gap: 4px;
 }
 
 .nav-links a button:hover {
   color: var(--primary);
-  background: rgba(88, 166, 255, 0.1);
+  background: rgba(88, 166, 255, 0.08);
 }
 
 .nav-links a.active-link button {
@@ -80,14 +77,14 @@
   -webkit-background-clip: text !important;
   background-clip: text !important;
   color: transparent !important;
-  font-weight: 700 !important;
+  font-weight: 600 !important;
 }
 
 /* Search Box */
 .nav-search-wrap {
   flex: 1;
-  max-width: 320px;
-  margin: 0 20px;
+  max-width: 280px;
+  margin: 0 16px;
 }
 
 .search-wrapper {
@@ -99,13 +96,13 @@
 
 .search-input {
   width: 100%;
-  height: 40px;
-  padding: 0 36px 0 16px;
+  height: 36px; /* ✅ تقليل الارتفاع */
+  padding: 0 32px 0 14px;
   background: var(--surface-2);
   border: 1px solid var(--line);
   border-radius: 40px;
   color: var(--text);
-  font-size: 14px;
+  font-size: 13px;
   transition: all 0.2s ease;
 }
 
@@ -118,21 +115,21 @@
 
 .search-input::placeholder {
   color: var(--muted);
-  font-size: 13px;
+  font-size: 12px;
 }
 
 .search-clear-btn {
   position: absolute;
-  right: 10px;
+  right: 8px;
   top: 50%;
   transform: translateY(-50%);
-  background: rgba(128, 128, 128, 0.2);
+  background: rgba(128, 128, 128, 0.15);
   border: none;
   color: var(--muted);
   cursor: pointer;
-  font-size: 12px;
-  width: 22px;
-  height: 22px;
+  font-size: 10px;
+  width: 18px;
+  height: 18px;
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -151,8 +148,8 @@
   background: var(--surface-2);
   border: 1px solid var(--line);
   border-radius: 50%;
-  width: 36px;
-  height: 36px;
+  width: 34px;
+  height: 34px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -169,8 +166,8 @@
 }
 
 .theme-icon {
-  width: 20px;
-  height: 20px;
+  width: 18px;
+  height: 18px;
 }
 
 /* Language Dropdown */
@@ -181,18 +178,20 @@
 .lang-btn {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 4px;
+  font-size: 13px;
+  padding: 6px 10px;
 }
 
 .language-menu {
   position: absolute;
-  top: 45px;
+  top: 40px;
   right: 0;
   background: var(--surface);
   border: 1px solid var(--line);
-  border-radius: 12px;
-  padding: 8px;
-  min-width: 140px;
+  border-radius: 10px;
+  padding: 6px;
+  min-width: 130px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
   z-index: 100;
   animation: fadeIn 0.2s ease;
@@ -201,16 +200,16 @@
 .language-menu button {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
   width: 100%;
-  padding: 8px 12px;
+  padding: 6px 10px;
   background: transparent;
   border: none;
-  border-radius: 8px;
+  border-radius: 6px;
   color: var(--text);
   cursor: pointer;
   transition: all 0.2s;
-  font-size: 14px;
+  font-size: 13px;
 }
 
 .language-menu button:hover {
@@ -223,7 +222,7 @@
 }
 
 .language-menu button span {
-  font-size: 16px;
+  font-size: 14px;
 }
 
 @keyframes fadeIn {
@@ -241,17 +240,18 @@
 .nav-actions {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 4px; /* ✅ تقليل المسافة بين الأزرار */
 }
 
 .ghost-btn {
   background: transparent;
   border: none;
   color: var(--text);
-  padding: 8px 14px;
+  padding: 6px 12px;
   cursor: pointer;
   font-weight: 500;
-  border-radius: 8px;
+  font-size: 13px;
+  border-radius: 6px;
   transition: all 0.2s;
 }
 
@@ -264,10 +264,11 @@
   background: var(--primary);
   border: none;
   color: var(--bg);
-  padding: 8px 16px;
-  border-radius: 8px;
+  padding: 6px 14px;
+  border-radius: 6px;
   cursor: pointer;
   font-weight: 600;
+  font-size: 13px;
   transition: all 0.2s;
 }
 
@@ -280,11 +281,11 @@
   background: transparent;
   border: none;
   color: var(--text);
-  width: 36px;
-  height: 36px;
+  width: 34px;
+  height: 34px;
   border-radius: 50%;
   cursor: pointer;
-  font-size: 18px;
+  font-size: 16px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -295,23 +296,6 @@
 .icon-btn:hover {
   background: rgba(255, 255, 255, 0.05);
   color: var(--primary);
-}
-
-.notification-badge {
-  position: absolute;
-  top: -2px;
-  right: -2px;
-  min-width: 16px;
-  height: 16px;
-  border-radius: 50%;
-  background: var(--red);
-  color: white;
-  font-size: 9px;
-  font-weight: 700;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0 3px;
 }
 
 /* User Menu */
@@ -329,15 +313,15 @@
 }
 
 .user-avatar {
-  width: 36px;
-  height: 36px;
+  width: 34px;
+  height: 34px;
   border-radius: 50%;
   background: linear-gradient(135deg, var(--primary), var(--purple));
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: 700;
-  font-size: 16px;
+  font-size: 14px;
   color: var(--bg);
   overflow: hidden;
 }
@@ -350,27 +334,27 @@
 
 .user-dropdown {
   position: absolute;
-  top: 45px;
+  top: 42px;
   right: 0;
   background: var(--surface);
   border: 1px solid var(--line);
-  border-radius: 12px;
-  padding: 8px 0;
-  min-width: 220px;
+  border-radius: 10px;
+  padding: 6px 0;
+  min-width: 200px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
   z-index: 100;
   animation: fadeIn 0.2s ease;
 }
 
 .user-info {
-  padding: 8px 16px;
+  padding: 6px 14px;
   text-align: left;
 }
 
 .user-info strong {
   display: block;
-  font-size: 14px;
-  margin-bottom: 4px;
+  font-size: 13px;
+  margin-bottom: 2px;
 }
 
 .user-info small {
@@ -378,35 +362,15 @@
   color: var(--muted);
 }
 
-.user-role {
-  display: inline-block;
-  margin-top: 6px;
-  padding: 3px 8px;
-  border-radius: 20px;
-  font-size: 10px;
-  font-weight: 700;
-  text-align: center;
-}
-
-.student-role {
-  background: rgba(63, 185, 80, 0.15);
-  color: var(--green);
-}
-
-.admin-role {
-  background: linear-gradient(135deg, rgba(88, 166, 255, 0.15), rgba(210, 168, 255, 0.15));
-  color: var(--primary);
-}
-
 .user-dropdown hr {
-  margin: 8px 0;
+  margin: 6px 0;
   border-color: var(--line);
 }
 
 .user-dropdown button {
   width: 100%;
   text-align: left;
-  padding: 10px 16px;
+  padding: 8px 14px;
   background: transparent;
   border: none;
   color: var(--text);
@@ -427,6 +391,12 @@
 /* Hamburger Menu Button */
 .hamburger-btn {
   display: none;
+  background: transparent;
+  border: none;
+  color: var(--text);
+  font-size: 22px;
+  cursor: pointer;
+  padding: 4px 8px;
 }
 
 /* Mobile Menu */
@@ -437,10 +407,10 @@
   right: 0;
   background: var(--surface);
   border-top: 1px solid var(--line);
-  padding: 20px;
+  padding: 16px 20px;
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 12px;
   z-index: 99;
   animation: slideDown 0.3s ease;
 }
@@ -457,10 +427,11 @@
 }
 
 .mobile-menu a {
-  padding: 10px 0;
+  padding: 8px 0;
   color: var(--text);
   text-decoration: none;
-  font-weight: 600;
+  font-weight: 500;
+  font-size: 15px;
   border-bottom: 1px solid var(--line);
 }
 
@@ -475,8 +446,8 @@
 /* Responsive */
 @media (max-width: 1024px) {
   .nav-search-wrap {
-    max-width: 240px;
-    margin: 0 12px;
+    max-width: 200px;
+    margin: 0 10px;
   }
 }
 
@@ -490,22 +461,28 @@
   }
   
   .nav-search-wrap {
-    max-width: 200px;
+    max-width: 160px;
   }
   
   .ghost-btn {
-    padding: 6px 10px;
+    padding: 4px 8px;
+    font-size: 12px;
+  }
+  
+  .primary-btn {
+    padding: 4px 10px;
+    font-size: 12px;
   }
 }
 
 @media (max-width: 768px) {
   .top-nav {
-    padding: 0 16px;
+    padding: 0 12px;
   }
   
   .nav-search-wrap {
-    max-width: 180px;
-    margin: 0 8px;
+    max-width: 140px;
+    margin: 0 6px;
   }
   
   .brand-btn span:last-child {
@@ -513,12 +490,33 @@
   }
   
   .brand-icon {
-    font-size: 24px;
+    font-size: 22px;
   }
-  
+  /* Notification dot */
+.notif-dot {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  background: #ef4444;
+  color: #ffffff;
+  font-size: 10px;
+  font-weight: 700;
+  min-width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 4px;
+  pointer-events: none;
+  border: 2px solid var(--surface);
+  line-height: 1;
+  box-shadow: 0 2px 6px rgba(239, 68, 68, 0.5);
+  z-index: 10;
+}
   .ghost-btn, .primary-btn {
-    padding: 6px 10px;
-    font-size: 13px;
+    padding: 4px 8px;
+    font-size: 12px;
   }
   
   .user-dropdown {
@@ -558,27 +556,32 @@
   
   .brand-btn span:last-child {
     display: inline;
+    font-size: 14px;
+  }
+  
+  .brand-icon {
+    font-size: 20px;
   }
 }
 
 @media (min-width: 901px) {
   .hamburger-btn {
-    display: none;
+    display: none !important;
   }
   
   .mobile-menu {
-    display: none;
+    display: none !important;
   }
 }
 
 /* RTL Support */
 [dir="rtl"] .search-input {
-  padding: 0 16px 0 36px;
+  padding: 0 14px 0 32px;
 }
 
 [dir="rtl"] .search-clear-btn {
   right: auto;
-  left: 10px;
+  left: 8px;
 }
 
 [dir="rtl"] .language-menu {

@@ -1,7 +1,5 @@
-
+// src/services/api.js
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://localhost:7021/api';
-
-
 
 const handleResponse = async (response) => {
   console.log(`📡 ${response.method || 'REQUEST'} ${response.url} - Status: ${response.status}`);
@@ -17,8 +15,8 @@ const handleResponse = async (response) => {
         errorMessage = validationErrors.join(', ');
       } else if (errorData.message) {
         errorMessage = errorData.message;
-        } else if (errorData.error) {      
-      errorMessage = errorData.error;
+      } else if (errorData.error) {      
+        errorMessage = errorData.error;
       } else if (errorData.title) {
         errorMessage = errorData.title;
       }
@@ -42,7 +40,6 @@ const getAuthToken = () => {
   return localStorage.getItem('auth_token');
 };
 
-
 export const getAuthHeaders = () => {
   const token = getAuthToken();
   return {
@@ -51,15 +48,12 @@ export const getAuthHeaders = () => {
   };
 };
 
-
 export const getFormDataHeaders = () => {
   const token = getAuthToken();
   return {
     'Authorization': token ? `Bearer ${token}` : '',
-
   };
 };
-
 
 export const api = {
   get: async (endpoint, customHeaders = {}) => {
@@ -82,11 +76,15 @@ export const api = {
     return handleResponse(response);
   },
 
-  put: async (endpoint, data, customHeaders = {}) => {
+  // ✅ Fix: Add isFormData parameter to put
+  put: async (endpoint, data, isFormData = false, customHeaders = {}) => {
+    const headers = isFormData ? getFormDataHeaders() : getAuthHeaders();
+    const body = isFormData ? data : JSON.stringify(data);
+    
     const response = await fetch(`${API_BASE_URL}${endpoint}`, {
       method: 'PUT',
-      headers: { ...getAuthHeaders(), ...customHeaders },
-      body: JSON.stringify(data),
+      headers: { ...headers, ...customHeaders },
+      body,
     });
     return handleResponse(response);
   },

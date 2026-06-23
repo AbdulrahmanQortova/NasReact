@@ -1,6 +1,5 @@
-
 /* ============================================
-   Courses Page - Modern Design
+   Courses Page - Modern Design with Infinite Scroll
    ============================================ */
 
 .courses-page {
@@ -50,6 +49,16 @@
   background: linear-gradient(135deg, var(--primary), var(--purple));
   border-color: transparent;
   color: var(--bg);
+}
+
+/* Category Skeleton */
+.category-chip-skeleton {
+  padding: 10px 24px;
+  background: var(--surface-2);
+  border-radius: 40px;
+  width: 80px;
+  height: 40px;
+  animation: pulse 1.5s ease-in-out infinite;
 }
 
 /* ============================================
@@ -201,8 +210,21 @@
   gap: 30px;
 }
 
-/* Course Card - نفس تصميم Home */
+/* Skeleton Grid */
+.courses-grid.skeleton {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 30px;
+}
+
+/* ============================================
+   Course Card - Fade In Animation
+   ============================================ */
+
 .course-card {
+  opacity: 0;
+  transform: translateY(30px);
+  animation: fadeInUp 0.6s ease forwards;
   background: var(--surface);
   border: 1px solid var(--line);
   border-radius: 20px;
@@ -215,6 +237,37 @@
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
   border-color: var(--primary);
 }
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* RTL Animation */
+[dir="rtl"] .course-card {
+  animation-name: fadeInUpRTL;
+}
+
+@keyframes fadeInUpRTL {
+  from {
+    opacity: 0;
+    transform: translateY(30px) translateX(0);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) translateX(0);
+  }
+}
+
+/* ============================================
+   Course Card Styles
+   ============================================ */
 
 .course-card-image {
   position: relative;
@@ -278,6 +331,10 @@
   margin-bottom: 10px;
   color: var(--text);
   line-height: 1.3;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .course-card-description {
@@ -372,12 +429,13 @@
   background: transparent !important;
   border: 1.5px solid var(--green) !important;
   color: var(--green) !important;
-  cursor: default !important;
+  cursor: pointer !important;
 }
 
 .enrolled-btn:hover {
-  transform: none !important;
-  box-shadow: none !important;
+  background: rgba(248, 81, 73, 0.1) !important;
+  border-color: var(--red) !important;
+  color: var(--red) !important;
 }
 
 .rate-btn {
@@ -396,53 +454,6 @@
   cursor: not-allowed;
   transform: none;
 }
-
-/* ============================================
-   Pagination
-   ============================================ */
-
-.courses-pagination {
-  max-width: 1400px;
-  margin: 40px auto;
-  padding: 0 20px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 16px;
-}
-
-.page-btn {
-  padding: 10px 20px;
-  background: var(--surface);
-  border: 1px solid var(--line);
-  border-radius: 10px;
-  color: var(--text);
-  cursor: pointer;
-  font-weight: 500;
-  transition: all 0.2s;
-}
-
-.page-btn:hover:not(:disabled) { border-color: var(--primary); color: var(--primary); }
-.page-btn:disabled { opacity: 0.4; cursor: not-allowed; }
-
-.page-numbers { display: flex; gap: 8px; }
-
-.page-number {
-  width: 40px;
-  height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: var(--surface);
-  border: 1px solid var(--line);
-  border-radius: 10px;
-  color: var(--text);
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.page-number:hover { border-color: var(--primary); color: var(--primary); }
-.page-number.active { background: var(--primary); border-color: transparent; color: var(--bg); }
 
 /* ============================================
    Loading State
@@ -518,6 +529,43 @@
   cursor: pointer;
 }
 
+.clear-filters-btn:hover {
+  background: var(--primary-hover);
+  transform: translateY(-2px);
+}
+
+/* ============================================
+   Infinite Scroll Styles
+   ============================================ */
+
+.infinite-scroll-sentinel {
+  height: 20px;
+  width: 100%;
+  visibility: hidden;
+}
+
+.infinite-scroll-loader {
+  display: flex;
+  justify-content: center;
+  padding: 30px 0;
+}
+
+.spinner-small {
+  width: 40px;
+  height: 40px;
+  border: 3px solid var(--line);
+  border-top-color: var(--primary);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+.infinite-scroll-end {
+  text-align: center;
+  padding: 30px 0;
+  color: var(--muted);
+  font-size: 14px;
+}
+
 /* ============================================
    RTL Support
    ============================================ */
@@ -533,16 +581,119 @@
    Responsive
    ============================================ */
 
+@media (max-width: 992px) {
+  .courses-grid {
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 24px;
+  }
+  
+  .courses-grid.skeleton {
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 24px;
+  }
+}
+
 @media (max-width: 768px) {
-  .categories-container { justify-content: flex-start; }
-  .results-sort-bar { flex-direction: column; align-items: flex-start; }
-  .courses-grid { grid-template-columns: 1fr; padding: 0 16px; gap: 20px; }
-  .courses-pagination { flex-wrap: wrap; }
-  .page-numbers { order: 3; width: 100%; justify-content: center; }
+  .courses-page {
+    padding: 20px 0;
+  }
+  
+  .categories-container { 
+    justify-content: flex-start;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding-bottom: 8px;
+  }
+  
+  .category-chip {
+    padding: 8px 16px;
+    font-size: 13px;
+    flex-shrink: 0;
+  }
+  
+  .results-sort-bar { 
+    flex-direction: column; 
+    align-items: flex-start;
+    gap: 12px;
+  }
+  
+  .sort-section {
+    width: 100%;
+  }
+  
+  .sort-dropdown-wrapper {
+    flex: 1;
+    min-width: unset;
+  }
+  
+  .courses-grid { 
+    grid-template-columns: 1fr; 
+    padding: 0 16px; 
+    gap: 20px;
+  }
+  
+  .courses-grid.skeleton {
+    grid-template-columns: 1fr;
+    padding: 0 16px;
+    gap: 20px;
+  }
+  
+  .course-card-actions { 
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+  
+  .course-card-actions button {
+    flex: 1;
+    min-width: 120px;
+  }
+  
+  .results-count {
+    font-size: 22px;
+  }
 }
 
 @media (max-width: 480px) {
-  .category-chip { padding: 6px 16px; font-size: 12px; }
-  .course-card-actions { flex-direction: column; }
-  .course-card-actions button { width: 100%; }
+  .category-chip { 
+    padding: 6px 14px; 
+    font-size: 12px; 
+  }
+  
+  .course-card-actions { 
+    flex-direction: column; 
+  }
+  
+  .course-card-actions button { 
+    width: 100%;
+    min-width: unset;
+  }
+  
+  .course-card-title {
+    font-size: 16px;
+  }
+  
+  .course-card-description {
+    font-size: 13px;
+    -webkit-line-clamp: 3;
+  }
+  
+  .course-card-image {
+    height: 160px;
+  }
+  
+  .price-value {
+    font-size: 18px;
+  }
+  
+  .results-sort-bar {
+    padding: 0 16px;
+  }
+  
+  .results-count {
+    font-size: 20px;
+  }
+  
+  .results-label {
+    font-size: 14px;
+  }
 }

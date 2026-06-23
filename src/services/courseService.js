@@ -54,6 +54,34 @@ class CourseService {
     return await api.get(`/Courses?${queryParams.toString()}`);
   }
 
+// src/services/courseService.js - تأكد من هذه الدالة
+
+async getCoursesCursor(params = {}) {
+  const {
+    cursor = null,
+    pageSize = 6,
+    search = '',
+    topicId = '',
+    sortBy = '',
+    ascending = true,
+  } = params;
+
+  const queryParams = new URLSearchParams();
+  if (cursor) queryParams.append('cursor', cursor);
+  queryParams.append('pageSize', pageSize);
+  if (search) queryParams.append('search', search);
+  if (topicId) queryParams.append('topicId', topicId);
+  if (sortBy) queryParams.append('sortBy', sortBy);
+  queryParams.append('ascending', ascending);
+
+  const response = await api.get(`/Courses/cursor?${queryParams.toString()}`);
+  
+  // Log the response for debugging
+  console.log('API Response:', response);
+  
+  return response;
+}
+
   async getById(id) {
     return await api.get(`/Courses/${id}`);
   }
@@ -71,18 +99,17 @@ class CourseService {
     return await api.delete(`/Courses/${id}`);
   }
 
-// src/services/courseService.js
+  async rateCourse(id, ratingData) {
+    const payload = {
+      value: Number(ratingData.value ?? ratingData.rating ?? 0),
+      review: ratingData.review ?? ratingData.comment ?? ''
+    };
+    
+    console.log('Sending rating payload:', payload); 
+    
+    return await api.post(`/Courses/${id}/ratings`, payload);
+  }
 
-async rateCourse(id, ratingData) {
-  const payload = {
-    value: Number(ratingData.value ?? ratingData.rating ?? 0),
-    review: ratingData.review ?? ratingData.comment ?? ''
-  };
-  
-  console.log('Sending rating payload:', payload); 
-  
-  return await api.post(`/Courses/${id}/ratings`, payload);
-}
   async uploadThumbnail(id, file) {
     const formData = new FormData();
     formData.append('file', file);
@@ -132,78 +159,76 @@ async rateCourse(id, ratingData) {
     return await api.post(`/Topics/${id}/icon`, formData, true);
   }
 
-  // src/services/courseService.js
+  // ========== Sections Services ==========
 
-// ========== Sections Services ==========
+  async getCourseSections(courseId) {
+    return await api.get(`/Courses/${courseId}/sections`);
+  }
 
-async getCourseSections(courseId) {
-  return await api.get(`/Courses/${courseId}/sections`);
+  async getSectionById(courseId, sectionId) {
+    return await api.get(`/Courses/${courseId}/sections/${sectionId}`);
+  }
+
+  async createCourseSection(courseId, sectionData) {
+    return await api.post(`/Courses/${courseId}/sections`, sectionData);
+  }
+
+  async updateCourseSection(courseId, sectionId, sectionData) {
+    const cleanData = {};
+    if (sectionData.title) cleanData.title = sectionData.title;
+    if (sectionData.order && sectionData.order > 0) cleanData.order = sectionData.order;
+    
+    return await api.put(`/Courses/${courseId}/sections/${sectionId}`, cleanData);
+  }
+
+  async deleteCourseSection(courseId, sectionId) {
+    const response = await api.delete(`/Courses/${courseId}/sections/${sectionId}`);
+    return response;
+  }
+
+  // ========== Lessons Services ==========
+
+  async getLessons(sectionId) {
+    return await api.get(`/sections/${sectionId}/lessons`);
+  }
+
+  async getLessonById(sectionId, lessonId) {
+    return await api.get(`/sections/${sectionId}/lessons/${lessonId}`);
+  }
+
+  async createLesson(sectionId, lessonData) {
+    return await api.post(`/sections/${sectionId}/lessons`, lessonData);
+  }
+
+  async updateLesson(sectionId, lessonId, lessonData) {
+    return await api.put(`/sections/${sectionId}/lessons/${lessonId}`, lessonData);
+  }
+
+  async deleteLesson(sectionId, lessonId) {
+    return await api.delete(`/sections/${sectionId}/lessons/${lessonId}`);
+  }
+
+  async reorderLessons(sectionId, orders) {
+    return await api.post(`/sections/${sectionId}/lessons/reorder`, orders);
+  }
+
+  // ========== Enrollment Services ==========
+
+  async enrollInCourse(courseId) {
+    return await api.post(`/Enrollments/enroll/${courseId}`);
+  }
+
+  async unenrollFromCourse(courseId) {
+    return await api.delete(`/Enrollments/unenroll/${courseId}`);
+  }
+
+  async getMyEnrollments() {
+    return await api.get('/Enrollments/my-enrollments');
+  }
+
+  async getMyEnrollment(courseId) {
+    return await api.get(`/Enrollments/my-enrollments/${courseId}`);
+  }
 }
-
-async getSectionById(courseId, sectionId) {
-  return await api.get(`/Courses/${courseId}/sections/${sectionId}`);
-}
-
-async createCourseSection(courseId, sectionData) {
-  return await api.post(`/Courses/${courseId}/sections`, sectionData);
-}
-
-async updateCourseSection(courseId, sectionId, sectionData) {
-  const cleanData = {};
-  if (sectionData.title) cleanData.title = sectionData.title;
-  if (sectionData.order && sectionData.order > 0) cleanData.order = sectionData.order;
-  
-  return await api.put(`/Courses/${courseId}/sections/${sectionId}`, cleanData);
-}
-
-async deleteCourseSection(courseId, sectionId) {
-  const response = await api.delete(`/Courses/${courseId}/sections/${sectionId}`);
-  return response;
-}
-
-
-// ========== Lessons Services ==========
-
-async getLessons(sectionId) {
-  return await api.get(`/sections/${sectionId}/lessons`);
-}
-
-async getLessonById(sectionId, lessonId) {
-  return await api.get(`/sections/${sectionId}/lessons/${lessonId}`);
-}
-
-async createLesson(sectionId, lessonData) {
-  return await api.post(`/sections/${sectionId}/lessons`, lessonData);
-}
-
-async updateLesson(sectionId, lessonId, lessonData) {
-  return await api.put(`/sections/${sectionId}/lessons/${lessonId}`, lessonData);
-}
-
-async deleteLesson(sectionId, lessonId) {
-  return await api.delete(`/sections/${sectionId}/lessons/${lessonId}`);
-}
-async reorderLessons(sectionId, orders) {
-  return await api.post(`/sections/${sectionId}/lessons/reorder`, orders);
-}
-// ========== Enrollment Services ==========
-
-async enrollInCourse(courseId) {
-  return await api.post(`/Enrollments/enroll/${courseId}`);
-}
-
-async unenrollFromCourse(courseId) {
-  return await api.delete(`/Enrollments/unenroll/${courseId}`);
-}
-
-async getMyEnrollments() {
-  return await api.get('/Enrollments/my-enrollments');
-}
-
-async getMyEnrollment(courseId) {
-  return await api.get(`/Enrollments/my-enrollments/${courseId}`);
-}
-}
-
 
 export const courseService = new CourseService();

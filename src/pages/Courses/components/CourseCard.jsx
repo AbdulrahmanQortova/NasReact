@@ -2,7 +2,7 @@
 import { useTranslation } from 'react-i18next';
 import { authService } from '../../../services/authService';
 
-export default function CourseCard({ course, topicName, onRate, onView, onEnroll }) {
+export default function CourseCard({ course, topicName, onRate, onView, onEnroll, onUnenroll, index }) {
   const { t, i18n } = useTranslation();
   const isLoggedIn = authService.isAuthenticated();
   const isStudent = authService.isStudent();
@@ -67,8 +67,18 @@ export default function CourseCard({ course, topicName, onRate, onView, onEnroll
     }
   };
 
+  const handleUnenroll = () => {
+    if (onUnenroll) {
+      onUnenroll(course.id);
+    }
+  };
+
   return (
-    <div className="course-card" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div 
+      className="course-card fade-in-up" 
+      style={{ animationDelay: `${(index % 6) * 0.1}s` }}
+      dir={isRTL ? 'rtl' : 'ltr'}
+    >
       <div className="course-card-image">
         {course.thumbnailUrl ? (
           <img 
@@ -113,21 +123,18 @@ export default function CourseCard({ course, topicName, onRate, onView, onEnroll
       </div>
 
       <div className="course-card-actions">
-        {/* View Course Button */}
         <button className="view-btn" onClick={() => onView(course)}>
           {t('courses.viewCourse')}
         </button>
         
-        {/* Enroll Now Button - فقط للمستخدمين المسجلين وغير المسجلين في الكورس */}
         {isLoggedIn && !isEnrolled && (
           <button className="enroll-btn" onClick={handleEnroll}>
             {t('courses.enrollNow')}
           </button>
         )}
         
-        {/* Enrolled Badge - للمستخدمين المسجلين */}
         {isLoggedIn && isEnrolled && (
-          <button className="enrolled-btn" disabled>
+          <button className="enrolled-btn" onClick={handleUnenroll}>
             ✓ {t('courses.enrolled')}
           </button>
         )}

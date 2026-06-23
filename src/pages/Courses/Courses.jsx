@@ -1,27 +1,34 @@
 // src/pages/Courses/Courses.jsx
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { courseService } from '../../services/courseService';
 import { authService } from '../../services/authService';
 import { useToast } from '../../context/ToastContext';
 import CourseCard from './components/CourseCard';
+import CourseSkeleton from './components/CourseSkeleton';
 import RatingModal from './components/RatingModal';
+import InfiniteScroll from '../../components/ui/InfiniteScroll';
 import './Courses.css';
 
 export default function Courses() {
   const { t, i18n } = useTranslation();
   const toast = useToast();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const isLoggedIn = authService.isAuthenticated();
+  const isRTL = i18n.language === 'ar';
+  
+  // State
   const [courses, setCourses] = useState([]);
   const [topics, setTopics] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const [initialLoading, setInitialLoading] = useState(true);
   const [error, setError] = useState('');
-  const [pagination, setPagination] = useState({
-    page: 1,
-    pageSize: 12,
-    totalPages: 1,
-    totalCount: 0,
-  });
+  const [hasMore, setHasMore] = useState(true);
+  const [page, setPage] = useState(1);
+  const [totalCount, setTotalCount] = useState(0);
+  const [pageSize] = useState(6);
   const [filters, setFilters] = useState({
     search: '',
     topicId: '',
@@ -31,10 +38,9 @@ export default function Courses() {
   const [selectedCourse, setSelectedCourse] = useState(null);
   const [showRatingModal, setShowRatingModal] = useState(false);
   
-  const navigate = useNavigate();
-  const location = useLocation();
-  const isLoggedIn = authService.isAuthenticated();
-  const isRTL = i18n.language === 'ar';
+  // Refs
+  const isFirstLoad = useRef(true);
+  const isFetching = useRef(false);
 
   // Read search from URL
   useEffect(() => {
@@ -50,10 +56,14 @@ export default function Courses() {
     fetchTopics();
   }, []);
 
-  // Fetch courses when filters or page changes
+  // Reset state when filters change
   useEffect(() => {
-    fetchCourses();
-  }, [pagination.page, filters.search, filters.topicId, filters.sortBy, filters.ascending]);
+    if (isFirstLoad.current) {
+      isFirstLoad.current = false;
+      return;
+    }
+    resetAndFetch();
+  }, [filters.search, filters.topicId, filters.sortBy, filters.ascending]);
 
   const fetchTopics = async () => {
     try {
@@ -65,45 +75,122 @@ export default function Courses() {
     }
   };
 
-  const fetchCourses = async () => {
-    setLoading(true);
+  const resetAndFetch = () => {
+    setCourses([]);
+    setPage(1);
+    setHasMore(true);
+    setTotalCount(0);
     setError('');
-    try {
-      const response = await courseService.getAll({
-        page: pagination.page,
-        pageSize: pagination.pageSize,
-        search: filters.search,
-        topicId: filters.topicId,
-        sortBy: filters.sortBy,
-        ascending: filters.ascending,
-      });
-      
-      const coursesData = response.items || response.data || [];
-      
-      // ✅ جلب حالة التسجيل لكل كورس إذا كان المستخدم مسجل دخول
-      if (isLoggedIn) {
-        try {
-          const enrollments = await courseService.getMyEnrollments();
-          coursesData.forEach(course => {
-            course.isEnrolled = enrollments.some(e => e.courseId === course.id);
-          });
-        } catch (err) {
-          console.error('Error fetching enrollments:', err);
-        }
-      }
-      
-      setCourses(coursesData);
-      setPagination(prev => ({
-        ...prev,
-        totalPages: response.totalPages || 1,
-        totalCount: response.totalCount || 0,
-      }));
-    } catch (err) {
-      setError(err.message || t('courses.error'));
-    } finally {
-      setLoading(false);
-    }
+    isFetching.current = false;
+    fetchCourses(true);
   };
+
+const fetchCourses = async (reset = false) => {
+  if (isFetching.current) return;
+  if (!reset && !hasMore) return;
+
+  isFetching.current = true;
+  
+  if (reset) {
+    setInitialLoading(true);
+  } else {
+    setLoading(true);
+  }
+
+  try {
+    const currentPage = reset ? 1 : page;
+    
+    console.log('🔍 Fetching courses - Page:', currentPage, 'PageSize:', pageSize);
+    
+    const response = await courseService.getAll({
+      page: currentPage,
+      pageSize: pageSize,
+      search: filters.search,
+      topicId: filters.topicId,
+      sortBy: filters.sortBy,
+      ascending: filters.ascending,
+    });
+
+    console.log('📦 Full API Response:', response);
+
+    const items = response.data || [];
+    const pagination = response.pagination || {};
+    const totalItems = pagination.totalCount || 0;
+
+    console.log('📊 Items received:', items.length);
+    console.log('📊 Total items from pagination:', totalItems);
+    console.log('📊 Pagination object:', pagination);
+    console.log('📊 Current page:', currentPage);
+
+    if (items.length === 0) {
+      setHasMore(false);
+      isFetching.current = false;
+      setLoading(false);
+      setInitialLoading(false);
+      return;
+    }
+
+    // Get enrollments if user is logged in
+    let enrollments = [];
+    if (isLoggedIn) {
+      try {
+        const enrollResponse = await courseService.getMyEnrollments();
+        enrollments = enrollResponse.data || enrollResponse || [];
+      } catch (err) {
+        console.error('Error fetching enrollments:', err);
+      }
+    }
+
+    // Update enrollment status for each course
+    const itemsWithEnrollment = items.map(course => ({
+      ...course,
+      isEnrolled: enrollments.some(e => e.courseId === course.id),
+    }));
+
+    // Update state based on reset flag
+    if (reset) {
+      setCourses(itemsWithEnrollment);
+    } else {
+      setCourses(prev => {
+        const existingIds = new Set(prev.map(c => c.id));
+        const newItems = itemsWithEnrollment.filter(c => !existingIds.has(c.id));
+        return [...prev, ...newItems];
+      });
+    }
+
+    // Update pagination
+    setTotalCount(totalItems);
+    const totalPages = Math.ceil(totalItems / pageSize);
+    const nextPage = currentPage + 1;
+    
+    setPage(nextPage);
+    setHasMore(nextPage <= totalPages);
+    
+    console.log('✅ Total pages:', totalPages);
+    console.log('✅ Next page:', nextPage);
+    console.log('✅ HasMore:', nextPage <= totalPages);
+
+    setError('');
+
+  } catch (err) {
+    console.error('❌ Error fetching courses:', err);
+    setError(err.message || t('courses.error'));
+    toast.error(err.message || t('courses.error'));
+  } finally {
+    isFetching.current = false;
+    setInitialLoading(false);
+    setLoading(false);
+  }
+};
+  const loadMore = useCallback(() => {
+    console.log('🔄 Load more triggered - loading:', loading, 'hasMore:', hasMore, 'isFetching:', isFetching.current);
+    if (!loading && hasMore && !isFetching.current) {
+      console.log('🔄 Calling fetchCourses for page:', page);
+      fetchCourses(false);
+    }
+  }, [loading, hasMore, page]);
+
+  // ... باقي الدوال (handleEnroll, handleUnenroll, etc.)
 
   const handleEnroll = async (courseId) => {
     if (!isLoggedIn) {
@@ -113,12 +200,9 @@ export default function Courses() {
     
     try {
       await courseService.enrollInCourse(courseId);
-      
-      // ✅ تحديث حالة الكورس محلياً
       setCourses(prev => prev.map(c => 
         c.id === courseId ? { ...c, isEnrolled: true } : c
       ));
-      
       toast.success(t('courses.enrollSuccess'));
     } catch (error) {
       console.error('Enrollment error:', error);
@@ -131,12 +215,9 @@ export default function Courses() {
     
     try {
       await courseService.unenrollFromCourse(courseId);
-      
-      // ✅ تحديث حالة الكورس محلياً
       setCourses(prev => prev.map(c => 
         c.id === courseId ? { ...c, isEnrolled: false } : c
       ));
-      
       toast.success(t('courses.unenrollSuccess'));
     } catch (error) {
       console.error('Unenroll error:', error);
@@ -146,7 +227,6 @@ export default function Courses() {
 
   const handleTopicFilter = (topicId) => {
     setFilters(prev => ({ ...prev, topicId }));
-    setPagination(prev => ({ ...prev, page: 1 }));
   };
 
   const handleSortChange = (e) => {
@@ -156,14 +236,6 @@ export default function Courses() {
       sortBy,
       ascending: ascending === 'true',
     }));
-    setPagination(prev => ({ ...prev, page: 1 }));
-  };
-
-  const handlePageChange = (newPage) => {
-    if (newPage >= 1 && newPage <= pagination.totalPages) {
-      setPagination(prev => ({ ...prev, page: newPage }));
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
   };
 
   const handleRateClick = (course) => {
@@ -178,7 +250,7 @@ export default function Courses() {
   const handleRatingSubmit = async (ratingData) => {
     try {
       await courseService.rateCourse(selectedCourse.id, ratingData);
-      await fetchCourses();
+      resetAndFetch();
       setShowRatingModal(false);
       setSelectedCourse(null);
       toast.success(t('courses.rateSuccess'));
@@ -194,7 +266,6 @@ export default function Courses() {
 
   const handleClearFilters = () => {
     setFilters({ search: '', topicId: '', sortBy: 'createdAt', ascending: false });
-    setPagination(prev => ({ ...prev, page: 1 }));
     navigate('/courses', { replace: true });
   };
 
@@ -210,18 +281,29 @@ export default function Courses() {
     return count;
   };
 
-  if (loading && courses.length === 0) {
+  // Loading Skeleton
+  if (initialLoading) {
     return (
-      <div className="courses-loading">
-        <div className="spinner"></div>
-        <p>{t('courses.loading')}</p>
+      <div className="courses-page" dir={isRTL ? 'rtl' : 'ltr'}>
+        <div className="categories-bar">
+          <div className="categories-container">
+            {[...Array(6)].map((_, i) => (
+              <div key={i} className="category-chip-skeleton"></div>
+            ))}
+          </div>
+        </div>
+        <div className="courses-grid skeleton">
+          {[...Array(6)].map((_, i) => (
+            <CourseSkeleton key={i} />
+          ))}
+        </div>
       </div>
     );
   }
 
   return (
     <div className="courses-page" dir={isRTL ? 'rtl' : 'ltr'}>
-      {/* Categories Bar - Horizontal */}
+      {/* Categories Bar */}
       <div className="categories-bar">
         <div className="categories-container">
           <button
@@ -245,7 +327,7 @@ export default function Courses() {
       {/* Results & Sort Bar */}
       <div className="results-sort-bar">
         <div className="results-info">
-          <span className="results-count">{pagination.totalCount || courses.length}</span>
+          <span className="results-count">{totalCount || courses.length}</span>
           <span className="results-label">{t('courses.coursesFound')}</span>
           {getActiveFiltersCount() > 0 && (
             <button className="clear-filters-small" onClick={handleClearFilters}>
@@ -304,12 +386,12 @@ export default function Courses() {
         <div className="courses-error">
           <span className="error-icon">⚠️</span>
           <span className="error-text">{error}</span>
-          <button onClick={fetchCourses} className="retry-btn">{t('common.retry')}</button>
+          <button onClick={resetAndFetch} className="retry-btn">{t('common.retry')}</button>
         </div>
       )}
 
-      {/* Courses Grid */}
-      {!loading && courses.length === 0 && !error ? (
+      {/* Courses Grid with Infinite Scroll */}
+      {courses.length === 0 && !error ? (
         <div className="courses-empty">
           <div className="empty-icon">📚</div>
           <h3>{t('courses.noCourses')}</h3>
@@ -319,9 +401,14 @@ export default function Courses() {
           </button>
         </div>
       ) : (
-        <>
+        <InfiniteScroll
+          hasMore={hasMore}
+          loading={loading}
+          onLoadMore={loadMore}
+          endMessage={<span>{t('courses.noMoreCourses')}</span>}
+        >
           <div className="courses-grid">
-            {courses.map(course => (
+            {courses.map((course, index) => (
               <CourseCard
                 key={course.id}
                 course={course}
@@ -330,55 +417,11 @@ export default function Courses() {
                 onView={handleViewCourse}
                 onEnroll={handleEnroll}
                 onUnenroll={handleUnenroll}
+                index={index}
               />
             ))}
           </div>
-
-          {/* Pagination */}
-          {pagination.totalPages > 1 && (
-            <div className="courses-pagination">
-              <button
-                onClick={() => handlePageChange(pagination.page - 1)}
-                disabled={pagination.page === 1}
-                className="page-btn prev"
-              >
-                ← {t('common.previous')}
-              </button>
-              
-              <div className="page-numbers">
-                {[...Array(Math.min(5, pagination.totalPages))].map((_, i) => {
-                  let pageNum;
-                  if (pagination.totalPages <= 5) {
-                    pageNum = i + 1;
-                  } else if (pagination.page <= 3) {
-                    pageNum = i + 1;
-                  } else if (pagination.page >= pagination.totalPages - 2) {
-                    pageNum = pagination.totalPages - 4 + i;
-                  } else {
-                    pageNum = pagination.page - 2 + i;
-                  }
-                  return (
-                    <button
-                      key={pageNum}
-                      onClick={() => handlePageChange(pageNum)}
-                      className={`page-number ${pagination.page === pageNum ? 'active' : ''}`}
-                    >
-                      {pageNum}
-                    </button>
-                  );
-                })}
-              </div>
-              
-              <button
-                onClick={() => handlePageChange(pagination.page + 1)}
-                disabled={pagination.page === pagination.totalPages}
-                className="page-btn next"
-              >
-                {t('common.next')} →
-              </button>
-            </div>
-          )}
-        </>
+        </InfiniteScroll>
       )}
 
       {/* Rating Modal */}
