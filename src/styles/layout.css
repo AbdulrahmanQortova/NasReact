@@ -109,7 +109,7 @@
 .notif-item:last-child { border-bottom: 0; }
 .notif-item:hover { background: var(--surface-2); }
 .notif-item.unread { border-inline-start: 3px solid var(--primary); }
-.notif-dot   { font-size: 1.2rem; flex-shrink: 0; margin-top: 2px; }
+/* notif-dot is defined in Navbar.css */
 .notif-empty { padding: 28px; text-align: center; color: var(--muted); }
 
 /* ── Search results ──────────────────────────────────────────── */

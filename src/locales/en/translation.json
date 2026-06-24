@@ -589,6 +589,23 @@
     "updateError" : "Failed to update post",
     "editComment" : "Edit Comment",
     "commentUpdated" : "Comment updated successfully"
+  },
+  "report": {
+    "title": "Report Content",
+    "reasonLabel": "Reason",
+    "subtitle" :"Please select a reason for reporting this content. Your report will be reviewed by our team.",
+    "detailsLabel": "Details (Optional)",
+    "submit": "Submit Report",
+    "reporting": "Reporting...",
+    "success": "Report submitted successfully. Thank you for your cooperation.",
+    "error": "Failed to submit report. Please try again.",
+    "fillReason": "Please select a reason for reporting",
+    "spam": "Spam or misleading",
+    "harassment": "Harassment or bullying",
+    "inappropriate": "Inappropriate content",
+    "fakeInfo" : "False information",
+    "other" : "Other",
+    "detailsPlaceholder" : "Provide additional details (optional)"
   }
 
 }

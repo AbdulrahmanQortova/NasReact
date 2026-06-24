@@ -279,3 +279,8 @@ label { display: grid; gap: 8px; font-weight: 700; }
   transition: transform .1s;
 }
 .star-btn:hover { transform: scale(1.2); }
+
+.icon-btn {
+  min-width: 34px !important;
+  min-height: 34px !important;
+}

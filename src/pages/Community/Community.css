@@ -141,11 +141,17 @@
   font-size: 14px;
   font-weight: 500;
   transition: all 0.2s;
+  min-height: unset;
+  margin-bottom: 0;
+}
+
+.back-btn::before {
+  display: none !important;
 }
 
 .back-btn:hover {
   background: var(--primary);
-  color: white;
+  color: white !important;
   border-color: var(--primary);
 }
 .create-first-btn:hover {

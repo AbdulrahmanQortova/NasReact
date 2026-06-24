@@ -1,9 +1,5 @@
 /* src/components/layout/Navbar.css */
 
-/* ============================================
-   Top Navigation Bar
-   ============================================ */
-
 .top-nav {
   display: flex;
   align-items: center;
@@ -17,7 +13,6 @@
   z-index: 100;
 }
 
-/* Brand Button */
 .brand-btn {
   display: flex;
   align-items: center;
@@ -31,18 +26,13 @@
   transition: opacity 0.2s;
 }
 
-.brand-btn:hover {
-  opacity: 0.8;
-}
+.brand-btn:hover { opacity: 0.8; }
 
-.brand-icon {
-  font-size: 24px;
-}
+.brand-icon { font-size: 24px; }
 
-/* Nav Links - ✅ تقريب المسافات */
 .nav-links {
   display: flex;
-  gap: 2px; /* ✅ تقليل المسافة بين التابس */
+  gap: 2px;
   align-items: center;
 }
 
@@ -50,10 +40,10 @@
   background: transparent;
   border: none;
   color: var(--text);
-  padding: 6px 12px; /* ✅ تقليل الـ padding */
+  padding: 6px 12px;
   cursor: pointer;
-  font-weight: 500; /* ✅ تقليل الوزن */
-  font-size: 14px; /* ✅ حجم خط أصغر */
+  font-weight: 500;
+  font-size: 14px;
   transition: all 0.2s;
   border-radius: 6px;
   display: flex;
@@ -71,7 +61,6 @@
   background: rgba(88, 166, 255, 0.1);
 }
 
-/* Admin Nav Link */
 .admin-nav-link button {
   background: linear-gradient(135deg, var(--primary), var(--purple)) !important;
   -webkit-background-clip: text !important;
@@ -80,7 +69,6 @@
   font-weight: 600 !important;
 }
 
-/* Search Box */
 .nav-search-wrap {
   flex: 1;
   max-width: 280px;
@@ -96,7 +84,7 @@
 
 .search-input {
   width: 100%;
-  height: 36px; /* ✅ تقليل الارتفاع */
+  height: 36px;
   padding: 0 32px 0 14px;
   background: var(--surface-2);
   border: 1px solid var(--line);
@@ -143,7 +131,6 @@
   background: var(--red);
 }
 
-/* Theme Toggle Button */
 .theme-toggle-btn {
   background: var(--surface-2);
   border: 1px solid var(--line);
@@ -170,10 +157,7 @@
   height: 18px;
 }
 
-/* Language Dropdown */
-.language-dropdown {
-  position: relative;
-}
+.language-dropdown { position: relative; }
 
 .lang-btn {
   display: flex;
@@ -212,35 +196,24 @@
   font-size: 13px;
 }
 
-.language-menu button:hover {
-  background: var(--surface-2);
-}
+.language-menu button:hover { background: var(--surface-2); }
 
 .language-menu button.active {
   background: rgba(88, 166, 255, 0.15);
   color: var(--primary);
 }
 
-.language-menu button span {
-  font-size: 14px;
-}
+.language-menu button span { font-size: 14px; }
 
 @keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(-10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(-10px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
-/* Nav Actions */
 .nav-actions {
   display: flex;
   align-items: center;
-  gap: 4px; /* ✅ تقليل المسافة بين الأزرار */
+  gap: 4px;
 }
 
 .ghost-btn {
@@ -277,19 +250,22 @@
   transform: translateY(-1px);
 }
 
+/* ── Bell Icon Button ─────────────────────────────────────── */
 .icon-btn {
   background: transparent;
   border: none;
   color: var(--text);
   width: 34px;
   height: 34px;
+  min-width: 34px;
+  min-height: 34px;
   border-radius: 50%;
   cursor: pointer;
   font-size: 16px;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.2s;
+  transition: color 0.2s;
   position: relative;
 }
 
@@ -298,10 +274,37 @@
   color: var(--primary);
 }
 
-/* User Menu */
-.user-menu {
-  position: relative;
+/* ── Notification Badge ───────────────────────────────────── */
+.icon-btn > .notif-dot {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  left: auto;
+  bottom: auto;
+  background: #ef4444;
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  min-width: 16px;
+  min-height: 16px;
+  width: auto;
+  height: 16px;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 3px;
+  pointer-events: none;
+  border: 2px solid var(--surface);
+  line-height: 1;
+  box-shadow: 0 1px 4px rgba(239, 68, 68, 0.6);
+  z-index: 200;
+  flex-shrink: 0;
+  margin: 0;
+  inset-inline-end: unset;
 }
+
+.user-menu { position: relative; }
 
 .user-menu-btn {
   background: transparent;
@@ -346,10 +349,7 @@
   animation: fadeIn 0.2s ease;
 }
 
-.user-info {
-  padding: 6px 14px;
-  text-align: left;
-}
+.user-info { padding: 6px 14px; text-align: left; }
 
 .user-info strong {
   display: block;
@@ -384,11 +384,8 @@
   color: var(--primary);
 }
 
-.logout-btn {
-  color: var(--red) !important;
-}
+.logout-btn { color: var(--red) !important; }
 
-/* Hamburger Menu Button */
 .hamburger-btn {
   display: none;
   background: transparent;
@@ -399,7 +396,6 @@
   padding: 4px 8px;
 }
 
-/* Mobile Menu */
 .mobile-menu {
   position: fixed;
   top: 60px;
@@ -416,14 +412,8 @@
 }
 
 @keyframes slideDown {
-  from {
-    opacity: 0;
-    transform: translateY(-20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(-20px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
 .mobile-menu a {
@@ -435,165 +425,64 @@
   border-bottom: 1px solid var(--line);
 }
 
-.mobile-menu a:last-child {
-  border-bottom: none;
-}
+.mobile-menu a:last-child { border-bottom: none; }
+.mobile-menu a.active-link { color: var(--primary); }
 
-.mobile-menu a.active-link {
-  color: var(--primary);
-}
-
-/* Responsive */
+/* ── Responsive ──────────────────────────────────────────── */
 @media (max-width: 1024px) {
-  .nav-search-wrap {
-    max-width: 200px;
-    margin: 0 10px;
-  }
+  .nav-search-wrap { max-width: 200px; margin: 0 10px; }
 }
 
 @media (max-width: 900px) {
-  .nav-links {
-    display: none;
-  }
-  
-  .hamburger-btn {
-    display: flex !important;
-  }
-  
-  .nav-search-wrap {
-    max-width: 160px;
-  }
-  
-  .ghost-btn {
-    padding: 4px 8px;
-    font-size: 12px;
-  }
-  
-  .primary-btn {
-    padding: 4px 10px;
-    font-size: 12px;
-  }
+  .nav-links { display: none; }
+  .hamburger-btn { display: flex !important; }
+  .nav-search-wrap { max-width: 160px; }
+  .ghost-btn { padding: 4px 8px; font-size: 12px; }
+  .primary-btn { padding: 4px 10px; font-size: 12px; }
 }
 
 @media (max-width: 768px) {
-  .top-nav {
-    padding: 0 12px;
-  }
-  
-  .nav-search-wrap {
-    max-width: 140px;
-    margin: 0 6px;
-  }
-  
-  .brand-btn span:last-child {
-    display: none;
-  }
-  
-  .brand-icon {
-    font-size: 22px;
-  }
-  /* Notification dot */
-.notif-dot {
-  position: absolute;
-  top: -4px;
-  right: -4px;
-  background: #ef4444;
-  color: #ffffff;
-  font-size: 10px;
-  font-weight: 700;
-  min-width: 18px;
-  height: 18px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0 4px;
-  pointer-events: none;
-  border: 2px solid var(--surface);
-  line-height: 1;
-  box-shadow: 0 2px 6px rgba(239, 68, 68, 0.5);
-  z-index: 10;
-}
-  .ghost-btn, .primary-btn {
-    padding: 4px 8px;
-    font-size: 12px;
-  }
-  
+  .top-nav { padding: 0 12px; }
+  .nav-search-wrap { max-width: 140px; margin: 0 6px; }
+  .brand-btn span:last-child { display: none; }
+  .brand-icon { font-size: 22px; }
+  .ghost-btn, .primary-btn { padding: 4px 8px; font-size: 12px; }
+
   .user-dropdown {
     position: fixed;
-    top: auto;
-    bottom: 0;
-    left: 0;
-    right: 0;
+    top: auto; bottom: 0; left: 0; right: 0;
     border-radius: 16px 16px 0 0;
     animation: slideUp 0.3s ease;
   }
-  
+
   .language-menu {
     position: fixed;
-    top: auto;
-    bottom: 50px;
-    left: 0;
-    right: 0;
+    top: auto; bottom: 50px; left: 0; right: 0;
     border-radius: 16px 16px 0 0;
     width: 100%;
   }
-  
+
   @keyframes slideUp {
-    from {
-      transform: translateY(100%);
-    }
-    to {
-      transform: translateY(0);
-    }
+    from { transform: translateY(100%); }
+    to   { transform: translateY(0); }
   }
 }
 
 @media (max-width: 640px) {
-  .nav-search-wrap {
-    display: none;
-  }
-  
-  .brand-btn span:last-child {
-    display: inline;
-    font-size: 14px;
-  }
-  
-  .brand-icon {
-    font-size: 20px;
-  }
+  .nav-search-wrap { display: none; }
+  .brand-btn span:last-child { display: inline; font-size: 14px; }
+  .brand-icon { font-size: 20px; }
 }
 
 @media (min-width: 901px) {
-  .hamburger-btn {
-    display: none !important;
-  }
-  
-  .mobile-menu {
-    display: none !important;
-  }
+  .hamburger-btn { display: none !important; }
+  .mobile-menu { display: none !important; }
 }
 
-/* RTL Support */
-[dir="rtl"] .search-input {
-  padding: 0 14px 0 32px;
-}
-
-[dir="rtl"] .search-clear-btn {
-  right: auto;
-  left: 8px;
-}
-
-[dir="rtl"] .language-menu {
-  right: auto;
-  left: 0;
-}
-
-[dir="rtl"] .user-dropdown {
-  right: auto;
-  left: 0;
-}
-
-[dir="rtl"] .nav-links a button {
-  font-family: 'Cairo', sans-serif;
-}
+/* ── RTL ─────────────────────────────────────────────────── */
+[dir="rtl"] .search-input { padding: 0 14px 0 32px; }
+[dir="rtl"] .search-clear-btn { right: auto; left: 8px; }
+[dir="rtl"] .language-menu { right: auto; left: 0; }
+[dir="rtl"] .user-dropdown { right: auto; left: 0; }
+[dir="rtl"] .nav-links a button { font-family: 'Cairo', sans-serif; }
+[dir="rtl"] .icon-btn > .notif-dot { right: auto; left: -4px; }

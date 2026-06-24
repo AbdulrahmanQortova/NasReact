@@ -78,24 +78,32 @@ const {
     };
   };
 
-  useEffect(() => {
-    const checkAuth = () => {
-      try {
-        const loggedIn = authService.isAuthenticated();
-        const currentUser = authService.getCurrentUser();
-        setIsLoggedIn(loggedIn);
-        setUser(currentUser);
-      } catch (error) {
-        console.error('Error checking auth:', error);
-        setIsLoggedIn(false);
-        setUser(null);
-      }
-    };
-    checkAuth();
-    window.addEventListener('storage', checkAuth);
-    return () => window.removeEventListener('storage', checkAuth);
-  }, []);
+ useEffect(() => {
+  const checkAuth = () => {
+    try {
+      const loggedIn = authService.isAuthenticated();
+      const currentUser = authService.getCurrentUser();
+      setIsLoggedIn(loggedIn);
+      setUser(currentUser);
+    } catch (error) {
+      setIsLoggedIn(false);
+      setUser(null);
+    }
+  };
 
+  checkAuth();
+
+
+  window.addEventListener('storage', checkAuth);
+  window.addEventListener('auth:login', checkAuth);
+  window.addEventListener('auth:logout', checkAuth);
+
+  return () => {
+    window.removeEventListener('storage', checkAuth);
+    window.removeEventListener('auth:login', checkAuth);
+    window.removeEventListener('auth:logout', checkAuth);
+  };
+}, []);
   useEffect(() => {
     if (location.pathname === '/courses') {
       const params = new URLSearchParams(location.search);

@@ -3,6 +3,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import ReportModal from './ReportModal';
 import {
   faHeart,
   faComment,
@@ -36,7 +37,7 @@ export default function PostCard({ post, index, onPostDeleted, onPostEdited, onP
   const { t } = useTranslation();
   const navigate = useNavigate();
   const toast = useToast();
-
+const [showReportModal, setShowReportModal] = useState(false);
   // Post state
   const [isLiked, setIsLiked] = useState(post.isLiked || false);
   const [likeCount, setLikeCount] = useState(post.likeCount || 0);
@@ -71,8 +72,21 @@ const [showComments, setShowComments] = useState(defaultShowComments);
   const menuRef = useRef(null);
   const isLoggedIn = authService.isAuthenticated();
   const currentUser = authService.getCurrentUser();
-  const isAuthor = currentUser?.id === post.authorId;
-
+const isAuthor = currentUser?.id?.toLowerCase() === post.authorId?.toLowerCase();
+const canEditPost = () => {
+  if (!post.createdAt) return false;
+  const normalized = post.createdAt.endsWith('Z') ? post.createdAt : post.createdAt + 'Z';
+  const created = new Date(normalized);
+  const diffHours = (new Date() - created) / (1000 * 60 * 60);
+  return diffHours < 4;
+};
+const canEditComment = (c) => {
+  if (!c.createdAt) return false;
+  const normalized = c.createdAt.endsWith('Z') ? c.createdAt : c.createdAt + 'Z';
+  const created = new Date(normalized);
+  const diffHours = (new Date() - created) / (1000 * 60 * 60);
+  return diffHours < 4;
+};
   useEffect(() => {
     setIsLiked(post.isLiked || false);
     setLikeCount(post.likeCount || 0);
@@ -257,11 +271,10 @@ useEffect(() => {
     if (onPostEdited) onPostEdited(post);
   };
 
-  const handleReport = () => {
-    setShowMenu(false);
-    toast.info(t('community.reportPost'));
-  };
-
+const handleReport = () => {
+  setShowMenu(false);
+  setShowReportModal(true);
+};
   const startReply = (c) => {
     setReplyingTo(c);
     document.getElementById(`comment-input-${post.id}`)?.focus();
@@ -300,36 +313,37 @@ const formatDate = (dateString) => {
           <div className="comment-author-right">
             <span className="comment-date">{formatDate(c.createdAt)}</span>
 
-            {/* ✅ Three dots menu على الكومنت */}
-            {isCommentAuthor && (
-              <div className="comment-menu">
-                <button
-                  className="comment-menu-trigger"
-                  onClick={() => setOpenCommentMenu(isMenuOpen ? null : c.id)}
-                  aria-label="Comment options"
-                >
-                  <FontAwesomeIcon icon={faEllipsisV} />
-                </button>
-                {isMenuOpen && (
-                  <div className="comment-menu-dropdown">
-                    <button
-                      className="comment-menu-item edit"
-                      onClick={() => handleEditComment(c)}
-                    >
-                      <FontAwesomeIcon icon={faEdit} />
-                      <span>{t('common.edit')}</span>
-                    </button>
-                    <button
-                      className="comment-menu-item delete"
-                      onClick={() => requestDeleteComment(c.id)}
-                    >
-                      <FontAwesomeIcon icon={faTrash} />
-                      <span>{t('common.delete')}</span>
-                    </button>
-                  </div>
-                )}
-              </div>
-            )}
+{isCommentAuthor && (
+  <div className="comment-menu">
+    <button className="comment-menu-trigger" onClick={() => setOpenCommentMenu(isMenuOpen ? null : c.id)}>
+      <FontAwesomeIcon icon={faEllipsisV} />
+    </button>
+    {isMenuOpen && (
+      <div className="comment-menu-dropdown">
+        {canEditComment(c) ? (
+          <button className="comment-menu-item edit" onClick={() => handleEditComment(c)}>
+            <FontAwesomeIcon icon={faEdit} />
+            <span>{t('common.edit')}</span>
+          </button>
+        ) : (
+          <button
+            className="comment-menu-item edit"
+            disabled
+            title="Can only edit within 4 hours"
+            style={{ opacity: 0.4, cursor: 'not-allowed' }}
+          >
+            <FontAwesomeIcon icon={faEdit} />
+            <span>{t('common.edit')}</span>
+          </button>
+        )}
+        <button className="comment-menu-item delete" onClick={() => requestDeleteComment(c.id)}>
+          <FontAwesomeIcon icon={faTrash} />
+          <span>{t('common.delete')}</span>
+        </button>
+      </div>
+    )}
+  </div>
+)}
           </div>
         </div>
 
@@ -385,22 +399,34 @@ const formatDate = (dateString) => {
             </button>
             {showMenu && (
               <div className="menu-dropdown">
-                {isAuthor && (
-                  <>
-                    <button onClick={handleEdit} className="menu-item edit">
-                      <FontAwesomeIcon icon={faEdit} />
-                      <span>{t('common.edit')}</span>
-                    </button>
-                    <button
-                      onClick={() => { setShowMenu(false); setShowDeletePostDialog(true); }}
-                      className="menu-item delete"
-                      disabled={isDeleting}
-                    >
-                      <FontAwesomeIcon icon={faTrash} />
-                      <span>{isDeleting ? t('common.deleting') : t('common.delete')}</span>
-                    </button>
-                  </>
-                )}
+{isAuthor && (
+  <>
+    {canEditPost() ? (
+      <button onClick={handleEdit} className="menu-item edit">
+        <FontAwesomeIcon icon={faEdit} />
+        <span>{t('common.edit')}</span>
+      </button>
+    ) : (
+      <button
+        className="menu-item edit"
+        disabled
+        title="Can only edit within 4 hours"
+        style={{ opacity: 0.4, cursor: 'not-allowed' }}
+      >
+        <FontAwesomeIcon icon={faEdit} />
+        <span>{t('common.edit')}</span>
+      </button>
+    )}
+    <button
+      onClick={() => { setShowMenu(false); setShowDeletePostDialog(true); }}
+      className="menu-item delete"
+      disabled={isDeleting}
+    >
+      <FontAwesomeIcon icon={faTrash} />
+      <span>{isDeleting ? t('common.deleting') : t('common.delete')}</span>
+    </button>
+  </>
+)}
                 {!isAuthor && (
                   <button onClick={handleReport} className="menu-item report">
                     <FontAwesomeIcon icon={faFlag} />
@@ -550,6 +576,12 @@ const formatDate = (dateString) => {
           onCommentUpdated={handleCommentUpdated}
         />
       )}
+      {showReportModal && (
+  <ReportModal
+    post={post}
+    onClose={() => setShowReportModal(false)}
+  />
+)}
     </>
   );
 }

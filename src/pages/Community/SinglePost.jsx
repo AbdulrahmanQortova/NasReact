@@ -6,6 +6,7 @@ import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { postService } from '../../services/postService';
 import PostCard from './components/PostCard';
 import PostSkeleton from './components/PostSkeleton';
+import EditPostModal from './components/EditPostModal';
 import './Community.css';
 
 export default function SinglePost() {
@@ -17,13 +18,27 @@ export default function SinglePost() {
   const [post, setPost] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [editingPost, setEditingPost] = useState(null);  // ✅ أضف
 
   useEffect(() => {
     const fetchPost = async () => {
       try {
         const response = await postService.getPostById(postId);
-        const data = response.data || response;
-        setPost(data);
+        const raw = response?.data || response;
+        const normalized = {
+          id:           raw.id,
+          title:        raw.title,
+          content:      raw.content,
+          mediaUrl:     raw.mediaUrl,
+          authorId:     raw.authorId,
+          authorName:   raw.authorName || '',
+          likeCount:    raw.likeCount  ?? (raw.likedBy?.length ?? 0),
+          commentCount: raw.commentCount ?? (raw.comments?.length ?? 0),
+          createdAt:    raw.createdAt,
+          isLiked:      raw.isLiked ?? false,
+          hashtags:     raw.hashtags  || [],
+        };
+        setPost(normalized);
       } catch (err) {
         setError(t('community.error'));
       } finally {
@@ -32,6 +47,11 @@ export default function SinglePost() {
     };
     fetchPost();
   }, [postId]);
+
+  const handlePostUpdated = (updatedPost) => {
+    setPost(prev => ({ ...prev, ...updatedPost }));
+    setEditingPost(null);
+  };
 
   if (loading) {
     return (
@@ -78,7 +98,17 @@ export default function SinglePost() {
         index={0}
         defaultShowComments={true}
         onPostDeleted={() => navigate('/community')}
+        onPostEdited={(p) => setEditingPost(p)}
+        onPostUpdated={handlePostUpdated}
       />
+
+      {editingPost && (
+        <EditPostModal
+          post={editingPost}
+          onClose={() => setEditingPost(null)}
+          onPostUpdated={handlePostUpdated}
+        />
+      )}
     </div>
   );
 }

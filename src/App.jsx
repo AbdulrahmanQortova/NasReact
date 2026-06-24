@@ -10,7 +10,7 @@ import PaymentPage from './pages/Payment/PaymentPage';
 import AdminDashboard from './pages/Admin/AdminDashboard';
 import CourseDetails from './pages/Admin/CourseDetails';
 import Community from './pages/Community/Community';
-
+import SinglePost from './pages/Community/SinglePost';
 // Protected Route Component
 const ProtectedRoute = ({ children }) => {
   const isAuthenticated = localStorage.getItem('auth_token');
@@ -76,7 +76,11 @@ export default function App() {
               <Community />
             </ProtectedRoute>
           } />
-          
+          <Route path="/community/post/:postId" element={
+  <ProtectedRoute>
+    <SinglePost />
+  </ProtectedRoute>
+} />
           <Route path="/exams" element={
             <ProtectedRoute>
               <div style={{ padding: '40px' }}>Exams Page</div>

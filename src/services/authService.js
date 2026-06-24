@@ -14,31 +14,34 @@ class AuthService {
       
       if (result.token) {
         this.setToken(result.token);
+      if (result.refreshToken) {
+        localStorage.setItem('refresh_token', result.refreshToken);
+}
+
       }
       
-      // استخراج الـ role من الـ response
+    
       const roleValue = result.role ?? result.userRole ?? (email === 'admin@localhost.com' ? 1 : 0);
       
-      // تحويل الرقم إلى نص للعرض
+
       let roleName = 'Student';
       if (roleValue === 1 || roleValue === '1' || roleValue === 'Admin') {
         roleName = 'Admin';
       }
       
-      // حفظ بيانات المستخدم
       const userData = {
         id: result.userId,
         firstName: result.firstName || (roleName === 'Admin' ? 'Admin' : 'User'),
         lastName: result.lastName || '',
         email: result.email || email,
-        role: roleName,      // نص للعرض: 'Admin' أو 'Student'
-        roleValue: roleValue, // رقم: 1 أو 0
+        role: roleName,      
+        roleValue: roleValue, 
         profilePictureUrl: result.profilePictureUrl,
       };
       
       console.log('Saving user data:', userData);
       localStorage.setItem(USER_KEY, JSON.stringify(userData));
-      
+      window.dispatchEvent(new Event('auth:login'));
       return result;
     } catch (error) {
       console.error('Login service error:', error);
@@ -86,11 +89,13 @@ class AuthService {
     localStorage.setItem(TOKEN_EXPIRY_KEY, expiry.toString());
   }
 
-  logout() {
-    localStorage.removeItem(TOKEN_KEY);
-    localStorage.removeItem(USER_KEY);
-    localStorage.removeItem(TOKEN_EXPIRY_KEY);
-  }
+logout() {
+  localStorage.removeItem(TOKEN_KEY);
+  localStorage.removeItem(USER_KEY);
+  localStorage.removeItem(TOKEN_EXPIRY_KEY);
+  localStorage.removeItem('refresh_token');
+  window.dispatchEvent(new Event('auth:logout'));
+}
 
   isAuthenticated() {
     const token = localStorage.getItem(TOKEN_KEY);
@@ -122,25 +127,24 @@ class AuthService {
     return localStorage.getItem(TOKEN_KEY);
   }
 
-  // دالة محسنة للتحقق من الأدمن
+ 
   isAdmin() {
     const user = this.getCurrentUser();
     if (!user) return false;
     
-    // التحقق بكل الطرق الممكنة
+
     const isAdmin = 
-      user.role === 'Admin' ||           // نص 'Admin'
-      user.role === 1 ||                  // رقم 1
-      user.roleValue === 1 ||             // roleValue = 1
-      user.roleValue === '1' ||           // roleValue = '1'
-      user.userRole === 1 ||              // userRole = 1
-      user.userRole === 'Admin';          // userRole = 'Admin'
+      user.role === 'Admin' ||           
+      user.role === 1 ||                
+      user.roleValue === 1 ||            
+      user.roleValue === '1' ||         
+      user.userRole === 1 ||            
+      user.userRole === 'Admin';      
     
     console.log('Is admin check - User role:', user.role, 'Role value:', user.roleValue, 'Result:', isAdmin);
     return isAdmin;
   }
 
-  // دالة محسنة للتحقق من الطالب
   isStudent() {
     const user = this.getCurrentUser();
     if (!user) return false;

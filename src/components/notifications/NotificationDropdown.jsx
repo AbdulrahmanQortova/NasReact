@@ -54,18 +54,19 @@ export default function NotificationDropdown({
 
   if (!isOpen) return null;
 
-  const handleNotifClick = async (notif) => {
-    // mark as read لو مش مقروء
-    if (!notif.isRead) await onMarkAsRead(notif.id);
+const handleNotifClick = async (notif) => {
+  if (!notif.isRead) await onMarkAsRead(notif.id);
 
-    // navigate للبوست
-    const postId = notif.relatedEntityId || notif.RelatedEntityId;
-    if (postId) {
-      navigate(`/community?post=${postId}`);
-      onClose();
-    }
-  };
+  const postId = notif.relatedEntityId;
+  const entityType = notif.relatedEntityType?.toLowerCase();
 
+  if (postId) {
+   
+
+    navigate(`/community/post/${postId}`);
+    onClose();
+  }
+};
   return (
     <div className="notif-dropdown" ref={dropdownRef}>
       <div className="notif-header">
