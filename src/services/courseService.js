@@ -54,7 +54,7 @@ class CourseService {
     return await api.get(`/Courses?${queryParams.toString()}`);
   }
 
-// src/services/courseService.js - تأكد من هذه الدالة
+
 
 async getCoursesCursor(params = {}) {
   const {

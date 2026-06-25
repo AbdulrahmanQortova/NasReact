@@ -98,7 +98,6 @@ const canEditComment = (c) => {
       if (menuRef.current && !menuRef.current.contains(event.target)) {
         setShowMenu(false);
       }
-      // ✅ أغلق comment menus لو الضغطة برة
       if (!event.target.closest('.comment-menu')) {
         setOpenCommentMenu(null);
       }
@@ -189,7 +188,6 @@ useEffect(() => {
             likeCount: response.liked ? (c.likeCount || 0) + 1 : (c.likeCount || 0) - 1
           };
         }
-        // ✅ نتحقق كمان في الـ replies
         if (c.replies?.length) {
           return {
             ...c,
@@ -239,9 +237,7 @@ useEffect(() => {
 
   const handleCommentUpdated = (updatedComment) => {
     setComments(prev => prev.map(c => {
-      if (c.id === updatedComment.id) return { ...c, ...updatedComment };
-      // ✅ نتحقق في الـ replies
-      if (c.replies?.length) {
+      if (c.id === updatedComment.id) return { ...c, ...updatedComment };      if (c.replies?.length) {
         return {
           ...c,
           replies: c.replies.map(r => r.id === updatedComment.id ? { ...r, ...updatedComment } : r)

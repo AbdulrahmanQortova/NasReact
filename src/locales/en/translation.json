@@ -469,7 +469,36 @@
       "updateSuccess": "Exam updated successfully",
       "updateError": "Failed to update exam",
       "updateBtn": "Update"
-    }
+    },
+    "reports": {
+  "total": "Total Reports",
+  "pending": "Pending",
+  "approved": "Approved",
+  "dismissed": "Dismissed",
+  "loadError": "Failed to load reports",
+  "reviewSuccess": "Report reviewed successfully",
+  "reviewError": "Failed to review report",
+  "deleteSuccess": "Post deleted successfully",
+  "deleteError": "Failed to delete post",
+  "confirmDelete": "Are you sure you want to delete this post? This cannot be undone.",
+  "noReports": "No reports found",
+  "statusAll": "All",
+  "statusPending": "Pending",
+  "statusApproved": "Approved",
+  "statusDismissed": "Dismissed",
+  "sortBy": "Sort by:",
+  "sortNewest": "Newest first",
+  "sortMost": "Most reported",
+  "reportsCount": "{{count}} report(s)",
+  "viewPost": "View Post",
+  "deletePost": "Delete Post",
+  "reason": "Reason",
+  "adminNotes": "Admin notes",
+  "reviewedBy": "Reviewed by",
+  "addNotes": "Add admin notes (optional)...",
+  "approve": "Approve",
+  "dismiss": "Dismiss"
+}
 
   },
   "home": {

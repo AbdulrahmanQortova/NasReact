@@ -29,16 +29,16 @@ export default function Login() {
     setLoading(true);
     
     try {
-      // استدعاء خدمة تسجيل الدخول الحقيقية
+     
       const result = await authService.login(email, password);
       
       console.log('Login successful:', result);
       
-      // التحقق من دور المستخدم للتوجيه المناسب
+      
       const user = authService.getCurrentUser();
       const isAdmin = user?.role === 'Admin' || user?.roles?.includes('Admin');
       
-      // توجيه المستخدم بناءً على دوره
+      
       if (isAdmin) {
         navigate('/admin/dashboard');
       } else {

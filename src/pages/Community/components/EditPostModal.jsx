@@ -94,7 +94,7 @@ if (onPostUpdated) {
     if (selectedFile) {
       setFile(selectedFile);
       setRemoveMedia(false);
-      // ✅ نمسح الـ value عشان لو اختار نفس الفايل تاني مرة يشتغل
+      
       e.target.value = '';
     }
   };
@@ -108,7 +108,7 @@ if (onPostUpdated) {
     setRemoveMedia(false);
   };
 
-  // ✅ إصلاح: triggerFileInput شغال دايماً لأن الـ input موجود في الـ DOM دايماً
+  
   const triggerFileInput = () => {
     fileInputRef.current?.click();
   };
@@ -127,7 +127,7 @@ if (onPostUpdated) {
     }
   };
 
-  // ✅ إضافة: force close بدون dialog — لما نضغط X بعد إيرور
+ 
   const handleForceClose = () => {
     setShowCancelDialog(false);
     onClose();
@@ -184,7 +184,7 @@ if (onPostUpdated) {
             <div className="form-group">
               <label className="form-label">{t('community.media')}</label>
 
-              {/* ✅ Input مخفي دايماً في الـ DOM — مش جوه أي condition */}
+             
               <input
                 ref={fileInputRef}
                 type="file"
@@ -236,7 +236,7 @@ if (onPostUpdated) {
                 </div>
               )}
 
-              {/* Upload area — لما مفيش ميديا أو اتمسحت */}
+            
               {(!currentMediaUrl || removeMedia) && !file && (
                 <div className="file-upload-wrapper">
                   <label className="file-upload-label" onClick={triggerFileInput}>

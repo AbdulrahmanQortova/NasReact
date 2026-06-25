@@ -18,7 +18,7 @@ export default function SinglePost() {
   const [post, setPost] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const [editingPost, setEditingPost] = useState(null);  // ✅ أضف
+  const [editingPost, setEditingPost] = useState(null); 
 
   useEffect(() => {
     const fetchPost = async () => {

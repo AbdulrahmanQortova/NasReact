@@ -51,13 +51,11 @@ export default function CourseDetailsPage() {
     }
   };
 
-  // ✅ دالة محدثة لجلب الأقسام مع الدروس
   const fetchSections = async () => {
     try {
       const response = await courseService.getCourseSections(id);
       const sectionsData = response.data || response || [];
       
-      // ✅ جلب الدروس لكل قسم
       const sectionsWithLessons = await Promise.all(
         sectionsData.map(async (section) => {
           try {

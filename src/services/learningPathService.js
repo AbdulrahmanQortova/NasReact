@@ -5,7 +5,7 @@ class LearningPathService {
   // ========== Learning Paths Services ==========
   
   async getAll(params = {}) {
-    // ✅ تصحيح المسار: learning-paths (بشرطة) وليس LearningPaths
+   
     return await api.get('/learning-paths');
   }
 

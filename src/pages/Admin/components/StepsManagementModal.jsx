@@ -199,7 +199,7 @@ export default function StepsManagementModal({ path, onClose, onSuccess }) {
     newSteps.splice(draggedItem, 1);
     newSteps.splice(dropIndex, 0, draggedStep);
 
-    // تحديث الترتيب بناءً على الموضع الجديد
+
     const reorderedSteps = newSteps.map((step, idx) => ({
       ...step,
       order: idx + 1
@@ -209,10 +209,8 @@ export default function StepsManagementModal({ path, onClose, onSuccess }) {
     setDraggedItem(null);
     setDragOverItem(null);
 
-    // حفظ الترتيب الجديد في الـ Backend
     setSubmitting(true);
     try {
-      // إرسال جميع الأوامر الجديدة
       for (const step of reorderedSteps) {
         await learningPathService.updateStep(path.id, step.id, {
           courseId: step.courseId,
@@ -223,7 +221,7 @@ export default function StepsManagementModal({ path, onClose, onSuccess }) {
     } catch (err) {
       console.error('Error reordering steps:', err);
       toast.error(t('admin.steps.reorderError'));
-      await fetchSteps(); // إعادة تحميل الترتيب الأصلي
+      await fetchSteps();
     } finally {
       setSubmitting(false);
     }

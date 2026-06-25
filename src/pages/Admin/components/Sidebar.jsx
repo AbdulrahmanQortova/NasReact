@@ -17,8 +17,7 @@ export default function Sidebar({ activeTab, onTabChange }) {
     setUser(currentUser);
   }, []);
 
-// src/pages/Admin/components/Sidebar.jsx
-// أضف في menuItems
+
 
 const menuItems = [
   { id: 'courses', label: t('admin.sidebar.courses'), icon: '📚', description: t('admin.sidebar.coursesDesc') },

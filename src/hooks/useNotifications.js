@@ -100,7 +100,6 @@ export function useNotifications() {
     }
   }, []);
 
-  // لما تضغط على الأيقونة تصفر العداد
   const clearUnreadCount = useCallback(() => {
     setUnreadCount(0);
   }, []);

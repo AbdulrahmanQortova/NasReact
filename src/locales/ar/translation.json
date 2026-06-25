@@ -473,7 +473,36 @@
       "updateSuccess": "تم تحديث الامتحان بنجاح",
       "updateError": "فشل في تحديث الامتحان",
       "updateBtn": "تحديث"
-    }
+    },
+    "reports": {
+  "total": "إجمالي البلاغات",
+  "pending": "قيد الانتظار",
+  "approved": "موافق عليها",
+  "dismissed": "مرفوضة",
+  "loadError": "فشل تحميل البلاغات",
+  "reviewSuccess": "تمت مراجعة البلاغ بنجاح",
+  "reviewError": "فشل مراجعة البلاغ",
+  "deleteSuccess": "تم حذف المنشور بنجاح",
+  "deleteError": "فشل حذف المنشور",
+  "confirmDelete": "هل أنت متأكد من حذف هذا المنشور؟",
+  "noReports": "لا توجد بلاغات",
+  "statusAll": "الكل",
+  "statusPending": "قيد الانتظار",
+  "statusApproved": "موافق عليها",
+  "statusDismissed": "مرفوضة",
+  "sortBy": "ترتيب حسب:",
+  "sortNewest": "الأحدث أولاً",
+  "sortMost": "الأكثر بلاغات",
+  "reportsCount": "{{count}} بلاغ",
+  "viewPost": "عرض المنشور",
+  "deletePost": "حذف المنشور",
+  "reason": "السبب",
+  "adminNotes": "ملاحظات المدير",
+  "reviewedBy": "راجعه",
+  "addNotes": "إضافة ملاحظات (اختياري)...",
+  "approve": "موافقة",
+  "dismiss": "رفض"
+}
   },
   "home": {
     "featuredCourses": "دورات مميزة",

@@ -24,7 +24,6 @@ export default function EditCourseModal({ course, onClose, onSuccess }) {
 
   useEffect(() => {
     if (course) {
-      // تحويل مستوى الكورس من رقم إلى نص
       const levelMap = { 0: 'Beginner', 1: 'Intermediate', 2: 'Advanced' };
       setFormData({
         title: course.title || '',

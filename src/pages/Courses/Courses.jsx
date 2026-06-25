@@ -190,7 +190,7 @@ const fetchCourses = async (reset = false) => {
     }
   }, [loading, hasMore, page]);
 
-  // ... باقي الدوال (handleEnroll, handleUnenroll, etc.)
+
 
   const handleEnroll = async (courseId) => {
     if (!isLoggedIn) {
