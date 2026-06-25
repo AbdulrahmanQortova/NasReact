@@ -635,6 +635,33 @@
     "fakeInfo" : "False information",
     "other" : "Other",
     "detailsPlaceholder" : "Provide additional details (optional)"
-  }
+  },
+  "profile": {
+  "tabInfo": "Profile Info",
+  "tabPassword": "Change Password",
+  "firstName": "First Name",
+  "lastName": "Last Name",
+  "email": "Email Address",
+  "emailHint": "Email cannot be changed",
+  "bio": "Bio",
+  "bioPlaceholder": "Tell us about yourself...",
+  "department": "Department",
+  "departmentPlaceholder": "e.g., Computer Science",
+  "saveChanges": "Save Changes",
+  "changePassword": "Change Password",
+  "currentPassword": "Current Password",
+  "newPassword": "New Password",
+  "confirmPassword": "Confirm New Password",
+  "saveSuccess": "Profile updated successfully",
+  "saveError": "Failed to update profile",
+  "loadError": "Failed to load profile",
+  "passwordChanged": "Password changed successfully",
+  "passwordError": "Failed to change password",
+  "nameRequired": "First and last name are required",
+  "fillAllFields": "Please fill in all fields",
+  "passwordMismatch": "Passwords do not match",
+  "passwordTooShort": "Password must be at least 6 characters",
+  "imageSizeError": "Image must be less than 5MB"
+}
 
 }

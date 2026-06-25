@@ -11,6 +11,7 @@ import AdminDashboard from './pages/Admin/AdminDashboard';
 import CourseDetails from './pages/Admin/CourseDetails';
 import Community from './pages/Community/Community';
 import SinglePost from './pages/Community/SinglePost';
+import ProfilePage from './pages/Profile/ProfilePage';
 // Protected Route Component
 const ProtectedRoute = ({ children }) => {
   const isAuthenticated = localStorage.getItem('auth_token');
@@ -87,11 +88,11 @@ export default function App() {
             </ProtectedRoute>
           } />
           
-          <Route path="/profile" element={
-            <ProtectedRoute>
-              <div style={{ padding: '40px' }}>Profile Page</div>
-            </ProtectedRoute>
-          } />
+<Route path="/profile" element={
+  <ProtectedRoute>
+    <ProfilePage />
+  </ProtectedRoute>
+} />
           
           <Route path="/settings" element={
             <ProtectedRoute>

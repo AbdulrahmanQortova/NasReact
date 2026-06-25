@@ -12,12 +12,18 @@ import './Navbar.css';
 
 export default function Navbar() {
   const { t, i18n } = useTranslation();
+  const navigate = useNavigate();
+  const location = useLocation();
+  
   const [searchQuery, setSearchQuery] = useState('');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState(null);
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   const [showLanguageMenu, setShowLanguageMenu] = useState(false);
+  const [showNotifications, setShowNotifications] = useState(false);
+  
+  // ✅ إضافة Dark Mode state
   const [isDarkMode, setIsDarkMode] = useState(() => {
     const savedTheme = localStorage.getItem('theme');
     if (savedTheme) {
@@ -25,20 +31,20 @@ export default function Navbar() {
     }
     return window.matchMedia('(prefers-color-scheme: dark)').matches;
   });
-  const navigate = useNavigate();
-  const location = useLocation();
-const [showNotifications, setShowNotifications] = useState(false);
-const notifBtnRef = useRef(null);
-const {
-  notifications,
-  unreadCount,
-  loading,
-  markAsRead,
-  markAllAsRead,
-  deleteNotification,
-  deleteAll,
-  clearUnreadCount, 
-} = useNotifications();
+
+  const notifBtnRef = useRef(null);
+  
+  const {
+    notifications,
+    unreadCount,
+    loading,
+    markAsRead,
+    markAllAsRead,
+    deleteNotification,
+    deleteAll,
+    clearUnreadCount,
+  } = useNotifications();
+
   // Languages list
   const languages = [
     { code: 'en', name: 'English', dir: 'ltr', icon: '🇬🇧' },
@@ -47,7 +53,28 @@ const {
 
   const currentLanguage = i18n.language;
 
-  // Apply theme
+  const closeAll = () => {
+    setShowUserMenu(false);
+    setShowLanguageMenu(false);
+    setShowNotifications(false);
+  };
+
+  const toggleMenu = (menu) => {
+    const current = {
+      user: showUserMenu,
+      language: showLanguageMenu,
+      notif: showNotifications,
+    }[menu];
+
+    closeAll();
+    if (!current) {
+      if (menu === 'user') setShowUserMenu(true);
+      if (menu === 'language') setShowLanguageMenu(true);
+      if (menu === 'notif') setShowNotifications(true);
+    }
+  };
+
+  // ✅ Apply theme
   useEffect(() => {
     if (isDarkMode) {
       document.documentElement.setAttribute('data-theme', 'dark');
@@ -78,32 +105,32 @@ const {
     };
   };
 
- useEffect(() => {
-  const checkAuth = () => {
-    try {
-      const loggedIn = authService.isAuthenticated();
-      const currentUser = authService.getCurrentUser();
-      setIsLoggedIn(loggedIn);
-      setUser(currentUser);
-    } catch (error) {
-      setIsLoggedIn(false);
-      setUser(null);
-    }
-  };
+  useEffect(() => {
+    const checkAuth = () => {
+      try {
+        const loggedIn = authService.isAuthenticated();
+        const currentUser = authService.getCurrentUser();
+        setIsLoggedIn(loggedIn);
+        setUser(currentUser);
+      } catch (error) {
+        setIsLoggedIn(false);
+        setUser(null);
+      }
+    };
 
-  checkAuth();
+    checkAuth();
 
+    window.addEventListener('storage', checkAuth);
+    window.addEventListener('auth:login', checkAuth);
+    window.addEventListener('auth:logout', checkAuth);
 
-  window.addEventListener('storage', checkAuth);
-  window.addEventListener('auth:login', checkAuth);
-  window.addEventListener('auth:logout', checkAuth);
+    return () => {
+      window.removeEventListener('storage', checkAuth);
+      window.removeEventListener('auth:login', checkAuth);
+      window.removeEventListener('auth:logout', checkAuth);
+    };
+  }, []);
 
-  return () => {
-    window.removeEventListener('storage', checkAuth);
-    window.removeEventListener('auth:login', checkAuth);
-    window.removeEventListener('auth:logout', checkAuth);
-  };
-}, []);
   useEffect(() => {
     if (location.pathname === '/courses') {
       const params = new URLSearchParams(location.search);
@@ -180,7 +207,6 @@ const {
     links.push({ path: '/courses', label: t('nav.courses') });
     
     if (isLoggedIn) {
-      // ✅ تم إزالة Live
       links.push({ path: '/community', label: t('nav.community') });
       if (hasRole('Student')) {
         links.push({ path: '/exams', label: t('nav.exams') });
@@ -257,9 +283,9 @@ const {
         </button>
 
         <div className="language-dropdown">
-          <button 
-            className="ghost-btn lang-btn" 
-            onClick={() => setShowLanguageMenu(!showLanguageMenu)}
+          <button
+            className="ghost-btn lang-btn"
+            onClick={() => toggleMenu('language')}
           >
             {languages.find(l => l.code === currentLanguage)?.icon || '🌐'} {currentLanguage === 'ar' ? 'عربي' : 'English'}
           </button>
@@ -281,38 +307,48 @@ const {
         
         {isLoggedIn ? (
           <>
-
-<div style={{ position: 'relative' }} ref={notifBtnRef}>
-  <button
-    className="icon-btn"
-    onClick={() => {
-      const opening = !showNotifications;
-      setShowNotifications(opening);
-      if (opening) clearUnreadCount(); 
-    }}
-    aria-label="Notifications"
-  >
-    <FontAwesomeIcon icon={faBell} />
-    {unreadCount > 0 && (
-      <span className="notif-dot">{unreadCount > 9 ? '9+' : unreadCount}</span>
-    )}
-  </button>
-  <NotificationDropdown
-    isOpen={showNotifications}
-    onClose={() => setShowNotifications(false)}
-    notifications={notifications}
-    unreadCount={unreadCount}
-    loading={loading}
-    onMarkAsRead={markAsRead}
-    onMarkAllAsRead={markAllAsRead}
-    onDelete={deleteNotification}
-    onDeleteAll={deleteAll}
-  />
-</div>
+            <div style={{ position: 'relative' }} ref={notifBtnRef}>
+              <button
+                className="icon-btn"
+                onClick={() => {
+                  const wasOpen = showNotifications;
+                  toggleMenu('notif');
+                  if (!wasOpen) clearUnreadCount();
+                }}
+                aria-label="Notifications"
+              >
+                <FontAwesomeIcon icon={faBell} />
+                {unreadCount > 0 && (
+                  <span className="notif-dot">{unreadCount > 9 ? '9+' : unreadCount}</span>
+                )}
+              </button>
+              <NotificationDropdown
+                isOpen={showNotifications}
+                onClose={() => setShowNotifications(false)}
+                notifications={notifications}
+                unreadCount={unreadCount}
+                loading={loading}
+                onMarkAsRead={markAsRead}
+                onMarkAllAsRead={markAllAsRead}
+                onDelete={deleteNotification}
+                onDeleteAll={deleteAll}
+              />
+            </div>
             <div className="user-menu">
-              <button className="user-menu-btn" onClick={() => setShowUserMenu(!showUserMenu)}>
+              <button className="user-menu-btn" onClick={() => toggleMenu('user')}>
                 <div className="user-avatar">
-                  <span>{user?.firstName?.charAt(0)}{user?.lastName?.charAt(0)}</span>
+                  {user?.profilePictureUrl ? (
+                    <img
+                      src={user.profilePictureUrl.startsWith('http')
+                        ? user.profilePictureUrl
+                        : `${(import.meta.env.VITE_API_URL || 'https://localhost:7021/api').replace('/api', '')}${user.profilePictureUrl}`}
+                      alt="avatar"
+                      style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }}
+                      onError={e => { e.target.style.display = 'none'; }}
+                    />
+                  ) : (
+                    <span>{user?.firstName?.charAt(0)}{user?.lastName?.charAt(0)}</span>
+                  )}
                 </div>
               </button>
               {showUserMenu && (

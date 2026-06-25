@@ -639,6 +639,33 @@
   "fakeInfo": "معلومات كاذبة",
   "other": "أخرى",
   "detailsPlaceholder": "أضف أي تفاصيل إضافية هنا..."
+},
+"profile": {
+  "tabInfo": "معلومات الملف",
+  "tabPassword": "تغيير كلمة المرور",
+  "firstName": "الاسم الأول",
+  "lastName": "اسم العائلة",
+  "email": "البريد الإلكتروني",
+  "emailHint": "لا يمكن تغيير البريد الإلكتروني",
+  "bio": "نبذة شخصية",
+  "bioPlaceholder": "أخبرنا عن نفسك...",
+  "department": "القسم",
+  "departmentPlaceholder": "مثال: علوم الحاسب",
+  "saveChanges": "حفظ التغييرات",
+  "changePassword": "تغيير كلمة المرور",
+  "currentPassword": "كلمة المرور الحالية",
+  "newPassword": "كلمة المرور الجديدة",
+  "confirmPassword": "تأكيد كلمة المرور الجديدة",
+  "saveSuccess": "تم تحديث الملف الشخصي بنجاح",
+  "saveError": "فشل تحديث الملف الشخصي",
+  "loadError": "فشل تحميل الملف الشخصي",
+  "passwordChanged": "تم تغيير كلمة المرور بنجاح",
+  "passwordError": "فشل تغيير كلمة المرور",
+  "nameRequired": "الاسم الأول واسم العائلة مطلوبان",
+  "fillAllFields": "يرجى ملء جميع الحقول",
+  "passwordMismatch": "كلمتا المرور غير متطابقتين",
+  "passwordTooShort": "كلمة المرور يجب أن تكون 6 أحرف على الأقل",
+  "imageSizeError": "حجم الصورة يجب أن يكون أقل من 5 ميغابايت"
 }
   
 }
