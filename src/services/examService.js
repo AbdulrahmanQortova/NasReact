@@ -27,7 +27,14 @@ class ExamService {
   async deleteExam(id) {
     return await api.delete(`/exams/${id}`);
   }
+async getStandaloneExams() {
+  const data = await api.get('/exams/standalone');
+  return Array.isArray(data) ? data : data?.data || [];
+}
 
+async submitExam(examId, payload) {
+  return await api.post(`/exams/${examId}/submit`, payload);
+}
   // ========== Questions Services ==========
 
   async getQuestionsByExam(examId) {
@@ -64,7 +71,6 @@ class ExamService {
     return await api.get(`/questions/${questionId}/answers`);
   }
 
-  // ✅ تصحيح: getAnswerById يحتاج إلى questionId
   async getAnswerById(questionId, answerId) {
     return await api.get(`/questions/${questionId}/answers/${answerId}`);
   }
@@ -79,12 +85,10 @@ class ExamService {
     return await api.post(`/questions/${questionId}/answers`, payload);
   }
 
-  // ✅ تصحيح: updateAnswer يحتاج إلى questionId
   async updateAnswer(questionId, answerId, answerData) {
     return await api.put(`/questions/${questionId}/answers/${answerId}`, answerData);
   }
 
-  // ✅ تصحيح: deleteAnswer يحتاج إلى questionId
   async deleteAnswer(questionId, answerId) {
     console.log('🔴 Deleting answer - Question:', questionId, 'Answer:', answerId);
     try {
@@ -97,7 +101,6 @@ class ExamService {
     }
   }
 
-  // ✅ تصحيح: setCorrectAnswer - المسار الصحيح
   async setCorrectAnswer(questionId, answerId) {
     console.log('🔵 Setting correct answer - Question:', questionId, 'Answer:', answerId);
     try {

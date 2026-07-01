@@ -662,6 +662,37 @@
   "passwordMismatch": "Passwords do not match",
   "passwordTooShort": "Password must be at least 6 characters",
   "imageSizeError": "Image must be less than 5MB"
+},
+"exams": {
+  "title": "Available Exams",
+  "subtitle": "Test your knowledge with our exams",
+  "available": "exams available",
+  "noExams": "No exams available",
+  "noExamsDesc": "Check back later for new exams",
+  "loadError": "Failed to load exams",
+  "minutes": "min",
+  "toPass": "to pass",
+  "questions": "questions",
+  "maxAttempts": "max attempts",
+  "startExam": "Start Exam",
+  "duration": "Duration",
+  "passingScore": "Passing Score",
+  "question": "Question",
+  "pts": "pts",
+  "answered": "answered",
+  "typeAnswer": "Type your answer here...",
+  "previous": "Previous",
+  "next": "Next",
+  "submit": "Submit Exam",
+  "unansweredWarning": "questions unanswered. Submit anyway?",
+  "submitError": "Failed to submit exam",
+  "passed": "Congratulations! You Passed!",
+  "failed": "You Did Not Pass",
+  "yourScore": "Your Score",
+  "correct": "Correct",
+  "total": "Total",
+  "passing": "Passing",
+  "backToExams": "Back to Exams"
 }
 
 }
