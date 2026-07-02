@@ -204,12 +204,38 @@
 }
 
 .answer-bullet {
-  font-size: 18px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border: 2px solid var(--muted);
+  border-radius: 50%;
+  background: transparent;
   color: var(--muted);
+  font-size: 0;
+  flex-shrink: 0;
+}
+
+.answer-bullet::before {
+  font-size: 12px;
+  font-weight: 600;
 }
 
 .answer-bullet.correct {
-  color: var(--green);
+  background: linear-gradient(135deg, var(--green), #22c55e);
+  border-color: var(--green);
+  color: white;
+}
+
+.answer-bullet.correct::before {
+  content: '✓';
+  color: white;
+  font-size: 12px;
+}
+
+.answer-bullet:not(.correct)::before {
+  content: '';
 }
 
 .answer-text {

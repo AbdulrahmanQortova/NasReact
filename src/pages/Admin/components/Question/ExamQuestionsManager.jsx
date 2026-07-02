@@ -230,9 +230,7 @@ export default function ExamQuestionsManager({ exam, onClose, onSuccess }) {
                         <div className="answers-list">
                           {q.answers.map(a => (
                             <div key={a.id} className="answer-item">
-                              <span className={`answer-bullet ${a.isCorrect ? 'correct' : ''}`}>
-                                {a.isCorrect ? '✓' : '○'}
-                              </span>
+                              <span className={`answer-bullet ${a.isCorrect ? 'correct' : ''}`}></span>
                               <span className="answer-text">{a.text}</span>
                               <div className="answer-actions">
                                 {!a.isCorrect && (

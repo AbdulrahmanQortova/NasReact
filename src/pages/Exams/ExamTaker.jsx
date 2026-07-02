@@ -8,6 +8,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { examService } from '../../services/examService';
 import { useToast } from '../../context/ToastContext';
+import Dialog from '../../components/ui/Dialog';
 import './ExamTaker.css';
 
 export default function ExamTaker() {
@@ -27,6 +28,8 @@ export default function ExamTaker() {
   const [submitting, setSubmitting] = useState(false);
   const [result, setResult] = useState(null);
   const [started, setStarted] = useState(false);
+  const [showUnansweredDialog, setShowUnansweredDialog] = useState(false);
+  const [unansweredCount, setUnansweredCount] = useState(0);
 
   useEffect(() => {
     loadExam();
@@ -109,10 +112,9 @@ export default function ExamTaker() {
     if (!auto) {
       const unanswered = questions.filter(q => !answers[q.id]);
       if (unanswered.length > 0) {
-        const ok = window.confirm(
-          `${unanswered.length} ${t('exams.unansweredWarning')}`
-        );
-        if (!ok) return;
+        setUnansweredCount(unanswered.length);
+        setShowUnansweredDialog(true);
+        return;
       }
     }
 
@@ -240,16 +242,34 @@ export default function ExamTaker() {
 
   return (
     <div className="exam-taker" dir={isRTL ? 'rtl' : 'ltr'}>
+      <Dialog
+        isOpen={showUnansweredDialog}
+        onClose={() => setShowUnansweredDialog(false)}
+        onConfirm={() => {
+          setShowUnansweredDialog(false);
+          clearInterval(timerRef.current);
+          setSubmitting(true);
+          handleSubmit(true);
+        }}
+        type="warning"
+        title={t('exams.unansweredTitle') || 'Unanswered Questions'}
+        message={`${unansweredCount} ${t('exams.unansweredWarning')}`}
+        confirmText={t('exams.submitAnyway') || 'Submit Anyway'}
+        cancelText={t('common.cancel')}
+      />
+
       {/* Top bar */}
       <div className="exam-topbar">
-        <span className="exam-topbar-title">{exam?.title}</span>
+        <div className="exam-topbar-left">
+          <span className="exam-topbar-title">{exam?.title}</span>
+          <span className="exam-progress-text">
+            {answeredCount}/{questions.length} {t('exams.answered')}
+          </span>
+        </div>
         <div className={`exam-timer ${timerWarning ? 'warning' : ''}`}>
           <FontAwesomeIcon icon={faClock} />
           {formatTime(timeLeft)}
         </div>
-        <span className="exam-progress-text">
-          {answeredCount}/{questions.length} {t('exams.answered')}
-        </span>
       </div>
 
       {/* Progress bar */}
@@ -311,17 +331,6 @@ export default function ExamTaker() {
             <FontAwesomeIcon icon={faChevronLeft} />
             {t('common.previous')}
           </button>
-
-          {/* Question dots */}
-          <div className="question-dots">
-            {questions.map((_, i) => (
-              <button
-                key={i}
-                className={`q-dot ${i === currentQ ? 'active' : ''} ${answers[questions[i].id] ? 'answered' : ''}`}
-                onClick={() => setCurrentQ(i)}
-              />
-            ))}
-          </div>
 
           {isLast ? (
             <button

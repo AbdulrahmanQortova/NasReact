@@ -81,16 +81,28 @@ export default function CreateAnswerModal({ question, onClose, onSuccess }) {
               <small>{t('admin.exams.answerTextHint')}</small>
             </div>
 
-            <div className="form-group checkbox">
-              <label>
+            <div className="form-group checkbox-group">
+              <label className="checkbox-label">
                 <input
                   type="checkbox"
                   name="isCorrect"
                   checked={formData.isCorrect}
                   onChange={handleChange}
+                  className="checkbox-input"
                 />
-                {t('admin.exams.markAsCorrect')}
+                <span className="checkbox-custom">
+                  {formData.isCorrect && <span className="checkmark">✓</span>}
+                </span>
+                <span className="checkbox-text">
+                  {t('admin.exams.markAsCorrect')}
+                </span>
               </label>
+              {formData.isCorrect && (
+                <div className="correct-badge">
+                  <span className="badge-icon">★</span>
+                  <span className="badge-text">Correct Answer</span>
+                </div>
+              )}
             </div>
 
             <div className="modal-actions">

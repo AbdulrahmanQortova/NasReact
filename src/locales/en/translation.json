@@ -468,7 +468,8 @@
       "editTitle" : "Edit Exam",
       "updateSuccess": "Exam updated successfully",
       "updateError": "Failed to update exam",
-      "updateBtn": "Update"
+      "updateBtn": "Update",
+      "answers" : "Answers"
     },
     "reports": {
   "total": "Total Reports",
@@ -692,7 +693,10 @@
   "correct": "Correct",
   "total": "Total",
   "passing": "Passing",
-  "backToExams": "Back to Exams"
+  "backToExams": "Back to Exams",
+  "unansweredTitle" : "Unanswered Questions",
+  "unansweredDesc" : "You have {{count}} unanswered questions. Are you sure",
+  "submitAnyway" : "Submit Anyway"
 }
 
 }
