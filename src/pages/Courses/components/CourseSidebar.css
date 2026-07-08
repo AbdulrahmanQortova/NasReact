@@ -149,6 +149,14 @@
   border-left-color: var(--primary);
 }
 
+.sidebar-lesson.completed .lesson-title {
+  color: var(--green);
+}
+
+.sidebar-lesson.completed {
+  opacity: 0.92;
+}
+
 .sidebar-lesson .lesson-status {
   font-size: 14px;
 }

@@ -1,5 +1,4 @@
 // src/components/notifications/NotificationDropdown.jsx
-import { useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -39,18 +38,7 @@ export default function NotificationDropdown({
   onMarkAsRead, onMarkAllAsRead, onDelete, onDeleteAll,
 }) {
   const { t } = useTranslation();
-  const dropdownRef = useRef(null);
   const navigate = useNavigate();
-
-  useEffect(() => {
-    const handleClickOutside = (e) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
-        onClose();
-      }
-    };
-    if (isOpen) document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, [isOpen, onClose]);
 
   if (!isOpen) return null;
 
@@ -68,7 +56,7 @@ const handleNotifClick = async (notif) => {
   }
 };
   return (
-    <div className="notif-dropdown" ref={dropdownRef}>
+    <div className="notif-dropdown">
       <div className="notif-header">
         <span className="notif-title">
           Notifications

@@ -26,7 +26,9 @@ export default function Navbar() {
     return window.matchMedia('(prefers-color-scheme: dark)').matches;
   });
 
-  const notifBtnRef = useRef(null);
+  const languageMenuRef = useRef(null);
+  const userMenuRef = useRef(null);
+  const notifMenuRef = useRef(null);
 
   const {
     notifications, unreadCount, loading,
@@ -56,6 +58,26 @@ export default function Navbar() {
       if (menu === 'notif')    setShowNotifications(true);
     }
   };
+
+  // ── Close dropdowns on outside click ─────────────────────────
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (showLanguageMenu && languageMenuRef.current && !languageMenuRef.current.contains(e.target)) {
+        setShowLanguageMenu(false);
+      }
+      if (showUserMenu && userMenuRef.current && !userMenuRef.current.contains(e.target)) {
+        setShowUserMenu(false);
+      }
+      if (showNotifications && notifMenuRef.current && !notifMenuRef.current.contains(e.target)) {
+        setShowNotifications(false);
+      }
+    };
+
+    if (showLanguageMenu || showUserMenu || showNotifications) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [showLanguageMenu, showUserMenu, showNotifications]);
 
   // ── Theme ────────────────────────────────────────────────────
   useEffect(() => {
@@ -241,7 +263,7 @@ export default function Navbar() {
         </button>
 
         {/* Language */}
-        <div className="language-dropdown">
+        <div className="language-dropdown" ref={languageMenuRef}>
           <button className="ghost-btn lang-btn" onClick={() => toggleMenu('language')}>
             {languages.find(l => l.code === currentLanguage)?.icon || '🌐'}{' '}
             {currentLanguage === 'ar' ? 'عربي' : 'English'}
@@ -264,13 +286,13 @@ export default function Navbar() {
         {isLoggedIn ? (
           <>
             {/* Notifications */}
-            <div style={{ position: 'relative' }} ref={notifBtnRef}>
+            <div style={{ position: 'relative' }} ref={notifMenuRef}>
               <button
                 className="icon-btn"
                 onClick={() => {
-                  const wasOpen = showNotifications;
+                  const willOpen = !showNotifications;
                   toggleMenu('notif');
-                  if (!wasOpen) clearUnreadCount();
+                  if (willOpen) clearUnreadCount();
                 }}
                 aria-label="Notifications"
               >
@@ -293,7 +315,7 @@ export default function Navbar() {
             </div>
 
             {/* User menu */}
-            <div className="user-menu">
+            <div className="user-menu" ref={userMenuRef}>
               <button className="user-menu-btn" onClick={() => toggleMenu('user')}>
                 <div className="user-avatar">
                   {avatarSrc ? (

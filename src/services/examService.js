@@ -32,6 +32,10 @@ async getStandaloneExams() {
   return Array.isArray(data) ? data : data?.data || [];
 }
 
+async getAttemptStatus(examId) {
+  return await api.get(`/exams/${examId}/attempt-status`);
+}
+
 async submitExam(examId, payload) {
   return await api.post(`/exams/${examId}/submit`, payload);
 }

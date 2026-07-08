@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faClock, faChevronLeft, faChevronRight,
-  faCheckCircle, faSpinner, faArrowLeft
+  faCheckCircle, faSpinner, faArrowLeft, faLock
 } from '@fortawesome/free-solid-svg-icons';
 import { examService } from '../../services/examService';
 import { useToast } from '../../context/ToastContext';
@@ -143,6 +143,21 @@ export default function ExamTaker() {
     }
   };
 
+  const formatRetryDate = (dateStr) => {
+    if (!dateStr) return '';
+    return new Intl.DateTimeFormat(isRTL ? 'ar-EG' : 'en-US', {
+      dateStyle: 'medium',
+      timeStyle: 'short',
+    }).format(new Date(dateStr));
+  };
+
+  const canTakeExam = exam?.canTakeExam !== false;
+  const maxAttempts = exam?.maxAttempts ?? 3;
+  const usedAttempts = exam?.usedAttempts ?? 0;
+  const remainingAttempts = exam?.remainingAttempts ?? Math.max(0, maxAttempts - usedAttempts);
+  const resetDays = exam?.attemptResetPeriodDays ?? 30;
+  const retryDate = formatRetryDate(exam?.nextAttemptAvailableAt);
+
   if (loading) {
     return (
       <div className="exam-taker-loading">
@@ -192,6 +207,35 @@ export default function ExamTaker() {
     );
   }
 
+  // ── Blocked screen (max attempts) ───────────────────────────
+  if (!loading && exam && !canTakeExam) {
+    return (
+      <div className="exam-intro" dir={isRTL ? 'rtl' : 'ltr'}>
+        <button className="exam-back-btn" onClick={() => navigate('/exams')}>
+          <FontAwesomeIcon icon={faArrowLeft} />
+          {t('common.back')}
+        </button>
+        <div className="exam-intro-card exam-blocked-card">
+          <div className="exam-blocked-icon">
+            <FontAwesomeIcon icon={faLock} />
+          </div>
+          <h1>{exam.title}</h1>
+          <p className="exam-blocked-title">{t('exams.maxAttemptsReached')}</p>
+          <p className="exam-blocked-desc">
+            {t('exams.attemptsUsed', { used: usedAttempts, max: maxAttempts, days: resetDays })}
+          </p>
+          {retryDate && (
+            <p className="exam-blocked-retry">{t('exams.retryAfter', { date: retryDate })}</p>
+          )}
+          <p className="exam-reset-note">{t('exams.attemptsResetInfo')}</p>
+          <button className="exam-start-btn-large" onClick={() => navigate('/exams')}>
+            {t('exams.backToExams')}
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   // ── Intro screen ─────────────────────────────────────────────
   if (!started) {
     return (
@@ -225,8 +269,16 @@ export default function ExamTaker() {
                 <small>{t('exams.passingScore')}</small>
               </div>
             </div>
+            <div className="intro-info-item">
+              <FontAwesomeIcon icon={faLock} />
+              <div>
+                <strong>{remainingAttempts}/{maxAttempts}</strong>
+                <small>{t('exams.attemptsRemaining', { remaining: remainingAttempts })}</small>
+              </div>
+            </div>
           </div>
-          <button className="exam-start-btn-large" onClick={startExam}>
+          <p className="exam-reset-note">{t('exams.attemptsResetInfo')}</p>
+          <button className="exam-start-btn-large" onClick={startExam} disabled={!canTakeExam}>
             {t('exams.startExam')}
           </button>
         </div>

@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import './CourseSidebar.css';
 
-export default function CourseSidebar({ sections, onLessonSelect, selectedLessonId }) {
+export default function CourseSidebar({ sections, onLessonSelect, selectedLessonId, completedLessonIds = [] }) {
   const { t } = useTranslation();
   const [expandedSections, setExpandedSections] = useState({});
 
@@ -60,19 +60,21 @@ export default function CourseSidebar({ sections, onLessonSelect, selectedLesson
 
               {isExpanded && lessonCount > 0 && (
                 <div className="sidebar-lessons">
-                  {section.lessons.map(lesson => (
+                  {section.lessons.map(lesson => {
+                    const isCompleted = completedLessonIds.includes(lesson.id);
+                    return (
                     <div
                       key={lesson.id}
-                      className={`sidebar-lesson ${selectedLessonId === lesson.id ? 'active' : ''}`}
+                      className={`sidebar-lesson ${selectedLessonId === lesson.id ? 'active' : ''} ${isCompleted ? 'completed' : ''}`}
                       onClick={() => onLessonSelect(lesson)}
                     >
                       <span className="lesson-status">
-                        {lesson.isFreePreview ? '🔓' : '🔒'}
+                        {isCompleted ? '✅' : lesson.isFreePreview ? '🔓' : '🔒'}
                       </span>
                       <span className="lesson-title">{lesson.title}</span>
                       <span className="lesson-duration">{lesson.durationInMinutes}m</span>
                     </div>
-                  ))}
+                  );})}
                 </div>
               )}
 

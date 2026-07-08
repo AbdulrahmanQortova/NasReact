@@ -1,34 +1,37 @@
 // src/pages/Courses/components/LessonContent.jsx
 import { useTranslation } from 'react-i18next';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCheckCircle, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import './LessonContent.css';
 
-export default function LessonContent({ lesson }) {
+export default function LessonContent({
+  lesson,
+  isEnrolled = false,
+  isCompleted = false,
+  onMarkComplete,
+  completing = false,
+}) {
   const { t } = useTranslation();
 
   const getYouTubeVideoId = (url) => {
     if (!url) return null;
-    
 
     const patterns = [
-      // https://www.youtube.com/watch?v=VIDEO_ID
       /(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\n?#]+)/,
-      // https://youtube.com/embed/VIDEO_ID
       /youtube\.com\/embed\/([^&\n?#]+)/,
-      // https://youtube.com/v/VIDEO_ID
       /youtube\.com\/v\/([^&\n?#]+)/,
-      // https://youtube.com/shorts/VIDEO_ID
       /youtube\.com\/shorts\/([^&\n?#]+)/
     ];
-    
+
     for (const pattern of patterns) {
       const match = url.match(pattern);
       if (match) return match[1];
     }
-    
+
     if (url.includes('youtube.com/embed/')) {
       return url.split('/embed/')[1]?.split('?')[0];
     }
-    
+
     return null;
   };
 
@@ -55,8 +58,14 @@ export default function LessonContent({ lesson }) {
     <div className="lesson-content">
       <div className="lesson-content-header">
         <div className="lesson-badge">
-          {lesson.isFreePreview ? '🔓' : '🔒'}
-          <span>{lesson.isFreePreview ? t('courseDetails.freePreview') : t('courseDetails.premium')}</span>
+          {isCompleted ? '✅' : lesson.isFreePreview ? '🔓' : '🔒'}
+          <span>
+            {isCompleted
+              ? t('courseDetails.lessonCompleted')
+              : lesson.isFreePreview
+              ? t('courseDetails.freePreview')
+              : t('courseDetails.premium')}
+          </span>
         </div>
         <h1 className="lesson-title">{lesson.title}</h1>
         <div className="lesson-meta">
@@ -78,8 +87,8 @@ export default function LessonContent({ lesson }) {
           </div>
         ) : lesson.videoUrl ? (
           <div className="video-container">
-            <video 
-              controls 
+            <video
+              controls
               src={lesson.videoUrl}
               className="lesson-video"
             >
@@ -101,6 +110,23 @@ export default function LessonContent({ lesson }) {
                 <p key={index}>{line}</p>
               ))}
             </div>
+          </div>
+        )}
+
+        {isEnrolled && (
+          <div className="lesson-complete-section">
+            <button
+              className={`lesson-complete-btn ${isCompleted ? 'completed' : ''}`}
+              onClick={() => onMarkComplete?.(lesson.id)}
+              disabled={isCompleted || completing}
+            >
+              {completing ? (
+                <FontAwesomeIcon icon={faSpinner} spin />
+              ) : (
+                <FontAwesomeIcon icon={faCheckCircle} />
+              )}
+              {isCompleted ? t('courseDetails.lessonCompleted') : t('courseDetails.markComplete')}
+            </button>
           </div>
         )}
       </div>

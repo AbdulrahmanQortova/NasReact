@@ -543,7 +543,14 @@
     "description": "الوصف",
     "videoNotSupported": "المتصفح لا يدعم تشغيل الفيديو",
     "noVideo": "لا يوجد فيديو لهذا الدرس",
-    "premium": "مميز"
+    "premium": "مميز",
+    "courseProgress": "تقدم الكورس",
+    "lessonsCompleted": "{{completed}} من {{total}} دروس مكتملة",
+    "markComplete": "تمييز كمكتمل",
+    "lessonCompleted": "تم إكمال الدرس!",
+    "allLessonsComplete": "خلّصت كل الدروس!",
+    "allLessonsCompleteExamNext": "ممتاز! أكمل امتحان الكورس عشان تاخد الشهادة.",
+    "completeFailed": "فشل تسجيل إكمال الدرس"
     
   },
   "payment": {
@@ -677,6 +684,13 @@
   "toPass": "للنجاح",
   "questions": "سؤال",
   "maxAttempts": "محاولة كحد أقصى",
+  "attemptsUsed": "{{used}} من {{max}} محاولات مستخدمة (آخر {{days}} يوم)",
+  "attemptsRemaining": "{{remaining}} محاولات متبقية",
+  "attemptsResetInfo": "المحاولات المستخدمة بتتصفر بعد 30 يوم — تقدر تعيد الامتحان لما يفتح مكان.",
+  "maxAttemptsReached": "وصلت للحد الأقصى من المحاولات",
+  "retryAfter": "تقدر تحاول تاني يوم {{date}}",
+  "cannotStartExam": "مش هتقدر تبدأ الامتحان دلوقتي",
+  "noAttemptsLeft": "مفيش محاولات متبقية",
   "startExam": "ابدأ الامتحان",
   "duration": "المدة",
   "passingScore": "درجة النجاح",

@@ -229,6 +229,16 @@ async getCoursesCursor(params = {}) {
   async getMyEnrollment(courseId) {
     return await api.get(`/Enrollments/my-enrollments/${courseId}`);
   }
+
+  // ========== Lesson Progress Services ==========
+
+  async getCourseProgress(courseId) {
+    return await api.get(`/courses/${courseId}/progress`);
+  }
+
+  async completeLesson(courseId, lessonId) {
+    return await api.post(`/courses/${courseId}/lessons/${lessonId}/complete`, {});
+  }
 }
 
 export const courseService = new CourseService();

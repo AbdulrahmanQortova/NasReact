@@ -71,7 +71,10 @@ export default function ExamsPage() {
             <ExamCard
               key={exam.id}
               exam={exam}
-              onStart={() => navigate(`/exams/${exam.id}`)}
+              onStart={() => {
+                if (exam.canTakeExam === false) return;
+                navigate(`/exams/${exam.id}`);
+              }}
             />
           ))}
         </div>
@@ -80,11 +83,25 @@ export default function ExamsPage() {
   );
 }
 
+function formatRetryDate(dateStr, locale) {
+  if (!dateStr) return '';
+  return new Intl.DateTimeFormat(locale === 'ar' ? 'ar-EG' : 'en-US', {
+    dateStyle: 'medium',
+    timeStyle: 'short',
+  }).format(new Date(dateStr));
+}
+
 function ExamCard({ exam, onStart }) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const canTake = exam.canTakeExam !== false;
+  const maxAttempts = exam.maxAttempts ?? 3;
+  const usedAttempts = exam.usedAttempts ?? 0;
+  const remainingAttempts = exam.remainingAttempts ?? Math.max(0, maxAttempts - usedAttempts);
+  const resetDays = exam.attemptResetPeriodDays ?? 30;
+  const retryDate = formatRetryDate(exam.nextAttemptAvailableAt, i18n.language);
 
   return (
-    <div className="exam-card">
+    <div className={`exam-card ${!canTake ? 'exam-card-locked' : ''}`}>
       <div className="exam-card-header">
         <div className="exam-card-icon">
           <FontAwesomeIcon icon={faClipboardList} />
@@ -111,19 +128,40 @@ function ExamCard({ exam, onStart }) {
             <FontAwesomeIcon icon={faClipboardList} />
             {exam.questionCount ?? 0} {t('exams.questions')}
           </span>
-          {exam.maxAttempts && (
-            <span className="exam-stat">
-              <FontAwesomeIcon icon={faLock} />
-              {exam.maxAttempts} {t('exams.maxAttempts')}
-            </span>
-          )}
+          <span className="exam-stat">
+            <FontAwesomeIcon icon={faLock} />
+            {t('exams.attemptsUsed', { used: usedAttempts, max: maxAttempts, days: resetDays })}
+          </span>
         </div>
+
+        {!canTake ? (
+          <div className="exam-attempt-warning">
+            <FontAwesomeIcon icon={faLock} />
+            <div>
+              <strong>{t('exams.maxAttemptsReached')}</strong>
+              {retryDate && (
+                <p>{t('exams.retryAfter', { date: retryDate })}</p>
+              )}
+              <p className="exam-reset-note">{t('exams.attemptsResetInfo')}</p>
+            </div>
+          </div>
+        ) : remainingAttempts < maxAttempts && (
+          <div className="exam-attempt-info">
+            <span>{t('exams.attemptsRemaining', { remaining: remainingAttempts })}</span>
+            <span className="exam-reset-note">{t('exams.attemptsResetInfo')}</span>
+          </div>
+        )}
       </div>
 
       <div className="exam-card-footer">
-        <button className="exam-start-btn" onClick={onStart}>
-          <FontAwesomeIcon icon={faPlay} />
-          {t('exams.startExam')}
+        <button
+          className="exam-start-btn"
+          onClick={onStart}
+          disabled={!canTake}
+          title={!canTake ? t('exams.cannotStartExam') : undefined}
+        >
+          <FontAwesomeIcon icon={canTake ? faPlay : faLock} />
+          {canTake ? t('exams.startExam') : t('exams.noAttemptsLeft')}
         </button>
       </div>
     </div>

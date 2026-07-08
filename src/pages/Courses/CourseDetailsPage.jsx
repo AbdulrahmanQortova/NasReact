@@ -27,6 +27,8 @@ export default function CourseDetailsPage() {
   const [userRating, setUserRating] = useState(null);
   const [selectedLesson, setSelectedLesson] = useState(null);
   const [selectedLessonId, setSelectedLessonId] = useState(null);
+  const [courseProgress, setCourseProgress] = useState(null);
+  const [completingLesson, setCompletingLesson] = useState(false);
   const isLoggedIn = authService.isAuthenticated();
   const isStudent = authService.isStudent();
   const isRTL = i18n.language === 'ar';
@@ -39,6 +41,14 @@ export default function CourseDetailsPage() {
       checkUserRating();
     }
   }, [id, isLoggedIn]);
+
+  useEffect(() => {
+    if (isLoggedIn && isEnrolled) {
+      fetchCourseProgress();
+    } else {
+      setCourseProgress(null);
+    }
+  }, [id, isLoggedIn, isEnrolled]);
 
   const fetchCourseDetails = async () => {
     try {
@@ -85,9 +95,53 @@ export default function CourseDetailsPage() {
   const checkEnrollment = async () => {
     try {
       const enrollments = await courseService.getMyEnrollments();
-      setIsEnrolled(enrollments.some(e => e.courseId === id));
+      const items = Array.isArray(enrollments) ? enrollments : enrollments?.data || [];
+      setIsEnrolled(items.some(e => e.courseId === id));
     } catch (error) {
       console.error('Error checking enrollment:', error);
+    }
+  };
+
+  const fetchCourseProgress = async () => {
+    try {
+      const data = await courseService.getCourseProgress(id);
+      setCourseProgress(data?.data || data);
+    } catch (error) {
+      console.error('Error fetching course progress:', error);
+    }
+  };
+
+  const handleMarkLessonComplete = async (lessonId) => {
+    if (!lessonId || !isEnrolled) return;
+
+    setCompletingLesson(true);
+    try {
+      const result = await courseService.completeLesson(id, lessonId);
+      const payload = result?.data || result;
+      if (payload?.progress) {
+        setCourseProgress(payload.progress);
+      } else {
+        await fetchCourseProgress();
+      }
+
+      if (payload?.alreadyCompleted) {
+        toast.info(t('courseDetails.lessonCompleted'));
+      } else {
+        toast.success(t('courseDetails.lessonCompleted'));
+      }
+
+      if (payload?.progress?.allLessonsCompleted) {
+        if (payload.progress.hasExam) {
+          toast.success(t('courseDetails.allLessonsCompleteExamNext'));
+        } else {
+          toast.success(t('courseDetails.allLessonsComplete'));
+        }
+      }
+    } catch (error) {
+      console.error('Complete lesson error:', error);
+      toast.error(error.message || t('courseDetails.completeFailed'));
+    } finally {
+      setCompletingLesson(false);
     }
   };
 
@@ -279,6 +333,27 @@ export default function CourseDetailsPage() {
           )}
 
           {/* Enrollment Actions */}
+          {isEnrolled && courseProgress && (
+            <div className="course-progress-section">
+              <div className="course-progress-header">
+                <span>{t('courseDetails.courseProgress')}</span>
+                <span>{Math.round(courseProgress.progressPercent || 0)}%</span>
+              </div>
+              <div className="course-progress-bar">
+                <div
+                  className="course-progress-fill"
+                  style={{ width: `${courseProgress.progressPercent || 0}%` }}
+                />
+              </div>
+              <small className="course-progress-text">
+                {t('courseDetails.lessonsCompleted', {
+                  completed: courseProgress.completedLessons || 0,
+                  total: courseProgress.totalLessons || 0,
+                })}
+              </small>
+            </div>
+          )}
+
           <div className="course-price-section">
             <span className="price-large">{formatPrice(course.price)}</span>
             
@@ -313,10 +388,19 @@ export default function CourseDetailsPage() {
             sections={sections}
             onLessonSelect={handleLessonSelect}
             selectedLessonId={selectedLessonId}
+            completedLessonIds={courseProgress?.completedLessonIds || []}
           />
         </div>
         <div className="course-lesson-wrapper">
-          <LessonContent lesson={selectedLesson} />
+          <LessonContent
+            lesson={selectedLesson}
+            isEnrolled={isEnrolled}
+            isCompleted={selectedLessonId
+              ? (courseProgress?.completedLessonIds || []).includes(selectedLessonId)
+              : false}
+            onMarkComplete={handleMarkLessonComplete}
+            completing={completingLesson}
+          />
         </div>
       </div>
 

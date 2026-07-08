@@ -197,3 +197,35 @@
     font-size: 36px;
   }
 }
+
+.lesson-complete-section {
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid var(--line);
+}
+
+.lesson-complete-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 10px;
+  background: var(--primary);
+  color: var(--bg);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.lesson-complete-btn:hover:not(:disabled) {
+  background: var(--primary-hover);
+}
+
+.lesson-complete-btn.completed,
+.lesson-complete-btn:disabled {
+  background: rgba(46, 160, 67, 0.15);
+  color: var(--green);
+  cursor: default;
+}

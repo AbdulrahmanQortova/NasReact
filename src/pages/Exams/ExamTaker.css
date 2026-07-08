@@ -32,7 +32,7 @@
 .exam-intro-desc { color: var(--muted); font-size: 14px; margin: 0; line-height: 1.6; }
 
 .exam-intro-info {
-  display: grid; grid-template-columns: repeat(3, 1fr);
+  display: grid; grid-template-columns: repeat(2, 1fr);
   gap: 12px;
 }
 
@@ -52,7 +52,52 @@
   font-weight: 700; cursor: pointer; transition: all 0.2s;
 }
 
-.exam-start-btn-large:hover { background: var(--primary-hover); transform: translateY(-1px); }
+.exam-start-btn-large:hover:not(:disabled) { background: var(--primary-hover); transform: translateY(-1px); }
+
+.exam-start-btn-large:disabled {
+  background: var(--surface-2);
+  color: var(--muted);
+  cursor: not-allowed;
+  transform: none;
+}
+
+.exam-reset-note {
+  margin: 0;
+  font-size: 12px;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.exam-blocked-card {
+  text-align: center;
+  align-items: center;
+}
+
+.exam-blocked-icon {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(248, 81, 73, 0.1);
+  color: var(--red);
+  font-size: 24px;
+}
+
+.exam-blocked-title {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--red);
+}
+
+.exam-blocked-desc,
+.exam-blocked-retry {
+  margin: 0;
+  color: var(--muted);
+  font-size: 14px;
+}
 
 /* ── Exam screen ── */
 .exam-taker { display: flex; flex-direction: column; min-height: calc(100vh - 60px); }
